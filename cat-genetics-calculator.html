@@ -1,0 +1,989 @@
+<title>Cat Coat Genetics Calculator</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --bg:#eeece6; --surface:#fbfaf6; --surface2:#f3f1ea; --text:#2a2430; --muted:#6f6878;
+    --accent:#a56f1f; --accent-strong:#8a5a12; --accent2:#3f7f7a; --warn:#a34c1a; --warn-bg:#f6e3d2;
+    --border:#d9d4c9; --border-strong:#bdb7a9; --stage:#e2ddd0; --line:#332b36; --fur-white:#faf7f2;
+    --chip:#e9e5da; --focus:#8a5a12;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1d1a21; --surface:#282430; --surface2:#221f29; --text:#ece7e0; --muted:#a49dae;
+      --accent:#d9a64a; --accent-strong:#e8bc6d; --accent2:#6fbcb5; --warn:#e0925c; --warn-bg:#463227;
+      --border:#3a3542; --border-strong:#4d475c; --stage:#403b4d; --line:#141119; --fur-white:#f4f1ea;
+      --chip:#332e3d; --focus:#e8bc6d;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1d1a21; --surface:#282430; --surface2:#221f29; --text:#ece7e0; --muted:#a49dae;
+    --accent:#d9a64a; --accent-strong:#e8bc6d; --accent2:#6fbcb5; --warn:#e0925c; --warn-bg:#463227;
+    --border:#3a3542; --border-strong:#4d475c; --stage:#403b4d; --line:#141119; --fur-white:#f4f1ea;
+    --chip:#332e3d; --focus:#e8bc6d;
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:15px; line-height:1.5; margin:0;
+  }
+  .wrap{max-width:1120px; margin:0 auto; padding:24px 20px 64px}
+  header.masthead{padding:20px 0 22px}
+  .masthead h1{
+    font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+    font-weight:800; font-size:clamp(1.7rem,3.6vw,2.5rem); line-height:1.08; margin:0 0 6px;
+    letter-spacing:-.015em; text-wrap:balance;
+  }
+  .masthead h1 .paw{color:var(--accent)}
+  .masthead p{margin:0; color:var(--muted); max-width:62ch}
+  main{display:grid; grid-template-columns:minmax(0,1fr) 400px; gap:22px; align-items:start}
+  @media (max-width:919px){ main{grid-template-columns:minmax(0,1fr)} }
+
+  /* ---------- result panel ---------- */
+  .result{grid-column:2; grid-row:1 / span 2; position:sticky; top:16px;
+    background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px; }
+  @media (max-width:919px){ .result{grid-column:1; grid-row:auto; position:static} }
+  .stage{background:var(--stage); border-radius:12px; padding:8px 8px 2px; display:flex; justify-content:center}
+  .stage svg{width:100%; max-width:290px; height:auto; display:block}
+  .pheno-name{
+    font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+    font-weight:800; font-size:1.35rem; line-height:1.15; margin:14px 2px 2px; letter-spacing:-.01em; text-wrap:balance;
+  }
+  .pheno-sub{margin:2px 2px 0; color:var(--muted); font-size:.92rem}
+  .coat-line{margin:6px 2px 0; color:var(--text); font-size:.92rem}
+  .swatches{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 0}
+  .swatch{display:inline-flex; align-items:center; gap:6px; background:var(--chip); border:1px solid var(--border);
+    border-radius:999px; padding:2px 10px 2px 4px; font-size:.8rem; color:var(--text)}
+  .swatch i{width:16px; height:16px; border-radius:50%; display:inline-block; border:1px solid var(--border-strong)}
+  .carries{margin:10px 2px 0; font-size:.85rem; color:var(--muted)}
+  .carries b{color:var(--text); font-weight:600}
+  .geno-row{display:flex; gap:8px; align-items:flex-start; margin-top:12px}
+  .geno{flex:1; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.78rem; line-height:1.6;
+    background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-width:0}
+  .copy-btn{flex:none; background:var(--surface2); color:var(--text); border:1px solid var(--border-strong);
+    border-radius:8px; padding:7px 12px; font:inherit; font-size:.82rem; cursor:pointer}
+  .copy-btn:hover{border-color:var(--accent)}
+  ul.notes{list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:6px}
+  ul.notes li{font-size:.85rem; border-radius:8px; padding:7px 10px; background:var(--surface2); border:1px solid var(--border); color:var(--muted)}
+  ul.notes li.warn{background:var(--warn-bg); color:var(--text); border-color:var(--warn)}
+  ul.notes li.warn::before{content:"⚠ "; color:var(--warn)}
+
+  /* ---------- controls ---------- */
+  #controls{display:flex; flex-direction:column; gap:16px; min-width:0}
+  .presets{display:flex; flex-wrap:wrap; gap:8px}
+  .presets button{background:var(--surface); border:1px solid var(--border-strong); color:var(--text);
+    border-radius:999px; padding:6px 14px; font:inherit; font-size:.85rem; cursor:pointer}
+  .presets button:hover{border-color:var(--accent); color:var(--accent-strong)}
+  fieldset{border:1px solid var(--border); border-radius:14px; background:var(--surface); margin:0; padding:14px 16px 16px; min-width:0}
+  fieldset legend{
+    font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif; font-weight:600; font-size:1rem;
+    padding:0 8px; letter-spacing:.01em}
+  fieldset.dimmed{opacity:.62}
+  .group-hint{margin:-4px 0 10px; font-size:.8rem; color:var(--muted)}
+  .locus-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px 16px}
+  .locus{display:flex; flex-direction:column; gap:4px; min-width:0}
+  .locus-label{display:flex; align-items:baseline; gap:6px; font-size:.86rem; font-weight:600}
+  .locus-label .sym{color:var(--accent-strong); font-family:"JetBrains Mono",monospace; font-size:.78rem; font-weight:600}
+  .locus select, .locus input[type=range]{width:100%}
+  .locus input[type=range]{accent-color:var(--accent)}
+  .locus select{
+    font:inherit; font-size:.88rem; color:var(--text); background:var(--surface2);
+    border:1px solid var(--border-strong); border-radius:8px; padding:7px 8px}
+  details.info{font-size:.8rem; color:var(--muted)}
+  details.info summary{cursor:pointer; list-style:none; color:var(--accent); display:inline; font-weight:500}
+  details.info summary::-webkit-details-marker{display:none}
+  details.info[open] summary{color:var(--accent-strong)}
+  details.info p{margin:4px 0 0; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 10px}
+  .seg{display:inline-flex; align-self:flex-start; border:1px solid var(--border-strong); border-radius:8px; overflow:hidden}
+  .seg label{padding:6px 16px; cursor:pointer; font-size:.88rem; background:var(--surface2); color:var(--muted)}
+  .seg input{position:absolute; opacity:0; pointer-events:none}
+  .seg input:checked + span{color:var(--text); font-weight:600}
+  .seg label:has(input:checked){background:var(--accent); }
+  .seg label:has(input:checked) span{color:#fff}
+  .slider-row{display:flex; flex-direction:column; gap:2px}
+  .slider-row output{font-size:.8rem; color:var(--muted)}
+  footer{margin-top:36px; color:var(--muted); font-size:.85rem; max-width:70ch}
+  :is(button,select,summary,input):focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:6px}
+  @media (prefers-reduced-motion:no-preference){
+    #cat *{transition:fill .25s ease, opacity .25s ease}
+  }
+  /* mobile mini preview */
+  #minibar{display:none}
+  @media (max-width:919px){
+    #minibar{position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px;
+      background:var(--surface); border-bottom:1px solid var(--border); padding:6px 14px;
+      margin:0 -20px 8px; visibility:hidden}
+    #minibar.on{visibility:visible}
+    #minibar svg{width:44px; height:47px; flex:none; background:var(--stage); border-radius:8px}
+    #minibar span{font-weight:600; font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  }
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <h1>Cat Coat Genetics Calculator<span class="paw"> ᨐ</span></h1>
+  <p>Set the genotype at every coat locus — colour, pattern, white, fur and ears — and see the cat it makes:
+  the breeder-style phenotype name, what it carries, and a live portrait.</p>
+</header>
+
+<div id="minibar" aria-hidden="true"><svg viewBox="0 0 320 340"><use href="#catRoot"></use></svg><span id="mini-name"></span></div>
+
+<main>
+  <aside class="result" id="result">
+    <div class="stage"><svg id="cat" viewBox="0 0 320 340" role="img" aria-labelledby="pheno-name">
+      <g id="catRoot">
+        <defs id="catDefs">
+          <clipPath id="sil">
+            <path id="clip-body"></path><path id="clip-head"></path>
+            <path id="clip-earL"></path><path id="clip-earR"></path>
+            <path id="clip-tail"></path><path id="clip-tufts" display="none"></path>
+          </clipPath>
+          <filter id="soft"><feGaussianBlur stdDeviation="5"/></filter>
+          <filter id="softer"><feGaussianBlur stdDeviation="8"/></filter>
+          <mask id="mTortie">
+            <rect x="0" y="0" width="320" height="340" fill="black"/>
+            <g fill="white" filter="url(#soft)" id="tortieBlobs"></g>
+          </mask>
+          <mask id="mPoint">
+            <rect x="0" y="0" width="320" height="340" fill="black"/>
+            <g fill="white" filter="url(#softer)">
+              <ellipse cx="108" cy="52" rx="26" ry="30"/><ellipse cx="212" cy="52" rx="26" ry="30"/>
+              <ellipse cx="160" cy="150" rx="40" ry="30"/>
+              <ellipse cx="130" cy="322" rx="26" ry="16"/><ellipse cx="190" cy="322" rx="26" ry="16"/>
+              <ellipse cx="92" cy="316" rx="18" ry="16"/><ellipse cx="228" cy="316" rx="18" ry="16"/>
+              <path d="M226,266 C270,280 300,310 274,336 C240,354 190,346 168,338 L180,314 C212,322 250,322 256,308 C260,294 240,282 222,282 Z"/>
+            </g>
+          </mask>
+          <linearGradient id="gSmoke" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="var(--fur-white)" stop-opacity=".85"/>
+            <stop offset=".45" stop-color="var(--fur-white)" stop-opacity=".35"/>
+            <stop offset="1" stop-color="var(--fur-white)" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="gShade" x1="0" y1="0" x2="0" y2="1">
+            <stop id="shade0" offset="0" stop-opacity=".95"/>
+            <stop id="shade1" offset=".55" stop-opacity=".35"/>
+            <stop id="shade2" offset="1" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <g id="paint" clip-path="url(#sil)">
+          <rect id="ground" x="0" y="0" width="320" height="340"/>
+          <g id="coatDirect">
+            <g id="coatFull">
+              <rect id="baseA" x="0" y="0" width="320" height="340"/>
+              <rect id="tabbyA" x="0" y="0" width="320" height="340"/>
+              <g id="patchB" mask="url(#mTortie)">
+                <rect id="baseB" x="0" y="0" width="320" height="340"/>
+                <rect id="tabbyB" x="0" y="0" width="320" height="340"/>
+              </g>
+              <rect id="smokeOverlay" x="0" y="0" width="320" height="340" fill="url(#gSmoke)"/>
+              <rect id="shadeOverlay" x="0" y="0" width="320" height="340" fill="url(#gShade)"/>
+            </g>
+          </g>
+          <use id="coatPoints" href="#coatFull" mask="url(#mPoint)" display="none"/>
+          <g id="whiteLayer" fill="var(--fur-white)">
+            <g id="wg-gloves" display="none">
+              <ellipse cx="130" cy="326" rx="14" ry="9"/><ellipse cx="190" cy="326" rx="14" ry="9"/>
+              <ellipse cx="94" cy="320" rx="11" ry="8"/><ellipse cx="226" cy="320" rx="11" ry="8"/>
+            </g>
+            <g id="wg-mild" display="none">
+              <ellipse cx="160" cy="208" rx="15" ry="11"/>
+              <ellipse cx="130" cy="328" rx="12" ry="7"/><ellipse cx="190" cy="328" rx="12" ry="7"/>
+            </g>
+            <g id="wg-tuxedo" display="none">
+              <path d="M160,178 C142,186 132,214 136,248 C140,276 150,290 160,290 C170,290 180,276 184,248 C188,214 178,186 160,178 Z"/>
+              <ellipse cx="160" cy="160" rx="22" ry="15"/>
+              <ellipse cx="130" cy="324" rx="16" ry="11"/><ellipse cx="190" cy="324" rx="16" ry="11"/>
+            </g>
+            <g id="wg-bicolor" display="none">
+              <path d="M160,172 C132,182 118,220 122,262 C126,300 142,318 160,318 C178,318 194,300 198,262 C202,220 188,182 160,172 Z"/>
+              <ellipse cx="160" cy="158" rx="26" ry="18"/>
+              <path d="M160,64 C154,84 152,104 154,120 L166,120 C168,104 166,84 160,64 Z"/>
+              <ellipse cx="128" cy="320" rx="22" ry="16"/><ellipse cx="192" cy="320" rx="22" ry="16"/>
+              <ellipse cx="92" cy="314" rx="16" ry="14"/><ellipse cx="228" cy="314" rx="16" ry="14"/>
+            </g>
+            <rect id="wg-full" x="0" y="0" width="320" height="340" display="none"/>
+            <g id="wg-patches" display="none">
+              <ellipse id="wp-head" cx="126" cy="96" rx="34" ry="26"/>
+              <ellipse id="wp-body" cx="112" cy="262" rx="40" ry="34"/>
+              <path id="wp-tail" d="M226,266 C270,280 300,310 274,336 C240,354 190,346 168,338 L180,314 C212,322 250,322 256,308 C260,294 240,282 222,282 Z"/>
+            </g>
+          </g>
+          <g id="texRex" stroke-linecap="round" fill="none" display="none"></g>
+          <g id="texWrinkles" stroke-linecap="round" fill="none" display="none"></g>
+        </g>
+
+        <g id="outline" fill="none" stroke="var(--line)" stroke-width="5" stroke-linejoin="round">
+          <path id="ol-tail"></path><path id="ol-body"></path>
+          <path id="ol-earL"></path><path id="ol-earR"></path><path id="ol-head"></path>
+          <path id="ol-tufts" display="none" stroke-width="4"></path>
+        </g>
+
+        <g id="details">
+          <path id="innerEarL" fill="#d98a86" opacity=".85"></path>
+          <path id="innerEarR" fill="#d98a86" opacity=".85"></path>
+          <g id="eyes">
+            <ellipse id="eyeL" cx="138" cy="128" rx="10" ry="12"/>
+            <ellipse id="eyeR" cx="182" cy="128" rx="10" ry="12"/>
+            <ellipse id="pupilL" cx="138" cy="129" rx="3.4" ry="9"/>
+            <ellipse id="pupilR" cx="182" cy="129" rx="3.4" ry="9"/>
+            <circle cx="141" cy="123" r="2.4" fill="#fff" opacity=".9"/>
+            <circle cx="185" cy="123" r="2.4" fill="#fff" opacity=".9"/>
+          </g>
+          <path id="nose" d="M154,148 L166,148 L160,156 Z"/>
+          <path id="mouth" d="M160,156 C160,162 154,165 149,163 M160,156 C160,162 166,165 171,163"
+                fill="none" stroke="var(--line)" stroke-width="2.4" stroke-linecap="round"/>
+          <g id="whiskers" stroke="var(--line)" stroke-width="1.8" stroke-linecap="round" opacity=".65">
+            <path d="M132,148 C116,146 102,142 92,138" fill="none"/><path d="M132,154 C116,155 102,155 90,152" fill="none"/>
+            <path d="M188,148 C204,146 218,142 228,138" fill="none"/><path d="M188,154 C204,155 218,155 230,152" fill="none"/>
+          </g>
+          <g id="legLines" stroke="var(--line)" stroke-width="3.4" stroke-linecap="round" fill="none">
+            <path d="M136,290 C134,304 134,316 136,330"/><path d="M184,290 C186,304 186,316 184,330"/>
+            <path d="M124,332 C127,327 133,327 136,332"/><path d="M184,332 C187,327 193,327 196,332"/>
+          </g>
+          <g id="barring" stroke-linecap="round" fill="none" display="none" stroke-width="5" opacity=".8">
+            <path d="M120,300 C126,302 134,302 140,300"/><path d="M118,312 C126,314 134,314 142,312"/>
+            <path d="M180,300 C186,302 194,302 200,300"/><path d="M178,312 C186,314 194,314 202,312"/>
+            <path d="M250,300 C256,306 260,312 262,318"/><path d="M264,296 C270,302 274,308 275,315"/>
+          </g>
+        </g>
+      </g>
+    </svg></div>
+
+    <h2 class="pheno-name" id="pheno-name"></h2>
+    <p class="pheno-sub" id="pheno-sub" hidden></p>
+    <p class="coat-line" id="coat-line"></p>
+    <div class="swatches" id="swatches"></div>
+    <p class="carries" id="carries" hidden></p>
+    <div class="geno-row">
+      <code class="geno" id="geno"></code>
+      <button class="copy-btn" id="copy-geno" type="button">Copy</button>
+    </div>
+    <ul class="notes" id="notes"></ul>
+  </aside>
+
+  <div id="controls"></div>
+</main>
+
+<footer>
+  <p>An educational toy, not a breeding tool: real cats add polygenic modifiers, rufousing, and a few
+  loci science hasn’t cloned yet (Dilute-Modifier, Inhibitor, Spotted, Wide Band). A two-parent offspring
+  calculator is the planned next step — the genetics engine here is already pure and Punnett-ready.</p>
+</footer>
+</div>
+
+<script>
+"use strict";
+/* ================================================================
+   1. DATA — loci, alleles, genotype options, blurbs
+   ================================================================ */
+const LOCI = [
+  { id:'O', sym:'O', label:'Orange (red)', group:'base', xLinked:true,
+    blurb:'X-linked. O forces yellow pigment (pheomelanin) and blocks black; o allows both. Females can be O/o — random X-inactivation gives tortoiseshell patches. Normal XY males cannot be tortie (the rare male torties are XXY or chimeras). Red areas always show tabby, even on a genetically solid cat.',
+    optionsBySex:{
+      XX:[['o','o','non-orange'],['O','o','tortoiseshell'],['O','O','red']],
+      XY:[['o','Y','non-orange'],['O','Y','red']] } },
+  { id:'C', sym:'C', label:'Colourpoint (tyrosinase)', group:'base',
+    blurb:'Master pigment gene (TYR). Point alleles are temperature-sensitive: more pigment on the cool ears, face, paws and tail. C > cb (sepia) > cs (point) > c (albino); cb/cs is codominant Mink (Tonkinese — which is why Tonkinese don’t breed true). cm is the Burmese “Mocha/Bangkok” allele. c/c albino hides every other colour gene.',
+    options:[ ['C','C','full colour'],['C','cb','full colour · carries sepia'],['C','cs','full colour · carries point'],
+      ['C','cm','full colour · carries mocha'],['C','c','full colour · carries albino'],
+      ['cb','cb','Sepia (Burmese)'],['cb','cs','Mink (Tonkinese)'],['cb','cm','Sepia · carries mocha'],
+      ['cb','c','Sepia · carries albino'],['cs','cs','Colourpoint (Siamese)'],['cs','cm','Point · carries mocha'],
+      ['cs','c','Point · carries albino'],['cm','cm','Mocha (Bangkok)'],['cm','c','Mocha · carries albino'],
+      ['c','c','Albino'] ] },
+  { id:'A', sym:'A', label:'Agouti', group:'base',
+    blurb:'ASIP. A allows yellow banding in the hair, so tabby patterns show. a/a blocks yellow pigment: black stripes on black background = a solid (“self”) cat — the tabby genes are still there, just invisible. Dominant O overrides this on red fur.',
+    options:[ ['A','A','agouti — tabby shows'],['A','a','agouti · carries solid'],['a','a','solid (non-agouti)'] ] },
+  { id:'E', sym:'E', label:'Extension', group:'base',
+    blurb:'MC1R. Rare recessive alleles replace the eumelanin colour late in kittenhood: ea/ea Amber (Norwegian Forest Cat), er/er Russet (Burmese), ec/ec Carnelian (Kurilian Bobtail). No visible effect on red cats — there is no black pigment to modify.',
+    options:[ ['E','E','normal'],['E','ea','normal · carries amber'],['E','er','normal · carries russet'],
+      ['E','ec','normal · carries carnelian'],['ea','ea','Amber'],['ea','er','amber/russet (uncharacterised)'],
+      ['ea','ec','amber/carnelian (uncharacterised)'],['er','er','Russet'],['er','ec','russet/carnelian (uncharacterised)'],
+      ['ec','ec','Carnelian'] ] },
+  { id:'B', sym:'B', label:'Brown', group:'mod',
+    blurb:'TYRP1 changes the shade of black pigment. B black (called Seal on pointed cats) > b chocolate > b′ cinnamon. Recessive: two brown-series alleles are needed to see it.',
+    options:[ ['B','B','black'],['B','b','black · carries chocolate'],['B','bl','black · carries cinnamon'],
+      ['b','b','chocolate'],['b','bl','chocolate · carries cinnamon'],['bl','bl','cinnamon'] ] },
+  { id:'D', sym:'D', label:'Dilution', group:'mod',
+    blurb:'MLPH. d/d clumps pigment in the hair shaft, washing every colour out: black→blue, chocolate→lilac, cinnamon→fawn, red→cream.',
+    options:[ ['D','D','dense'],['D','d','dense · carries dilute'],['d','d','dilute'] ] },
+  { id:'Dm', sym:'Dm', label:'Dilute modifier (caramel)', group:'mod',
+    blurb:'Uncloned. Dominant Dm acts only on dilute (d/d) cats: blue→blue-caramel, lilac→caramel (taupe), fawn→fawn-caramel, cream→apricot.',
+    options:[ ['dm','dm','no caramel'],['Dm','dm','caramel (needs d/d)'],['Dm','Dm','caramel (needs d/d)'] ] },
+  { id:'I', sym:'I', label:'Silver (inhibitor)', group:'mod',
+    blurb:'Uncloned. Dominant I suppresses pigment in the hair base — yellows more than blacks. Tabby→Silver Tabby, solid→Smoke, red→Cameo. With Wide Band it makes Shaded/Tipped cats.',
+    options:[ ['i','i','no silver'],['I','i','silver'],['I','I','silver'] ] },
+  { id:'W', sym:'W', label:'White (KIT)', group:'white',
+    blurb:'One gene, four alleles. Wd Dominant White = one giant white spot (all-white cat, deafness risk, especially Wd/Wd). Ws white spotting (tuxedo → van range, amount is polygenic). w wild type. wg Birman gloving, recessive. Different from albino: here melanocytes never reach the skin; the colour genes still hide underneath.',
+    options:[ ['w','w','no white'],['w','wg','no white · carries gloving'],['wg','wg','gloves (Birman mitts)'],
+      ['Ws','w','white spotting'],['Ws','wg','white spotting · carries gloving'],['Ws','Ws','high white'],
+      ['Wd','w','dominant white'],['Wd','wg','dominant white'],['Wd','Ws','dominant white'],['Wd','Wd','dominant white (higher deafness risk)'] ] },
+  { id:'Mc', sym:'Mc', label:'Tabby (mackerel/classic)', group:'pattern',
+    blurb:'Taqpep. Mc mackerel stripes (little tigers) > mc/mc classic swirls (blotched). Every cat has a tabby pattern — you only see it where agouti or red allows.',
+    options:[ ['Mc','Mc','mackerel'],['Mc','mc','mackerel · carries classic'],['mc','mc','classic (blotched)'] ] },
+  { id:'Sp', sym:'Sp', label:'Spotted', group:'pattern',
+    blurb:'Uncloned, probably polygenic. Sp breaks stripes into spots (little leopards — Ocicat, Bengal); needs at least one Mc allele. Sp/sp gives a broken, interrupted pattern.',
+    options:[ ['sp','sp','no spots'],['Sp','sp','broken pattern'],['Sp','Sp','spotted'] ] },
+  { id:'Ta', sym:'Ta', label:'Ticked', group:'pattern',
+    blurb:'DKK4. Dominant Ta bands each hair (Abyssinian salt-and-pepper) and masks stripes and spots. Heterozygous Ta/ta lets residual barring show on legs, tail and face.',
+    options:[ ['ta','ta','not ticked'],['Ta','ta','ticked · residual barring'],['Ta','Ta','ticked'] ] },
+  { id:'Wb', sym:'Wb', label:'Wide band', group:'pattern',
+    blurb:'Uncloned. Widens the pale band of agouti hairs. With Silver → Shaded/Tipped silver; without → Golden. Needs agouti to do anything.',
+    options:[ ['wb','wb','normal band'],['Wb','wb','wide band'],['Wb','Wb','wide band'] ] },
+  { id:'L', sym:'L', label:'Hair length', group:'coat',
+    blurb:'FGF5. Short hair L is dominant; l/l gives longhair.',
+    options:[ ['L','L','shorthair'],['L','l','shorthair · carries longhair'],['l','l','longhair'] ] },
+  { id:'K', sym:'K', label:'KRT71 series (Devon/Sphynx)', group:'coat',
+    blurb:'One gene, allelic series: re Devon Rex curl, hr Sphynx hairless; both recessive to normal, and re is incompletely dominant over hr (re/hr cats are rexoid).',
+    options:[ ['k','k','normal'],['k','re','normal · carries Devon'],['k','hr','normal · carries Sphynx'],
+      ['re','re','Devon Rex'],['re','hr','rexoid (re/hr)'],['hr','hr','Sphynx (hairless)'] ] },
+  { id:'R', sym:'R', label:'Cornish Rex (LPAR6)', group:'coat',
+    blurb:'A separate recessive rex gene: r/r gives the Cornish Rex wavy coat.',
+    options:[ ['r+','r+','normal'],['r+','r','normal · carries Cornish'],['r','r','Cornish Rex'] ] },
+  { id:'Hp', sym:'Hp', label:'Dominant hairless (Peterbald)', group:'coat',
+    blurb:'Peterbald/Donskoy, likely FOXI3 (like hairless dogs). Dominant: one copy = hairless. Homozygous Hp/Hp causes feline ectodermal dysplasia — poor dentition, impaired sweating and lactation.',
+    options:[ ['hp','hp','normal'],['Hp','hp','Peterbald (hairless)'],['Hp','Hp','Peterbald (FED risk)'] ] },
+  { id:'Cu', sym:'Cu', label:'Ear curl', group:'coat',
+    blurb:'American Curl, autosomal dominant. The pinna curls backward; Cu/Cu curls tighter, without the skeletal problems of folded-ear breeds.',
+    options:[ ['cu','cu','normal ears'],['Cu','cu','curled ears'],['Cu','Cu','tightly curled ears'] ] },
+];
+const SYM = { bl:'b′', 'r+':'+', k:'+', O:'O', o:'o' };
+const symOf = a => SYM[a] || a;
+const GROUPS = [
+  ['base','Sex & base colour','The pigment machinery: which pigments can be made, and where.'],
+  ['mod','Colour modifiers','Genes that reshape the base colours: shade, dilution, caramel, silver.'],
+  ['white','White','Genes for the absence of colour — missing melanocytes, not albinism.'],
+  ['pattern','Tabby pattern','Every cat is a tabby underneath; these decide the pattern and whether it shows.'],
+  ['coat','Coat & ears','Fur length, rex curls, hairlessness and ear shape.'],
+];
+
+/* ================================================================
+   2. ENGINE — pure genotype → phenotype descriptor
+   ================================================================ */
+const C_TABLE = { 'C':'none','cb/cb':'sepia','cb/cs':'mink','cb/cm':'sepia','cb/c':'sepia',
+  'cs/cs':'point','cs/cm':'point','cs/c':'point','cm/cm':'mocha','cm/c':'mocha' };
+const POINT_CONTRAST = { none:0, point:1, mink:.68, sepia:.45, mocha:.42 };
+const WHITE_GRADES = ['none','gloves','mild spotting','tuxedo','bicolor','harlequin','van'];
+
+function computePhenotype(g){
+  const pair = id => g.loci[id];
+  const has  = (id,a) => pair(id).includes(a);
+  const hom  = (id,a) => pair(id).every(x=>x===a);
+  const desc = { sex:g.sex, special:null, patches:[], pattern:{}, shading:'none',
+    point:'none', contrast:0, white:{grade:0,band:null}, coat:{}, masked:null,
+    warnings:[], notes:[], carried:[] };
+
+  /* coat structure — independent of colour */
+  desc.coat.length = hom('L','l') ? 'long' : 'short';
+  const k = pair('K').slice().sort().join('/');
+  desc.coat.texture =
+    has('Hp','Hp') ? 'peterbald' :
+    k==='hr/hr'    ? 'sphynx' :
+    k==='hr/re'    ? 'rexoid' :
+    k==='re/re'    ? 'devon' :
+    hom('R','r')   ? 'cornish' : 'normal';
+  desc.coat.hairless = ['peterbald','sphynx'].includes(desc.coat.texture);
+  desc.coat.ears = has('Cu','Cu') ? (hom('Cu','Cu') ? 'tightCurl' : 'curl') : 'normal';
+  if (hom('Hp','Hp')) desc.warnings.push('Hp/Hp — homozygous dominant hairless causes feline ectodermal dysplasia (poor dentition, impaired sweating and lactation).');
+  if (has('Hp','Hp') && (k!=='k/k' || hom('R','r'))) desc.notes.push('Peterbald hairlessness shown; the rex/KRT71 genotype is hidden underneath it.');
+  else if (desc.coat.texture==='sphynx' && hom('R','r')) desc.notes.push('Sphynx hairlessness shown; the Cornish rex coat is hidden underneath it.');
+
+  /* epistatic whites */
+  if (hom('C','c')) {
+    desc.special='albino';
+    desc.masked = computePhenotype({...g, loci:{...g.loci, C:['C','C']}});
+    desc.notes.push('c/c — recessive white: no working tyrosinase, so no pigment anywhere (pale pink-blue eyes). Every other colour gene is hidden.');
+    return desc;
+  }
+  if (has('W','Wd')) {
+    desc.special='dominantWhite';
+    desc.masked = computePhenotype({...g, loci:{...g.loci, W:['w','w']}});
+    desc.warnings.push(hom('W','Wd')
+      ? 'Wd/Wd — dominant white with two copies: high risk of deafness.'
+      : 'Wd — dominant white is associated with deafness (often one or both ears, blue-eyed sides especially).');
+    return desc;
+  }
+
+  /* patch channels from X-linked O */
+  const nO = pair('O').filter(a=>a==='O').length;
+  const isXX = g.sex==='XX';
+  const mk = pig => ({ pigment:pig, base:null, dilute:false, caramel:false, tabbyVisible:false, silver:false });
+  if (isXX && nO===2 || !isXX && nO===1) desc.patches=[mk('pheo')];
+  else if (isXX && nO===1) desc.patches=[mk('eu'),mk('pheo')];
+  else desc.patches=[mk('eu')];
+
+  /* eumelanin base from B, overridden by E */
+  const bBase = has('B','B') ? 'black' : has('B','b') ? 'chocolate' : 'cinnamon';
+  let eBase = null;
+  if (!has('E','E')) {
+    const e = pair('E');
+    eBase = {ea:'amber', er:'russet', ec:'carnelian'}[e[0]];
+    if (e[0]!==e[1]) desc.notes.push(`E locus ${symOf(e[0])}/${symOf(e[1])} — compound recessive; the interaction is uncharacterised, showing ${eBase}.`);
+  }
+  const dilute = hom('D','d');
+  const caramel = dilute && has('Dm','Dm');
+  const silver = has('I','I');
+  const agouti = has('A','A');
+  for (const p of desc.patches){
+    p.base = p.pigment==='pheo' ? 'red' : (eBase || bBase);
+    p.euBase = bBase;
+    p.dilute = dilute; p.caramel = caramel; p.silver = silver;
+    p.tabbyVisible = p.pigment==='pheo' ? true : agouti;
+  }
+  if (has('Dm','Dm') && !dilute) desc.notes.push('Dm is carried but silent — the caramel modifier only acts on dilute (d/d) coats.');
+  if (eBase && desc.patches.every(p=>p.pigment==='pheo')) desc.notes.push('The E-locus variant has no visible effect on an all-red cat — there is no black pigment to modify.');
+  if (eBase && desc.patches.some(p=>p.pigment==='eu')) desc.notes.push(`Genetically ${bBase}-based; the E-locus allele repaints it ${eBase} (kittens are born dark and lighten with age).`);
+
+  /* pattern */
+  const anyTabby = desc.patches.some(p=>p.tabbyVisible);
+  if (has('Ta','Ta')) {
+    desc.pattern.type='ticked';
+    desc.pattern.residualBarring = !hom('Ta','Ta');
+    if (has('Sp','Sp') || true===false) {}
+    if (has('Sp','Sp')) desc.notes.push('Ticked (Ta) is epistatic — the spotted pattern is masked.');
+    else if (!hom('Mc','Mc')||hom('Mc','mc')) {/*no note; ticked masks stripes silently*/}
+    if (desc.pattern.residualBarring && anyTabby) desc.notes.push('Ta/ta — heterozygous ticked: residual barring shows on the legs, tail and face.');
+  } else if (has('Sp','Sp')) {
+    if (has('Mc','Mc')) desc.pattern.type = hom('Sp','Sp') ? 'spotted' : 'broken';
+    else { desc.pattern.type='spotted';
+      desc.notes.push('Sp normally needs at least one Mc allele; on a classic (mc/mc) background the result is an odd broken/rosetted pattern.'); }
+  } else desc.pattern.type = has('Mc','Mc') ? 'mackerel' : 'classic';
+
+  /* wide band / shading */
+  const wb = has('Wb','Wb');
+  if (wb && anyTabby) desc.shading = silver ? 'shaded' : 'golden';
+  else if (wb) desc.notes.push('Wide Band is carried but needs visible agouti to show.');
+
+  /* colourpoint */
+  const cKey = has('C','C') ? 'C' : pair('C').slice().sort((a,b)=>['cb','cs','cm','c'].indexOf(a)-['cb','cs','cm','c'].indexOf(b)).join('/');
+  desc.point = C_TABLE[cKey] || 'none';
+  desc.contrast = POINT_CONTRAST[desc.point];
+
+  /* white spotting */
+  const w = pair('W');
+  if (has('W','Ws')) {
+    desc.white.band = hom('W','Ws') ? [5,6] : [2,3,4];
+    const def = hom('W','Ws') ? 5 : 3;
+    desc.white.grade = (g.whiteGrade!=null && desc.white.band.includes(g.whiteGrade)) ? g.whiteGrade : def;
+  } else if (hom('W','wg')) desc.white.grade = 1;
+
+  /* carried recessives */
+  const carry = [];
+  const het = (id,a)=> has(id,a) && !hom(id,a);
+  if (agouti && het('A','a')) carry.push('solid (a)');
+  if (has('B','B')) { if (het('B','b')) carry.push('chocolate'); if (het('B','bl')) carry.push('cinnamon'); }
+  else if (has('B','b') && het('B','bl')) carry.push('cinnamon');
+  if (has('C','C')) { const other = pair('C').find(a=>a!=='C'); if (other) carry.push({cb:'sepia',cs:'colourpoint',cm:'mocha',c:'albino'}[other]); }
+  else if (has('C','c') && !hom('C','c')) carry.push('albino');
+  if (het('D','d')) carry.push('dilute');
+  if (has('E','E')) { const o = pair('E').find(a=>a!=='E'); if (o) carry.push({ea:'amber',er:'russet',ec:'carnelian'}[o]); }
+  if (het('L','l')) carry.push('longhair');
+  if (has('K','k')) { if (het('K','re')) carry.push('Devon rex'); if (het('K','hr')) carry.push('Sphynx'); }
+  if (has('R','r+') && het('R','r')) carry.push('Cornish rex');
+  if (has('W','w') && het('W','wg')) carry.push('gloving (wg)');
+  desc.carried = carry;
+  return desc;
+}
+
+/* ================================================================
+   3. NAMING
+   ================================================================ */
+const FURNAME = { black:'Black', chocolate:'Chocolate', cinnamon:'Cinnamon',
+  blue:'Blue', lilac:'Lilac', fawn:'Fawn',
+  blueCaramel:'Blue-Caramel', caramel:'Caramel (Taupe)', fawnCaramel:'Fawn-Caramel',
+  red:'Red', cream:'Cream', apricot:'Apricot',
+  amber:'Amber', lightAmber:'Light Amber', russet:'Russet', carnelian:'Carnelian',
+  dRusset:'Dilute Russet', dCarnelian:'Dilute Carnelian' };
+const TORTIE_NAME = { black:'Tortoiseshell', blue:'Blue-Cream (Dilute Tortoiseshell)',
+  chocolate:'Chocolate Tortoiseshell', cinnamon:'Cinnamon Tortoiseshell',
+  lilac:'Lilac-Cream', fawn:'Fawn-Cream',
+  blueCaramel:'Caramel Tortoiseshell (Blue-Caramel & Apricot)' };
+const PATTERN_WORD = { mackerel:'Mackerel', classic:'Classic', spotted:'Spotted', broken:'Broken Mackerel', ticked:'Ticked' };
+const POINT_WORD = { point:'Point', mink:'Mink', sepia:'Sepia', mocha:'Mocha' };
+
+function patchKey(p){
+  if (p.pigment==='pheo') return p.caramel ? 'apricot' : p.dilute ? 'cream' : 'red';
+  if (p.base==='amber') return p.dilute ? 'lightAmber' : 'amber';
+  if (p.base==='russet') return p.dilute ? 'dRusset' : 'russet';
+  if (p.base==='carnelian') return p.dilute ? 'dCarnelian' : 'carnelian';
+  let k = p.base;
+  if (p.dilute) k = {black:'blue', chocolate:'lilac', cinnamon:'fawn'}[k];
+  if (p.caramel) k = {blue:'blueCaramel', lilac:'caramel', fawn:'fawnCaramel'}[k] || k;
+  return k;
+}
+
+function describe(desc){
+  const out = { name:'', sub:'', coatLine:'', notes:desc.notes.slice(), warnings:desc.warnings.slice(), carried:desc.carried };
+  /* coat line always */
+  const texWord = { normal:'', cornish:'Cornish rex coat', devon:'Devon rex coat',
+    rexoid:'rexoid coat (re/hr)', sphynx:'hairless (Sphynx)', peterbald:'hairless (Peterbald)' }[desc.coat.texture];
+  const earWord = { normal:'', curl:'curled ears', tightCurl:'tightly curled ears' }[desc.coat.ears];
+  const bits = [];
+  bits.push(desc.coat.hairless ? texWord : (desc.coat.length==='long'?'longhair':'shorthair'));
+  if (!desc.coat.hairless && texWord) bits.push(texWord);
+  if (earWord) bits.push(earWord);
+  out.coatLine = bits.join(' · ');
+
+  if (desc.special==='albino'){ out.name='Albino'; out.sub='masking: '+describe(desc.masked).name; return out; }
+  if (desc.special==='dominantWhite'){ out.name='White (Dominant White)'; out.sub='masking: '+describe(desc.masked).name; return out; }
+
+  const tortie = desc.patches.length===2;
+  const p0 = desc.patches[0];
+  const eu = desc.patches.find(p=>p.pigment==='eu');
+  const anyTabby = desc.patches.some(p=>p.tabbyVisible);
+  const pointed = desc.point!=='none';
+  const silver = p0.silver;
+  const grade = desc.white.grade;
+  const gradeName = WHITE_GRADES[grade];
+  let name;
+
+  if (tortie && !pointed){
+    const euKey = patchKey(eu);
+    let t = TORTIE_NAME[euKey] || `${FURNAME[euKey]} Tortoiseshell`;
+    if (eu.tabbyVisible) t = t.includes('Tortoiseshell') ? t.replace(/Tortoiseshell/g,'Torbie') : t+' Torbie';
+    if (silver) t = 'Silver '+t;
+    if (grade>=3){
+      const cal = (eu.tabbyVisible?'Caliby':'Calico');
+      name = (eu.dilute?'Dilute ':'')+cal+` (${gradeName} white)`;
+      if (silver) name = 'Silver '+name;
+    } else {
+      name = t + (grade>0 ? ` & White (${gradeName})` : '');
+    }
+    if (eu.tabbyVisible && desc.shading==='none') name += ` — ${PATTERN_WORD[desc.pattern.type].toLowerCase()} pattern`;
+  } else {
+    /* single patch, or pointed tortie */
+    const key = patchKey(tortie ? eu : p0);
+    let word = FURNAME[key];
+    if (pointed && key==='black') word = 'Seal';
+    const parts = [];
+    if (silver && !anyTabby) { parts.push(word+' Smoke'); }
+    else if (silver && anyTabby && desc.shading==='none'){
+      if ((tortie?eu:p0).pigment==='pheo') parts.push({red:'Cameo', cream:'Dilute Cameo', apricot:'Apricot Cameo'}[key] || word+' Cameo');
+      else parts.push(word+' Silver');
+    } else if (desc.shading!=='none' && (tortie?eu:p0).pigment==='pheo') parts.push({red:'', cream:'Dilute', apricot:'Apricot'}[key]||'');
+    else parts.push(word);
+    if (desc.shading!=='none'){
+      if ((tortie?eu:p0).pigment==='pheo') parts.push('Shaded Cameo');
+      else parts.push(silver ? 'Silver Shaded' : 'Golden Shaded');
+    }
+    else if (anyTabby && !pointed && !tortie) parts.push(PATTERN_WORD[desc.pattern.type]+' Tabby');
+    if (pointed){
+      const mod = tortie ? (eu.tabbyVisible?'Torbie ':'Tortie ') : (anyTabby?'Lynx ':'');
+      parts.push(mod + POINT_WORD[desc.point]);
+      if (anyTabby && desc.shading==='none') out.notes.unshift(`Pattern under the points: ${PATTERN_WORD[desc.pattern.type].toLowerCase()}.`);
+    }
+    name = parts.filter(Boolean).join(' ');
+    if (grade>0) name += ` & White (${gradeName})`;
+  }
+  out.name = name;
+  if (pointed) out.sub = { point:'pointed — colour restricted to the cool extremities',
+    mink:'mink — mid-contrast points, aqua eyes (Tonkinese)', sepia:'sepia — low-contrast points (Burmese)',
+    mocha:'mocha — low-contrast points (Bangkok)' }[desc.point];
+  return out;
+}
+
+function genotypeString(g){
+  const parts = [g.sex];
+  for (const l of LOCI){
+    const p = g.loci[l.id];
+    parts.push(p.map(symOf).join('/'));
+  }
+  return parts.join(' · ');
+}
+
+/* ================================================================
+   4. RENDER — colours + SVG
+   ================================================================ */
+const FUR = { black:'#241f26', chocolate:'#59372a', cinnamon:'#8c5a3a',
+  blue:'#7e8290', lilac:'#a9989e', fawn:'#c2a78e',
+  blueCaramel:'#8b8377', caramel:'#a5917f', fawnCaramel:'#c9b193',
+  red:'#d97b3f', cream:'#efc79c', apricot:'#f0b87e',
+  amber:'#c08a4e', lightAmber:'#d8b184', russet:'#a05236', carnelian:'#b8643f',
+  dRusset:'#c08a72', dCarnelian:'#cc9078',
+  silverBase:'#e9ebee', goldenBase:'#e8c48e' };
+const EYE = { default:'#d9a63f', green:'#7cae62', point:'#6ea3dc', mink:'#7fc9c4',
+  sepia:'#e0b23c', albino:'#e8b7c6', domWhite:'#7cb2e0' };
+const SKIN_PINK='#e8b0a0', NOSE_PINK='#d98a86';
+
+function hx(c){ return c.length===4 ? '#'+[...c.slice(1)].map(x=>x+x).join('') : c; }
+function mixHex(a,b,t){
+  a=hx(a); b=hx(b);
+  const ch=(i)=>Math.round(parseInt(a.slice(i,i+2),16)*(1-t)+parseInt(b.slice(i,i+2),16)*t);
+  return '#'+[1,3,5].map(i=>ch(i).toString(16).padStart(2,'0')).join('');
+}
+const patchHex = p => FUR[patchKey(p)];
+function patternHex(p){
+  const h = patchHex(p);
+  return p.pigment==='pheo' ? mixHex(h,'#7a3410',.45) : mixHex(h,'#000000',.42);
+}
+function bodyTint(point, hex){
+  return mixHex('#f0e8dc', hex, {point:.12, mink:.4, sepia:.58, mocha:.55}[point] ?? 1);
+}
+function hashStr(s){ let h=1779033703; for (let i=0;i<s.length;i++){ h=Math.imul(h^s.charCodeAt(i),3432918353); h=h<<13|h>>>19; } return h>>>0; }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+
+/* silhouette geometry */
+const SHAPES = {
+  bodyShort:'M160,176 C112,182 80,232 75,288 C72,318 94,328 160,328 C226,328 248,318 245,288 C240,232 208,182 160,176 Z',
+  bodyFluffy:'M160,172 C106,178 72,230 66,288 C63,320 92,332 160,332 C228,332 257,320 254,288 C248,230 214,178 160,172 Z',
+  head:'M160,68 C121,68 96,99 96,134 C96,169 125,192 160,192 C195,192 224,169 224,134 C224,99 199,68 160,68 Z',
+  earL:'M113,88 C104,66 100,49 101,37 C114,42 133,53 148,63 C134,69 122,77 113,88 Z',
+  earR:'M207,88 C216,66 220,49 219,37 C206,42 187,53 172,63 C186,69 198,77 207,88 Z',
+  earCurlL:'M114,86 C104,72 100,58 105,46 C112,55 119,55 125,47 C131,55 139,60 148,64 C135,70 123,76 114,86 Z',
+  earCurlR:'M206,86 C216,72 220,58 215,46 C208,55 201,55 195,47 C189,55 181,60 172,64 C185,70 197,76 206,86 Z',
+  earTightL:'M115,84 C106,73 102,62 108,52 C113,60 122,59 126,51 C131,57 139,61 148,64 C135,70 124,75 115,84 Z',
+  earTightR:'M205,84 C214,73 218,62 212,52 C207,60 198,59 194,51 C189,57 181,61 172,64 C185,70 196,75 205,84 Z',
+  tail:'M226,266 C270,278 298,306 274,330 C244,352 192,346 170,338 L179,316 C210,324 246,322 254,308 C259,295 240,283 221,283 Z',
+  tailFluffy:'M224,262 C274,272 306,304 278,332 C244,358 188,350 166,340 L177,314 C212,324 252,322 260,306 C266,291 242,280 218,280 Z',
+  tufts:'M96,196 C88,192 80,192 74,196 C80,200 86,203 92,206 Z M224,196 C232,192 240,192 246,196 C240,200 234,203 228,206 Z M120,206 C112,212 108,220 108,228 C114,222 120,217 127,214 Z M200,206 C208,212 212,220 212,228 C206,222 200,217 193,214 Z',
+  innerEarL:'M118,78 C113,66 110,55 110,47 C118,51 129,58 138,64 C130,68 123,72 118,78 Z',
+  innerEarR:'M202,78 C207,66 210,55 210,47 C202,51 191,58 182,64 C190,68 197,72 202,78 Z',
+  innerCurlL:'M119,76 C113,67 110,58 112,51 C117,57 124,57 128,52 C132,57 137,60 141,63 C133,67 125,71 119,76 Z',
+  innerCurlR:'M201,76 C207,67 210,58 208,51 C203,57 196,57 192,52 C188,57 183,60 179,63 C187,67 195,71 201,76 Z',
+};
+const $ = id => document.getElementById(id);
+function setD(id,d){ $(id).setAttribute('d',d); }
+
+/* patterns built per patch-suffix at init */
+function buildPatterns(defs, suffix){
+  const NS='http://www.w3.org/2000/svg';
+  const mk=(tag,attrs)=>{ const el=document.createElementNS(NS,tag); for(const k in attrs) el.setAttribute(k,attrs[k]); return el; };
+  const pat=(id,w,h,children)=>{ const p=mk('pattern',{id:id+suffix, width:w, height:h, patternUnits:'userSpaceOnUse'});
+    children.forEach(c=>p.appendChild(c)); defs.appendChild(p); return p; };
+  pat('pMackerel',30,340,[ mk('path',{d:'M15,-10 C8,60 22,120 13,200 C8,260 18,310 15,350', fill:'none','stroke-width':9,class:'pk'}) ]);
+  pat('pBroken',30,340,[ mk('path',{d:'M15,-10 C8,60 22,120 13,200 C8,260 18,310 15,350', fill:'none','stroke-width':9,'stroke-dasharray':'26 20','stroke-linecap':'round',class:'pk'}) ]);
+  pat('pClassic',112,112,[ mk('circle',{cx:56,cy:56,r:17,fill:'none','stroke-width':11,class:'pk'}),
+    mk('circle',{cx:56,cy:56,r:41,fill:'none','stroke-width':11,class:'pk'}) ]);
+  pat('pSpots',52,52,[ mk('ellipse',{cx:14,cy:14,rx:8.5,ry:7,class:'pkf'}), mk('ellipse',{cx:40,cy:40,rx:8.5,ry:7,class:'pkf'}),
+    mk('ellipse',{cx:40,cy:12,rx:6,ry:5,class:'pkf'}), mk('ellipse',{cx:12,cy:40,rx:6,ry:5,class:'pkf'}) ]);
+  pat('pTicked',13,13,[ mk('circle',{cx:3.5,cy:3.5,r:1.8,class:'pkf',opacity:.75}), mk('circle',{cx:9.5,cy:9.5,r:1.8,class:'pkf',opacity:.75}) ]);
+}
+function setPatternColor(suffix, hex){
+  document.querySelectorAll(`[id$="${suffix}"] .pk`).forEach(e=>e.setAttribute('stroke',hex));
+  document.querySelectorAll(`[id$="${suffix}"] .pkf`).forEach(e=>e.setAttribute('fill',hex));
+}
+const PATTERN_ID = { mackerel:'pMackerel', broken:'pBroken', classic:'pClassic', spotted:'pSpots', ticked:'pTicked' };
+
+function buildTortieBlobs(seedStr){
+  const g=$('tortieBlobs'); g.innerHTML='';
+  const rnd = mulberry32(hashStr(seedStr));
+  const NS='http://www.w3.org/2000/svg';
+  const spots=[[150,90,30,24],[210,150,34,30],[110,240,36,32],[190,270,34,30],[240,300,26,20],[130,150,22,20]];
+  for (const [cx,cy,rx,ry] of spots){
+    const e=document.createElementNS(NS,'ellipse');
+    e.setAttribute('cx',cx+(rnd()*28-14)); e.setAttribute('cy',cy+(rnd()*24-12));
+    e.setAttribute('rx',rx*(0.8+rnd()*0.5)); e.setAttribute('ry',ry*(0.8+rnd()*0.5));
+    g.appendChild(e);
+  }
+}
+function buildTextures(){
+  const NS='http://www.w3.org/2000/svg';
+  const rex=$('texRex');
+  const pts=[[120,220],[160,240],[200,220],[135,265],[185,268],[112,190],[208,190],[150,300]];
+  for (const [x,y] of pts){
+    const p=document.createElementNS(NS,'path');
+    p.setAttribute('d',`M${x},${y} q5,-6 10,0 q5,6 10,0`);
+    rex.appendChild(p);
+  }
+  const wr=$('texWrinkles');
+  [['M120,200 q40,14 80,0'],['M118,222 q42,16 84,0'],['M126,246 q34,12 68,0'],['M138,96 q22,10 44,0']]
+    .forEach(([d])=>{ const p=document.createElementNS(NS,'path'); p.setAttribute('d',d); wr.appendChild(p); });
+}
+
+function show(id,on){ $(id).setAttribute('display', on?'inline':'none'); }
+function fill(id,c){ $(id).setAttribute('fill',c); }
+
+function renderCat(desc){
+  /* silhouette */
+  const long = desc.coat.length==='long' && !desc.coat.hairless;
+  setD('clip-body', long?SHAPES.bodyFluffy:SHAPES.bodyShort); setD('ol-body', long?SHAPES.bodyFluffy:SHAPES.bodyShort);
+  setD('clip-head', SHAPES.head); setD('ol-head', SHAPES.head);
+  setD('clip-tail', long?SHAPES.tailFluffy:SHAPES.tail); setD('ol-tail', long?SHAPES.tailFluffy:SHAPES.tail);
+  const earKey = desc.coat.ears==='tightCurl' ? 'Tight' : desc.coat.ears==='curl' ? 'Curl' : '';
+  setD('clip-earL', SHAPES['ear'+(earKey||'')+'L'] || SHAPES.earL); setD('ol-earL', SHAPES['ear'+(earKey||'')+'L'] || SHAPES.earL);
+  setD('clip-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR); setD('ol-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR);
+  setD('innerEarL', earKey ? SHAPES.innerCurlL : SHAPES.innerEarL);
+  setD('innerEarR', earKey ? SHAPES.innerCurlR : SHAPES.innerEarR);
+  show('clip-tufts', false); show('ol-tufts', false);
+  show('texWrinkles', desc.coat.hairless);
+  show('texRex', !desc.coat.hairless && ['devon','cornish','rexoid'].includes(desc.coat.texture));
+  $('whiskers').setAttribute('opacity', desc.coat.texture==='sphynx'||desc.coat.texture==='peterbald' ? .18 : ['devon','cornish','rexoid'].includes(desc.coat.texture) ? .4 : .65);
+
+  const hideAllCoat = on => { show('coatDirect',!on); show('coatPoints',false); ['wg-gloves','wg-mild','wg-tuxedo','wg-bicolor','wg-full','wg-patches','barring','smokeOverlay','shadeOverlay'].forEach(i=>show(i,false)); };
+
+  /* specials */
+  if (desc.special){
+    hideAllCoat(true);
+    fill('ground','var(--fur-white)');
+    const eye = desc.special==='albino' ? EYE.albino : EYE.domWhite;
+    fill('eyeL',eye); fill('eyeR',eye);
+    const pup = desc.special==='albino' ? '#d391a4' : '#1c1a20';
+    fill('pupilL',pup); fill('pupilR',pup);
+    fill('nose',NOSE_PINK);
+    $('texRex').setAttribute('stroke','#c9c2b6'); $('texWrinkles').setAttribute('stroke','#d8a294');
+    return;
+  }
+
+  const tortie = desc.patches.length===2;
+  const pA = desc.patches[0], pB = tortie?desc.patches[1]:null;
+  const hexA = patchHex(pA), hexB = pB?patchHex(pB):null;
+  const pointed = desc.point!=='none';
+  const shaded = desc.shading!=='none';
+  const anyTabby = desc.patches.some(p=>p.tabbyVisible);
+
+  /* hairless: skin ghost of the coat colour */
+  if (desc.coat.hairless){
+    hideAllCoat(true);
+    fill('ground', mixHex(SKIN_PINK, pointed?bodyTint(desc.point,hexA):hexA, .35));
+    $('texWrinkles').setAttribute('stroke', mixHex(SKIN_PINK,'#000',.35));
+    $('texWrinkles').setAttribute('stroke-width','3');
+    show('texWrinkles',true);
+  } else {
+    show('coatDirect',!pointed);
+    show('coatPoints',pointed);
+    $('coatPoints').setAttribute('opacity', desc.contrast||1);
+    fill('ground', pointed ? bodyTint(desc.point,hexA) : hexA);
+
+    /* base + patterns */
+    const silverOn = pA.silver;
+    let baseAHex = hexA;
+    if (shaded) baseAHex = desc.shading==='shaded' ? FUR.silverBase : FUR.goldenBase;
+    else if (silverOn && pA.tabbyVisible) baseAHex = mixHex(FUR.silverBase, hexA, .18);
+    fill('baseA', baseAHex);
+    const patId = PATTERN_ID[desc.pattern.type];
+    const showTabA = pA.tabbyVisible && !shaded;
+    show('tabbyA', showTabA);
+    if (showTabA){ $('tabbyA').setAttribute('fill',`url(#${patId}A)`); setPatternColor('A', patternHex(pA)); }
+    show('patchB', !!pB);
+    if (pB){
+      let baseBHex = hexB;
+      if (shaded) baseBHex = desc.shading==='shaded' ? mixHex(FUR.silverBase,hexB,.3) : mixHex(FUR.goldenBase,hexB,.4);
+      else if (pB.silver && pB.tabbyVisible) baseBHex = mixHex(FUR.silverBase, hexB, .35);
+      fill('baseB', baseBHex);
+      const showTabB = pB.tabbyVisible && !shaded;
+      show('tabbyB', showTabB);
+      if (showTabB){ $('tabbyB').setAttribute('fill',`url(#${patId}B)`); setPatternColor('B', patternHex(pB)); }
+      buildTortieBlobs(JSON.stringify(state.loci)+state.sex);
+    }
+    /* smoke & shading overlays */
+    show('smokeOverlay', silverOn && !anyTabby && !pointed);
+    show('shadeOverlay', shaded);
+    if (shaded){ ['shade0','shade1','shade2'].forEach(i=>$(i).setAttribute('stop-color',patternHex(pA))); }
+
+    /* white spotting */
+    const gr = desc.white.grade;
+    show('wg-gloves', gr===1); show('wg-mild', gr===2);
+    show('wg-tuxedo', gr===3); show('wg-bicolor', gr===4);
+    show('wg-full', gr>=5); show('wg-patches', gr>=5);
+    if (gr>=5){
+      show('wp-body', gr===5);
+      fill('wp-head', hexA); fill('wp-body', tortie?hexB:hexA); fill('wp-tail', hexA);
+    }
+    /* residual barring */
+    const barr = desc.pattern.residualBarring && anyTabby && !desc.coat.hairless;
+    show('barring', !!barr);
+    if (barr) $('barring').setAttribute('stroke', patternHex(pA));
+    $('texRex').setAttribute('stroke', mixHex(baseAHex,'#000',.3));
+    $('texRex').setAttribute('stroke-width','2.5');
+  }
+
+  /* eyes & nose */
+  const eye = pointed ? (desc.point==='point'?EYE.point:desc.point==='mink'?EYE.mink:EYE.sepia)
+    : (pA.silver ? EYE.green : EYE.default);
+  fill('eyeL',eye); fill('eyeR',eye);
+  fill('pupilL','#1c1a20'); fill('pupilR','#1c1a20');
+  fill('nose', pA.pigment==='pheo' ? '#c96f52' : mixHex(hexA,'#b0605a',.5));
+}
+
+/* ================================================================
+   5. UI
+   ================================================================ */
+const state = { sex:'XY', whiteGrade:null, loci:{} };
+const WILD = { O:['o','Y'], C:['C','C'], A:['A','A'], E:['E','E'], B:['B','B'], D:['D','D'],
+  Dm:['dm','dm'], I:['i','i'], W:['w','w'], Mc:['Mc','Mc'], Sp:['sp','sp'], Ta:['ta','ta'],
+  Wb:['wb','wb'], L:['L','L'], K:['k','k'], R:['r+','r+'], Hp:['hp','hp'], Cu:['cu','cu'] };
+Object.assign(state.loci, structuredClone(WILD));
+
+const PRESETS = {
+  'Wild type': { sex:'XY', loci:{...WILD} },
+  'Siamese':   { sex:'XY', loci:{...WILD, A:['a','a'], C:['cs','cs']} },
+  'Birman':    { sex:'XX', loci:{...WILD, O:['o','o'], A:['a','a'], C:['cs','cs'], W:['wg','wg'], L:['l','l']} },
+  'Silver shaded': { sex:'XX', loci:{...WILD, O:['o','o'], I:['I','I'], Wb:['Wb','Wb'], Ta:['Ta','Ta'], L:['l','l']} },
+  'Calico':    { sex:'XX', loci:{...WILD, O:['O','o'], A:['a','a'], W:['Ws','w']}, whiteGrade:4 },
+};
+
+function optionValue(p){ return p[0]+'|'+p[1]; }
+function buildControls(){
+  const root=$('controls');
+  const presetBar=document.createElement('div'); presetBar.className='presets';
+  for (const name of Object.keys(PRESETS)){
+    const b=document.createElement('button'); b.type='button'; b.textContent=name;
+    b.addEventListener('click',()=>{ const p=PRESETS[name];
+      state.sex=p.sex; state.loci=structuredClone(p.loci); state.whiteGrade=p.whiteGrade??null; syncControls(); update(); });
+    presetBar.appendChild(b);
+  }
+  const rand=document.createElement('button'); rand.type='button'; rand.textContent='🎲 Random cat';
+  rand.addEventListener('click',()=>{ state.sex=Math.random()<.5?'XX':'XY';
+    for (const l of LOCI){ const opts=l.xLinked?l.optionsBySex[state.sex]:l.options;
+      const o=opts[Math.floor(Math.random()*opts.length)]; state.loci[l.id]=[o[0],o[1]]; }
+    state.whiteGrade=null; syncControls(); update(); });
+  presetBar.appendChild(rand);
+  root.appendChild(presetBar);
+
+  for (const [gid,gtitle,ghint] of GROUPS){
+    const fs=document.createElement('fieldset'); fs.id='group-'+gid;
+    fs.innerHTML=`<legend>${gtitle}</legend><p class="group-hint">${ghint}</p>`;
+    const grid=document.createElement('div'); grid.className='locus-grid';
+    if (gid==='base'){
+      const sexDiv=document.createElement('div'); sexDiv.className='locus';
+      sexDiv.innerHTML=`<span class="locus-label">Sex <span class="sym">XX/XY</span></span>
+        <span class="seg" role="radiogroup" aria-label="Sex">
+          <label><input type="radio" name="sex" value="XX"><span>♀ XX</span></label>
+          <label><input type="radio" name="sex" value="XY" checked><span>♂ XY</span></label>
+        </span>
+        <details class="info"><summary>about</summary><p>Sex matters for one locus: Orange sits on the X chromosome, so females carry two O-alleles and males only one.</p></details>`;
+      grid.appendChild(sexDiv);
+    }
+    for (const l of LOCI.filter(x=>x.group===gid)){
+      const d=document.createElement('div'); d.className='locus';
+      d.innerHTML=`<label class="locus-label" for="sel-${l.id}">${l.label} <span class="sym">${l.sym}</span></label>
+        <select id="sel-${l.id}" data-locus="${l.id}"></select>
+        <details class="info"><summary>about</summary><p>${l.blurb}</p></details>`;
+      grid.appendChild(d);
+      if (l.id==='W'){
+        const s=document.createElement('div'); s.className='locus slider-row'; s.id='white-slider-row'; s.hidden=true;
+        s.innerHTML=`<label class="locus-label" for="white-slider">Amount of white <span class="sym">polygenic</span></label>
+          <input type="range" id="white-slider" min="2" max="4" step="1" value="3">
+          <output id="white-slider-out"></output>
+          <details class="info"><summary>about</summary><p>How much white a spotting genotype shows is shaped by polygenic modifiers, not the KIT genotype alone — this slider stands in for them.</p></details>`;
+        grid.appendChild(s);
+      }
+    }
+    fs.appendChild(grid); root.appendChild(fs);
+  }
+  rebuildOSelect(); syncControls();
+
+  root.addEventListener('change', e=>{
+    const t=e.target;
+    if (t.name==='sex'){ state.sex=t.value; rebuildOSelect();
+      const l=state.loci.O; state.loci.O = state.sex==='XY' ? [l.includes('O')?'O':'o','Y'] : [l[0]==='Y'?'o':l[0], l[1]==='Y'?'o':l[1]];
+      if (state.sex==='XX' && l[0]==='O' && l[1]==='Y') state.loci.O=['O','o'];
+      syncControls(); update(); return; }
+    if (t.dataset.locus){ state.loci[t.dataset.locus]=t.value.split('|'); update(); return; }
+    if (t.id==='white-slider'){ state.whiteGrade=+t.value; update(); }
+  });
+  root.addEventListener('input', e=>{ if (e.target.id==='white-slider'){ state.whiteGrade=+e.target.value; update(); } });
+}
+function rebuildOSelect(){
+  const sel=$('sel-O'); const locus=LOCI.find(l=>l.id==='O');
+  sel.innerHTML='';
+  for (const o of locus.optionsBySex[state.sex]){
+    const opt=document.createElement('option'); opt.value=optionValue(o);
+    opt.textContent=`${symOf(o[0])}/${symOf(o[1])} — ${o[2]}`; sel.appendChild(opt);
+  }
+}
+function syncControls(){
+  document.querySelectorAll('input[name=sex]').forEach(r=>r.checked=r.value===state.sex);
+  rebuildOSelect();
+  for (const l of LOCI){
+    const sel=$('sel-'+l.id); if (!sel) continue;
+    if (!l.xLinked && !sel.options.length){
+      for (const o of l.options){ const opt=document.createElement('option'); opt.value=optionValue(o);
+        opt.textContent=`${symOf(o[0])}/${symOf(o[1])} — ${o[2]}`; sel.appendChild(opt); }
+    }
+    const v=state.loci[l.id]; const want=optionValue(v);
+    const flip=v[1]+'|'+v[0];
+    for (const opt of sel.options){ if (opt.value===want||opt.value===flip){ sel.value=opt.value; break; } }
+  }
+}
+
+function update(){
+  const desc = computePhenotype(state);
+  const d = describe(desc);
+  $('pheno-name').textContent = d.name;
+  $('mini-name').textContent = d.name;
+  $('pheno-sub').hidden = !d.sub; $('pheno-sub').textContent = d.sub||'';
+  $('coat-line').textContent = d.coatLine;
+  $('carries').hidden = !d.carried.length;
+  if (d.carried.length) $('carries').innerHTML = '<b>Carries:</b> '+d.carried.join(', ');
+  $('geno').textContent = genotypeString(state);
+  const notes=$('notes'); notes.innerHTML='';
+  for (const w of d.warnings){ const li=document.createElement('li'); li.className='warn'; li.textContent=w; notes.appendChild(li); }
+  for (const n of d.notes){ const li=document.createElement('li'); li.textContent=n; notes.appendChild(li); }
+
+  /* swatches */
+  const sw=$('swatches'); sw.innerHTML='';
+  if (!desc.special){
+    for (const p of desc.patches){
+      const chip=document.createElement('span'); chip.className='swatch';
+      chip.innerHTML=`<i style="background:${patchHex(p)}"></i>${FURNAME[patchKey(p)]}`;
+      sw.appendChild(chip);
+    }
+  } else {
+    const chip=document.createElement('span'); chip.className='swatch';
+    chip.innerHTML=`<i style="background:#faf7f2"></i>White`; sw.appendChild(chip);
+  }
+
+  /* white slider visibility */
+  const row=$('white-slider-row'); const band=desc.white.band;
+  if (band && band.length>1){
+    row.hidden=false; const s=$('white-slider');
+    s.min=band[0]; s.max=band[band.length-1]; s.value=desc.white.grade;
+    $('white-slider-out').textContent=WHITE_GRADES[desc.white.grade];
+  } else row.hidden=true;
+
+  /* dim pattern group when masked */
+  const patFs=$('group-pattern');
+  const masked = !desc.special && !desc.patches.some(p=>p.tabbyVisible);
+  patFs.classList.toggle('dimmed', masked);
+  patFs.querySelector('.group-hint').textContent = masked
+    ? 'Masked right now — a solid (a/a) cat with no red hides its tabby pattern. The genotype is still real and heritable.'
+    : GROUPS.find(g=>g[0]==='pattern')[2];
+
+  renderCat(desc);
+}
+
+/* init */
+buildControls();
+const defs=$('catDefs'); buildPatterns(defs,'A'); buildPatterns(defs,'B');
+buildTextures(); buildTortieBlobs('init');
+update();
+$('copy-geno').addEventListener('click', async ()=>{
+  const txt=$('geno').textContent;
+  try{ await navigator.clipboard.writeText(txt); $('copy-geno').textContent='Copied!'; }
+  catch(e){ const r=document.createRange(); r.selectNodeContents($('geno')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); $('copy-geno').textContent='Select+copy'; }
+  setTimeout(()=>$('copy-geno').textContent='Copy',1400);
+});
+/* mobile mini bar */
+if (matchMedia('(max-width:919px)').matches && 'IntersectionObserver' in window){
+  const io=new IntersectionObserver(([e])=>{ $('minibar').classList.toggle('on', !e.isIntersecting); },{threshold:.05});
+  io.observe($('result'));
+}
+
+/* ================================================================
+   self-tests (silent when passing)
+   ================================================================ */
+(function(){
+  const G=(over,sex='XY',wg=null)=>({sex, whiteGrade:wg, loci:{...structuredClone(WILD), ...(sex==='XX'?{O:['o','o']}:{}), ...over}});
+  const N=g=>describe(computePhenotype(g)).name;
+  const t=(got,want)=>console.assert(got.includes(want), `expected "${want}" in "${got}"`);
+  t(N(G({})),'Black Mackerel Tabby');
+  t(N(G({A:['a','a'],C:['cs','cs']})),'Seal Point');
+  t(N(G({A:['a','a'],B:['b','b'],C:['cb','cs'],W:['Ws','w']},'XX')),'Chocolate Mink & White (tuxedo)');
+  t(N(G({A:['a','a'],O:['O','o'],D:['d','d']},'XX')),'Blue-Cream');
+  t(N(G({A:['a','a'],O:['O','o'],D:['d','d'],Dm:['Dm','dm']},'XX')),'Caramel Tortoiseshell');
+  t(N(G({I:['I','i'],Wb:['Wb','wb']})),'Black Silver Shaded');
+  t(N(G({O:['O','Y'],I:['I','i'],Wb:['Wb','wb']})),'Shaded Cameo');
+  t(N(G({Wb:['Wb','wb']})),'Golden Shaded');
+  t(N(G({O:['O','Y'],I:['I','i']})),'Cameo');
+  t(N(G({A:['a','a'],I:['I','i']})),'Black Smoke');
+  t(N(G({A:['a','a'],O:['O','o'],W:['Ws','w']},'XX',4)),'Calico (bicolor white)');
+  t(N(G({A:['a','a'],E:['ea','ea']})),'Amber');
+  t(N(G({W:['Wd','w']})),'White (Dominant White)');
+  t(N(G({C:['c','c']})),'Albino');
+  t(N(G({Ta:['Ta','ta']})),'Black Ticked Tabby');
+  t(N(G({A:['a','a'],O:['O','o'],W:['Ws','w'],Mc:['Mc','Mc']},'XX',3)),'Calico');
+  console.assert(computePhenotype(G({O:['O','o'],A:['a','a']},'XX')).patches.length===2,'tortie = 2 patches');
+  console.assert(computePhenotype(G({O:['O','o'],A:['a','a']},'XX')).patches[1].tabbyVisible===true,'red patches always tabby');
+})();
+</script>
