@@ -147,8 +147,8 @@
           <mask id="mPoint">
             <rect x="0" y="0" width="320" height="340" fill="black"/>
             <g fill="white" filter="url(#softer)">
-              <ellipse cx="108" cy="52" rx="26" ry="30"/><ellipse cx="212" cy="52" rx="26" ry="30"/>
-              <ellipse cx="160" cy="150" rx="40" ry="30"/>
+              <ellipse id="mpEarL" cx="108" cy="52" rx="26" ry="30"/><ellipse id="mpEarR" cx="212" cy="52" rx="26" ry="30"/>
+              <ellipse id="mpFace" cx="160" cy="150" rx="40" ry="30"/>
               <ellipse cx="130" cy="322" rx="26" ry="16"/><ellipse cx="190" cy="322" rx="26" ry="16"/>
               <ellipse cx="92" cy="316" rx="18" ry="16"/><ellipse cx="228" cy="316" rx="18" ry="16"/>
               <path d="M226,266 C270,280 300,310 274,336 C240,354 190,346 168,338 L180,314 C212,322 250,322 256,308 C260,294 240,282 222,282 Z"/>
@@ -247,6 +247,11 @@
             <path d="M250,300 C256,306 260,312 262,318"/><path d="M264,296 C270,302 274,308 275,315"/>
           </g>
         </g>
+        <g id="customFace" display="none" transform="translate(-79.3,-18.1) scale(1.17)">
+          <ellipse id="cfEyeL" cx="189.5" cy="106" rx="11" ry="7.5"/>
+          <ellipse id="cfEyeR" cx="229.5" cy="106" rx="11" ry="7.5"/>
+          <path id="cfInk" fill="var(--line)" d="m 190.99319,156.79879 c -3.98817,-3.24252 -8.48548,-8.15686 -9.99403,-10.92076 -1.50855,-2.76391 -5.59289,-7.49741 -9.07632,-10.5189 -3.63973,-3.15707 -7.80041,-8.59177 -9.78246,-12.77793 -1.89693,-4.00637 -4.47948,-8.13954 -5.739,-9.18485 -1.25951,-1.04531 -6.33603,-10.25619 -11.28116,-20.468614 -8.85774,-18.292623 -9.87242,-21.760464 -13.72255,-46.90004 -2.36442,-15.43858 15.4717,-11.057677 39.22471,9.634363 l 12.93706,11.26992 6.26258,-1.118272 c 8.00516,-1.429436 18.25316,-1.425492 26.3067,0.01004 l 6.33012,1.128399 9.8893,-8.699383 C 251.78616,41.153657 264.56885,34.48356 271.68568,37.726207 l 3.59434,1.637689 -0.74271,6.466169 c -1.72414,15.010577 -5.00504,30.516425 -7.50218,35.456028 -1.4723,2.912373 -3.8041,7.455189 -5.18175,10.095144 -1.37766,2.639944 -4.01974,7.885562 -5.87129,11.656933 -1.85156,3.77135 -5.02175,9.01697 -7.04485,11.65691 -2.02311,2.63997 -4.46649,6.77179 -5.42975,9.18183 -0.96326,2.41005 -5.23904,7.71143 -9.5017,11.78084 -4.26268,4.06944 -8.7627,9.28108 -10.00003,11.58144 -7.87084,14.63284 -21.80845,18.66881 -33.01257,9.55956 z m 20.33799,0.27609 1.97355,-1.63788 -5.13476,-3.09895 -5.13476,-3.09897 -5.07906,2.92314 c -2.79347,1.60772 -4.75707,3.44412 -4.36354,4.08088 2.30548,3.73033 13.60746,4.2603 17.73857,0.83178 z m -12.73624,-8.48982 3.88173,-2.69163 -5.25314,-5.37836 -5.25314,-5.37835 v -8.50654 c 0,-8.49619 -0.92401,-10.52165 -4.79993,-10.52165 -1.66978,0 -1.70816,0.22111 -0.20391,1.17436 3.11485,1.97386 -6.08065,2.61653 -10.54995,0.73735 -4.31124,-1.81274 -8.45121,-6.79069 -8.43674,-10.14443 0.005,-1.22145 1.11433,-0.41809 2.66018,1.92694 2.81301,4.26727 7.64066,7.55246 11.04481,7.51593 1.13142,-0.0122 -0.20019,-0.95928 -2.95913,-2.10472 -9.36556,-3.88843 -10.92534,-14.61718 -2.23027,-15.340738 7.08957,-0.589968 10.41424,1.644048 14.01596,9.417988 1.71253,3.69631 3.40739,6.42686 3.76637,6.06789 0.359,-0.35898 0.6038,3.5052 0.54406,8.58709 l -0.10865,9.23978 3.4285,0.38352 c 1.88569,0.21094 4.35421,0.3613 5.48561,0.33417 1.13142,-0.0272 3.52858,-0.0404 5.32703,-0.0292 l 3.26993,0.0202 -0.68445,-9.56598 c -0.37645,-5.2613 -0.26452,-9.30647 0.24871,-8.98926 0.51324,0.31719 0.86936,-3.40079 0.7914,-8.26215 -0.15085,-9.404226 1.11191,-11.658145 2.53764,-4.52952 l 0.86186,4.30935 3.35828,-3.62364 c 2.70327,-2.91687 4.60285,-3.623652 9.73913,-3.623652 h 6.38085 l -0.53134,5.571532 -0.53133,5.57156 1.75869,-2.40516 1.75869,-2.40515 v 2.76587 c 0,5.89094 -9.9311,11.69118 -17.14255,10.01207 -2.26282,-0.52689 -3.23994,-1.03097 -2.17139,-1.12022 1.06855,-0.0892 1.57791,-0.52717 1.1319,-0.97318 -2.83759,-2.83761 -5.81707,1.06517 -5.34493,7.00131 0.67838,8.52965 -0.45508,12.11305 -5.2685,16.65614 -4.92667,4.64999 -5.12384,6.36538 -1.03255,8.98339 6.31076,4.03824 7.93104,3.99208 12.27277,-0.34966 l 4.17253,-4.17252 -0.87495,-5.47155 c -0.97809,-6.11675 0.56816,-10.04763 4.85478,-12.34175 3.09097,-1.65424 2.72749,-0.1497 -1.02888,4.25869 -2.57748,3.02485 -1.97645,8.32891 0.77312,6.82273 9.4103,-5.15486 19.2036,-24.19402 17.24385,-33.52375 -0.4846,-2.30705 -1.19344,-6.663183 -1.57519,-9.680267 -0.38175,-3.017084 -1.27304,-6.071884 -1.98064,-6.788446 -1.99488,-2.020118 -1.51757,-3.879176 0.77054,-3.001152 2.65478,1.01874 2.60484,0.247717 -0.16325,-2.520385 -2.96093,-2.96092 -1.54646,-4.103915 2.44575,-1.976342 l 3.20311,1.707041 -1.88217,-2.281631 -1.88218,-2.28163 1.88218,-0.04171 c 1.27627,-0.02827 1.1096,-0.491687 -0.51778,-1.439549 -3.67992,-2.143354 -2.85116,-4.145557 1.37141,-3.313247 l 3.77135,0.743372 -3.42852,-1.615038 -3.42849,-1.615038 4.1142,-0.8541 4.11422,-0.854099 -2.74281,-1.138113 -2.7428,-1.138113 2.7428,-1.127814 2.74281,-1.127814 -3.77137,-0.09639 c -4.24698,-0.108546 -4.81791,-2.152496 -1.59578,-5.712909 l 2.17558,-2.403982 -2.51844,0.35484 c -3.69675,0.520862 -12.78877,13.088731 -12.79703,17.689272 -0.004,2.217606 -0.58885,3.492634 -1.37831,3.004721 -4.4251,-2.734863 4.40967,-18.246443 15.8679,-27.859948 2.96386,-2.486701 4.15458,-3.926631 2.64604,-3.199846 -1.50855,0.726786 -7.37129,5.442399 -13.02833,10.479141 -14.91105,13.276057 -15.29861,13.488161 -21.49946,11.76629 -6.55744,-1.82089 -20.23543,-1.896316 -26.34102,-0.145254 -5.75561,1.650687 -7.72929,0.685897 -19.35829,-9.462927 -12.73473,-11.113824 -22.24136,-17.844294 -12.1693,-8.615583 11.92237,10.924093 20.95863,27.723829 14.91213,27.723829 -0.75428,0 -1.38241,-1.697111 -1.39585,-3.771359 -0.0252,-3.902548 -11.22323,-20.59831 -12.10872,-18.053699 -0.29064,0.835255 -1.35939,0.694393 -2.7428,-0.361507 -1.24662,-0.951496 -0.87803,-0.166065 0.81907,1.745403 1.69712,1.911468 3.08566,4.207037 3.08566,5.101263 0,0.894226 -1.38854,1.635316 -3.08566,1.646865 -2.27647,0.0155 -2.59296,0.333117 -1.20687,1.211178 1.51702,0.960998 1.38497,1.477081 -0.6857,2.680105 l -2.56449,1.489926 4.1142,0.08531 4.11422,0.08531 -2.7428,2.15533 -2.74281,2.155331 3.08566,-0.919958 c 3.35837,-1.001268 4.05151,0.493254 1.43996,3.104803 -0.90512,0.905126 -1.13811,1.645684 -0.51777,1.645684 0.62035,0 0.28093,1.026734 -0.75427,2.281631 l -1.88219,2.281631 3.20312,-1.707042 c 4.23338,-2.2561 5.4186,-0.835964 2.23671,2.680003 l -2.54323,2.810235 2.32306,-0.891447 c 2.47211,-0.94864 3.26253,1.402319 0.95166,2.830515 -0.75427,0.466171 -1.37139,2.653696 -1.37139,4.861165 0,2.20748 -0.73724,6.770005 -1.63828,10.138935 -1.23978,4.63538 -1.25519,6.89189 -0.0633,9.27666 0.86624,1.73323 2.33355,5.82506 3.26068,9.09299 1.2203,4.30132 3.6041,7.62451 8.63454,12.0372 l 6.94888,6.0955 0.45305,-2.89331 c 0.24918,-1.59131 -0.42835,-3.9224 -1.50566,-5.18018 -3.81888,-4.45868 -4.33071,-6.1241 -1.40005,-4.55566 4.73493,2.53406 5.90497,5.15572 5.58483,12.51366 l -0.31331,7.20058 3.75161,3.227 c 4.03415,3.47005 5.95105,3.28724 12.39672,-1.18223 z m -7.09478,-40.13597 c -1.25742,-2.75977 -1.19133,-4.2759 0.31143,-7.14405 l 1.90762,-3.64081 -0.10776,7.14406 c -0.12532,8.30707 -0.0469,8.17174 -2.11129,3.6408 z m -6.50637,-10.886512 c -2.81808,-4.300953 -1.61257,-10.295512 2.07045,-10.295512 2.12361,0 2.66904,1.222569 3.05953,6.857864 0.53699,7.74945 -1.43772,9.07273 -5.12998,3.437648 z m 1.71354,-6.524159 c -0.38045,-0.942833 -0.69172,-0.171419 -0.69172,1.714257 0,1.885676 0.31127,2.657091 0.69172,1.714258 0.38044,-0.942843 0.38044,-2.485672 0,-3.428515 z m 29.30456,6.171315 c 0.47671,-7.22951 0.0548,-9.476229 -1.35978,-7.23958 -0.70172,1.109561 -1.70156,1.591674 -2.22188,1.07135 -1.21219,-1.21218 3.06356,-7.792024 5.7278,-8.814388 2.11865,-0.812999 7.41172,3.089856 7.41172,5.465052 0,0.754268 -1.21127,0.275209 -2.69173,-1.064584 -1.75479,-1.588084 -3.54486,-2.07371 -5.14276,-1.39518 l -2.45103,1.040793 3.42851,0.896003 c 4.22492,1.10414 5.18263,5.805695 2.13126,10.462672 -2.91115,4.442988 -5.14005,4.248248 -4.83211,-0.422138 z m 3.60912,-6.171315 c -0.38045,-0.942833 -0.69172,-0.171419 -0.69172,1.714257 0,1.885676 0.31127,2.657091 0.69172,1.714258 0.38044,-0.942843 0.38044,-2.485672 0,-3.428515 z m -47.53598,5.707962 c 0,-0.725705 1.80592,-1.680655 4.01314,-2.122099 2.90277,-0.580556 3.82519,-1.424823 3.33378,-3.051376 -0.37363,-1.236804 0.23847,-0.706842 1.36027,1.177703 1.12179,1.884545 1.93581,3.494301 1.80896,3.577244 -1.60977,1.05261 -10.51615,1.40707 -10.51615,0.418528 z m 55.88469,0.509637 c -4.26551,-0.646177 -5.17088,-3.131942 -1.14073,-3.131942 3.58301,0 6.96918,1.403964 6.96918,2.889534 0,0.673578 -0.46284,1.13221 -1.02854,1.019202 -0.5657,-0.113017 -2.72566,-0.46257 -4.79991,-0.776794 z m -2.39997,-5.874742 c 0,-1.005698 0.41144,-1.417118 0.91427,-0.91427 0.50285,0.50285 0.50285,1.325692 0,1.82853 -0.50283,0.50285 -0.91427,0.09144 -0.91427,-0.91426 z m -34.28507,-1.889193 c 0,-3.921675 -3.83199,-5.468201 -7.53586,-3.041327 -3.97798,2.606476 -4.62094,0.942926 -0.92743,-2.399655 3.27792,-2.966473 5.12704,-2.863096 8.46329,0.47315 2.89442,2.894435 3.68694,6.857025 1.37139,6.857025 -0.75425,0 -1.37139,-0.850139 -1.37139,-1.889193 z m 14.87443,49.269397 c 0.28649,-1.47797 -0.11002,-2.08737 -1.00023,-1.53718 -0.81119,0.50134 -2.76573,0.22069 -4.34341,-0.62366 l -2.86853,-1.5352 2.3454,3.57954 c 2.56217,3.91036 5.12146,3.96119 5.86677,0.1165 z m 20.41062,-22.15211 c -0.45569,-0.45569 -1.63853,-0.50442 -2.62851,-0.10826 -1.09401,0.4378 -0.76904,0.76276 0.82855,0.82856 1.4457,0.0595 2.25568,-0.26458 1.79996,-0.7203 z m 7.22844,-4.06785 c 0,-0.37713 -1.23426,-0.0252 -2.74281,0.78221 -1.50852,0.80736 -2.7428,1.77648 -2.7428,2.1536 0,0.37715 1.23428,0.0252 2.7428,-0.78221 1.50855,-0.80733 2.74281,-1.77645 2.74281,-2.1536 z m -46.87946,-2.88339 c -0.52125,-4.40318 -3.86245,-6.07643 -3.86245,-1.93431 0,1.5714 -0.57555,2.8571 -1.27898,2.8571 -1.6666,0 -3.26088,-5.05881 -2.15711,-6.84475 0.49006,-0.79294 -0.64313,-1.38367 -2.65428,-1.38367 -2.5952,0 -3.50944,0.71455 -3.50944,2.74281 0,4.08301 4.88218,8.22842 9.69089,8.22842 h 4.2053 z m 42.46011,1.53073 c 4.24702,-2.97473 4.15215,-8.83636 -0.14303,-8.83636 h -3.19099 l 0.60383,4.1142 c 0.69869,4.76042 -1.95796,5.68402 -3.59789,1.25086 l -1.05923,-2.86339 -1.79282,2.16022 c -4.32896,5.21607 2.96055,8.53083 9.18013,4.17447 z m -72.12294,-4.07063 c -0.33847,-2.89923 -1.59266,-5.38444 -3.13354,-6.20908 l -2.56919,-1.375 1.35298,3.55859 c 1.53748,4.04389 4.01177,8.85958 4.55204,8.85958 0.19913,0 0.10811,-2.17534 -0.20229,-4.83409 z m 57.34264,4.1484 c 0,-0.37715 -0.30856,-0.68571 -0.68568,-0.68571 -0.37715,0 -0.68571,0.30856 -0.68571,0.68571 0,0.37713 0.30856,0.68569 0.68571,0.68569 0.37712,0 0.68568,-0.30856 0.68568,-0.68569 z m 37.78359,-5.44157 c 2.64893,-6.339777 2.50853,-7.112334 -0.75569,-4.15826 -1.50854,1.36521 -2.7428,3.92938 -2.7428,5.69816 0,4.52219 1.18318,4.00139 3.49849,-1.5399 z m -36.41217,2.69876 c 0,-0.37714 -0.30856,-0.6857 -0.68571,-0.6857 -0.37713,0 -0.68571,0.30856 -0.68571,0.6857 0,0.37713 0.30858,0.68569 0.68571,0.68569 0.37715,0 0.68571,-0.30856 0.68571,-0.68569 z M 159.05671,91.929516 c 0,-5.7947 -0.33838,-6.988274 -1.52261,-5.370752 -2.65969,3.632888 -3.65487,2.264616 -2.94345,-4.047021 l 0.69056,-6.12672 -2.68677,1.437919 c -3.8308,2.050185 -4.72114,0.376399 -1.64347,-3.089658 l 2.62012,-2.950765 -3.08566,1.619205 c -3.77641,1.981677 -4.291,-0.357944 -0.90233,-4.102396 l 2.18335,-2.412561 -3.21189,0.699793 -3.21189,0.699793 3.77135,-3.472199 c 4.2898,-3.949501 4.6432,-4.975163 1.71427,-4.975163 -2.85077,0 -2.58863,-2.407286 0.34285,-3.148571 1.63621,-0.413748 0.98156,-0.93673 -2.05712,-1.643386 -2.45137,-0.570079 -4.45705,-1.576497 -4.45705,-2.236485 0,-0.659987 2.00568,-1.241745 4.45705,-1.292795 l 4.45707,-0.09282 -3.09653,-1.49301 c -1.7031,-0.821157 -2.93736,-2.433256 -2.74281,-3.582445 0.28101,-1.659904 -10.22681,-7.034005 -13.83552,-7.076011 -3.01607,-0.03511 4.90971,37.054889 8.66124,40.531687 1.909,1.769198 3.46144,4.017605 3.44989,4.996457 -0.015,1.273595 -0.39907,1.194715 -1.35039,-0.277365 -0.9,-1.392649 -1.3362,-1.499057 -1.3504,-0.329427 -0.0116,0.950226 1.15905,2.738086 2.60136,3.973028 1.44231,1.234942 2.30528,3.071721 1.9177,4.081728 -0.41141,1.072122 0.66097,2.355592 2.57676,3.083971 1.80478,0.686179 4.11542,2.252499 5.13475,3.480715 2.67084,3.218188 3.51957,1.557948 3.51957,-6.88475 z m 95.76485,5.618262 c 0.50548,0.379782 0.61444,0.283016 0.2421,-0.21503 -0.37234,-0.498056 0.5948,-1.796346 2.14922,-2.8851 1.58055,-1.107061 2.49029,-2.854912 2.0641,-3.965594 -0.48236,-1.256973 -0.18514,-1.629453 0.80961,-1.014667 1.06903,0.660711 1.32423,0.025 0.79788,-1.98777 -0.42562,-1.62753 -0.27892,-2.653275 0.32598,-2.279437 0.60488,0.373848 1.46595,-0.27448 1.91348,-1.440734 0.46595,-1.214236 0.23433,-1.762377 -0.54199,-1.282591 -2.67049,1.650463 -1.29687,-1.77171 1.45054,-3.613795 2.89243,-1.939307 5.81934,-14.04178 7.7238,-31.93729 l 0.86345,-8.113309 -2.6111,1.069032 c -1.43609,0.587968 -3.84533,1.415774 -5.35388,1.839571 -1.50855,0.423796 -4.59421,1.962269 -6.85701,3.418829 -2.26282,1.456561 -3.03424,2.293434 -1.71426,1.859719 3.48871,-1.146309 2.94408,1.186596 -0.68569,2.937169 l -3.08566,1.488157 4.45705,0.09282 c 2.4514,0.05105 4.45706,0.632808 4.45706,1.292795 0,0.659988 -2.00566,1.666406 -4.45706,2.236485 -3.03867,0.706656 -3.6933,1.229638 -2.0571,1.643387 2.93149,0.741284 3.19362,3.14857 0.34286,3.14857 -3.14257,0 -2.45351,2.067186 1.37139,4.11421 4.17544,2.234622 4.53333,4.723027 0.52869,3.675788 l -2.89982,-0.758319 2.89982,3.086715 c 3.8921,4.142949 3.6515,5.184945 -0.80591,3.490242 l -3.70571,-1.408912 2.55449,2.822667 c 3.13861,3.468135 2.03545,4.965592 -2.0481,2.780142 -2.20108,-1.177982 -2.76142,-1.191618 -2.05589,-0.05003 1.18633,1.919502 2.00624,11.046971 0.99235,11.046971 -0.40125,0 -1.89028,-1.05045 -3.30895,-2.33432 l -2.57939,-2.33432 1.496,3.934789 c 0.8228,2.164136 1.00924,4.294556 0.4143,4.734273 -0.59494,0.439716 -0.9986,1.725191 -0.89704,2.856598 0.10152,1.131408 0.25584,2.842745 0.34285,3.80297 0.12035,1.328161 0.92266,1.244991 3.35332,-0.34766 1.75732,-1.151444 3.60872,-1.782801 4.11422,-1.403018 z m -103.30757,0.0052 c 0,-0.377139 -0.30858,-0.685705 -0.6857,-0.685705 -0.37715,0 -0.68571,0.308566 -0.68571,0.685705 0,0.377129 0.30856,0.685695 0.68571,0.685695 0.37712,0 0.6857,-0.308566 0.6857,-0.685695 z m -4.11422,-6.85702 c 0,-0.37714 -0.30856,-0.685705 -0.6857,-0.685705 -0.37713,0 -0.68569,0.308565 -0.68569,0.685705 0,0.37714 0.30856,0.685705 0.68569,0.685705 0.37714,0 0.6857,-0.308565 0.6857,-0.685705 z m -4.1142,-9.599828 c 0,-0.377136 -0.30858,-0.685702 -0.6857,-0.685702 -0.37715,0 -0.68571,0.308566 -0.68571,0.685702 0,0.377136 0.30856,0.685702 0.68571,0.685702 0.37712,0 0.6857,-0.308566 0.6857,-0.685702 z M 251.62642,55.03908 c 0,-0.377137 -0.30856,-0.685703 -0.6857,-0.685703 -0.37713,0 -0.68571,0.308566 -0.68571,0.685703 0,0.377136 0.30858,0.685701 0.68571,0.685701 0.37714,0 0.6857,-0.308565 0.6857,-0.685701 z M 151.51399,46.81066 c 0,-0.377137 -0.30858,-0.685702 -0.6857,-0.685702 -0.37715,0 -0.68571,0.308565 -0.68571,0.685702 0,0.377136 0.30856,0.685702 0.68571,0.685702 0.37712,0 0.6857,-0.308566 0.6857,-0.685702 z m 104.22663,-2.742807 c 0,-0.377136 -0.30856,-0.685701 -0.68568,-0.685701 -0.37715,0 -0.68571,0.308565 -0.68571,0.685701 0,0.377136 0.30856,0.685702 0.68571,0.685702 0.37712,0 0.68568,-0.308566 0.68568,-0.685702 z"/>
+        </g>
       </g>
     </svg></div>
 
@@ -269,6 +274,7 @@
   <p>An educational toy, not a breeding tool: real cats add polygenic modifiers, rufousing, and a few
   loci science hasn’t cloned yet (Dilute-Modifier, Inhibitor, Spotted, Wide Band). A two-parent offspring
   calculator is the planned next step — the genetics engine here is already pure and Punnett-ready.</p>
+  <p>The face on rex and hairless cats is hand-drawn by the repository owner (<code>hairless.svg</code>).</p>
 </footer>
 </div>
 
@@ -384,6 +390,8 @@ function computePhenotype(g){
     hom('R','r')   ? 'cornish' : 'normal';
   desc.coat.hairless = ['peterbald','sphynx'].includes(desc.coat.texture);
   desc.coat.ears = has('Cu','Cu') ? (hom('Cu','Cu') ? 'tightCurl' : 'curl') : 'normal';
+  if (desc.coat.ears!=='normal' && desc.coat.texture!=='normal')
+    desc.notes.push('Curled ears are genetic and named above; the hand-drawn face used for rex/hairless cats has fixed ears.');
   if (hom('Hp','Hp')) desc.warnings.push('Hp/Hp — homozygous dominant hairless causes feline ectodermal dysplasia (poor dentition, impaired sweating and lactation).');
   if (has('Hp','Hp') && (k!=='k/k' || hom('R','r'))) desc.notes.push('Peterbald hairlessness shown; the rex/KRT71 genotype is hidden underneath it.');
   else if (desc.coat.texture==='sphynx' && hom('R','r')) desc.notes.push('Sphynx hairlessness shown; the Cornish rex coat is hidden underneath it.');
@@ -603,7 +611,7 @@ const FUR = { black:'#241f26', chocolate:'#59372a', cinnamon:'#8c5a3a',
   silverBase:'#e9ebee', goldenBase:'#e8c48e' };
 const EYE = { default:'#d9a63f', green:'#7cae62', point:'#6ea3dc', mink:'#7fc9c4',
   sepia:'#e0b23c', albino:'#e8b7c6', domWhite:'#7cb2e0' };
-const SKIN_PINK='#e8b0a0', NOSE_PINK='#d98a86';
+const SKIN_PINK='#e8b0a0', NOSE_PINK='#d98a86', SKIN_WHITE='#f4e3da';
 
 function hx(c){ return c.length===4 ? '#'+[...c.slice(1)].map(x=>x+x).join('') : c; }
 function mixHex(a,b,t){
@@ -640,7 +648,12 @@ const SHAPES = {
   innerEarR:'M202,78 C207,66 210,55 210,47 C202,51 191,58 182,64 C190,68 197,72 202,78 Z',
   innerCurlL:'M119,76 C113,67 110,58 112,51 C117,57 124,57 128,52 C132,57 137,60 141,63 C133,67 125,71 119,76 Z',
   innerCurlR:'M201,76 C207,67 210,58 208,51 C203,57 196,57 192,52 C188,57 183,60 179,63 C187,67 195,71 201,76 Z',
+  /* backing silhouette for the hand-drawn face (hairless.svg), in the ART's coordinate space —
+     rendered through the same transform as #customFace */
+  customHeadArt:'M130,36 C149,52 171,61 190,64 C199,61 209,61 218,64 C237,61 259,52 279,36 C279,66 270,99 257,121 C249,143 227,166 204,168 C181,166 159,143 152,121 C138,99 130,66 130,36 Z',
+  none:'M0,0',
 };
+const FACE_TF = 'translate(-79.3,-18.1) scale(1.17)';
 const $ = id => document.getElementById(id);
 function setD(id,d){ $(id).setAttribute('d',d); }
 
@@ -696,17 +709,37 @@ function fill(id,c){ $(id).setAttribute('fill',c); }
 function renderCat(desc){
   /* silhouette */
   const long = desc.coat.length==='long' && !desc.coat.hairless;
+  /* hand-drawn face (hairless.svg) replaces the procedural head for hairless + rex coats */
+  const customFace = ['sphynx','peterbald','devon','cornish','rexoid'].includes(desc.coat.texture);
   setD('clip-body', long?SHAPES.bodyFluffy:SHAPES.bodyShort); setD('ol-body', long?SHAPES.bodyFluffy:SHAPES.bodyShort);
-  setD('clip-head', SHAPES.head); setD('ol-head', SHAPES.head);
   setD('clip-tail', long?SHAPES.tailFluffy:SHAPES.tail); setD('ol-tail', long?SHAPES.tailFluffy:SHAPES.tail);
   const earKey = desc.coat.ears==='tightCurl' ? 'Tight' : desc.coat.ears==='curl' ? 'Curl' : '';
-  setD('clip-earL', SHAPES['ear'+(earKey||'')+'L'] || SHAPES.earL); setD('ol-earL', SHAPES['ear'+(earKey||'')+'L'] || SHAPES.earL);
-  setD('clip-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR); setD('ol-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR);
+  if (customFace){
+    setD('clip-head', SHAPES.customHeadArt);
+    $('clip-head').setAttribute('transform', FACE_TF);
+    setD('clip-earL', SHAPES.none); setD('clip-earR', SHAPES.none);
+    setD('ol-head', SHAPES.none); setD('ol-earL', SHAPES.none); setD('ol-earR', SHAPES.none);
+    $('mpEarL').setAttribute('cx',100); $('mpEarL').setAttribute('cy',60); $('mpEarL').setAttribute('rx',42); $('mpEarL').setAttribute('ry',46);
+    $('mpEarR').setAttribute('cx',220); $('mpEarR').setAttribute('cy',60); $('mpEarR').setAttribute('rx',42); $('mpEarR').setAttribute('ry',46);
+    $('mpFace').setAttribute('cy',118); $('mpFace').setAttribute('rx',50); $('mpFace').setAttribute('ry',52);
+  } else {
+    $('clip-head').removeAttribute('transform');
+    setD('clip-head', SHAPES.head); setD('ol-head', SHAPES.head);
+    setD('clip-earL', SHAPES['ear'+(earKey||'')+'L'] || SHAPES.earL); setD('ol-earL', SHAPES['ear'+(earKey||'')+'L'] || SHAPES.earL);
+    setD('clip-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR); setD('ol-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR);
+    $('mpEarL').setAttribute('cx',108); $('mpEarL').setAttribute('cy',52); $('mpEarL').setAttribute('rx',26); $('mpEarL').setAttribute('ry',30);
+    $('mpEarR').setAttribute('cx',212); $('mpEarR').setAttribute('cy',52); $('mpEarR').setAttribute('rx',26); $('mpEarR').setAttribute('ry',30);
+    $('mpFace').setAttribute('cy',150); $('mpFace').setAttribute('rx',40); $('mpFace').setAttribute('ry',30);
+  }
   setD('innerEarL', earKey ? SHAPES.innerCurlL : SHAPES.innerEarL);
   setD('innerEarR', earKey ? SHAPES.innerCurlR : SHAPES.innerEarR);
+  show('customFace', customFace);
+  show('innerEarL', !customFace); show('innerEarR', !customFace);
+  show('eyes', !customFace); show('nose', !customFace); show('mouth', !customFace);
   show('clip-tufts', false); show('ol-tufts', false);
   show('texWrinkles', desc.coat.hairless);
   show('texRex', !desc.coat.hairless && ['devon','cornish','rexoid'].includes(desc.coat.texture));
+  show('whiskers', !customFace);
   $('whiskers').setAttribute('opacity', desc.coat.texture==='sphynx'||desc.coat.texture==='peterbald' ? .18 : ['devon','cornish','rexoid'].includes(desc.coat.texture) ? .4 : .65);
 
   const hideAllCoat = on => { show('coatDirect',!on); show('coatPoints',false); ['wg-gloves','wg-mild','wg-tuxedo','wg-bicolor','wg-full','wg-patches','barring','smokeOverlay','shadeOverlay'].forEach(i=>show(i,false)); };
@@ -714,9 +747,9 @@ function renderCat(desc){
   /* specials */
   if (desc.special){
     hideAllCoat(true);
-    fill('ground','var(--fur-white)');
+    fill('ground', desc.coat.hairless ? SKIN_WHITE : 'var(--fur-white)');
     const eye = desc.special==='albino' ? EYE.albino : EYE.domWhite;
-    fill('eyeL',eye); fill('eyeR',eye);
+    fill('eyeL',eye); fill('eyeR',eye); fill('cfEyeL',eye); fill('cfEyeR',eye);
     const pup = desc.special==='albino' ? '#d391a4' : '#1c1a20';
     fill('pupilL',pup); fill('pupilR',pup);
     fill('nose',NOSE_PINK);
@@ -731,66 +764,72 @@ function renderCat(desc){
   const shaded = desc.shading!=='none';
   const anyTabby = desc.patches.some(p=>p.tabbyVisible);
 
-  /* hairless: skin ghost of the coat colour */
-  if (desc.coat.hairless){
-    hideAllCoat(true);
-    fill('ground', mixHex(SKIN_PINK, pointed?bodyTint(desc.point,hexA):hexA, .35));
-    $('texWrinkles').setAttribute('stroke', mixHex(SKIN_PINK,'#000',.35));
-    $('texWrinkles').setAttribute('stroke-width','3');
-    show('texWrinkles',true);
-  } else {
+  /* Hairless cats pigment their SKIN with the pattern the fur would have had:
+     points, tortie patches, white spotting and ghost tabby all still show,
+     with colours softened toward skin tones. */
+  const skin = desc.coat.hairless;
+  const P = h => skin ? mixHex(h, SKIN_PINK, .32) : h;
+  {
     show('coatDirect',!pointed);
     show('coatPoints',pointed);
     $('coatPoints').setAttribute('opacity', desc.contrast||1);
-    fill('ground', pointed ? bodyTint(desc.point,hexA) : hexA);
+    fill('ground', pointed ? bodyTint(desc.point,P(hexA)) : P(hexA));
 
     /* base + patterns */
     const silverOn = pA.silver;
     let baseAHex = hexA;
     if (shaded) baseAHex = desc.shading==='shaded' ? FUR.silverBase : FUR.goldenBase;
     else if (silverOn && pA.tabbyVisible) baseAHex = mixHex(FUR.silverBase, hexA, .18);
+    baseAHex = P(baseAHex);
     fill('baseA', baseAHex);
     const patId = PATTERN_ID[desc.pattern.type];
     const showTabA = pA.tabbyVisible && !shaded;
     show('tabbyA', showTabA);
-    if (showTabA){ $('tabbyA').setAttribute('fill',`url(#${patId}A)`); setPatternColor('A', patternHex(pA)); }
+    $('tabbyA').setAttribute('opacity', skin ? .45 : 1);
+    if (showTabA){ $('tabbyA').setAttribute('fill',`url(#${patId}A)`); setPatternColor('A', P(patternHex(pA))); }
     show('patchB', !!pB);
     if (pB){
       let baseBHex = hexB;
       if (shaded) baseBHex = desc.shading==='shaded' ? mixHex(FUR.silverBase,hexB,.3) : mixHex(FUR.goldenBase,hexB,.4);
       else if (pB.silver && pB.tabbyVisible) baseBHex = mixHex(FUR.silverBase, hexB, .35);
-      fill('baseB', baseBHex);
+      fill('baseB', P(baseBHex));
       const showTabB = pB.tabbyVisible && !shaded;
       show('tabbyB', showTabB);
-      if (showTabB){ $('tabbyB').setAttribute('fill',`url(#${patId}B)`); setPatternColor('B', patternHex(pB)); }
+      $('tabbyB').setAttribute('opacity', skin ? .45 : 1);
+      if (showTabB){ $('tabbyB').setAttribute('fill',`url(#${patId}B)`); setPatternColor('B', P(patternHex(pB))); }
       buildTortieBlobs(JSON.stringify(state.loci)+state.sex);
     }
-    /* smoke & shading overlays */
-    show('smokeOverlay', silverOn && !anyTabby && !pointed);
-    show('shadeOverlay', shaded);
+    /* smoke & shading overlays — silver has little to show on bare skin */
+    show('smokeOverlay', !skin && silverOn && !anyTabby && !pointed);
+    show('shadeOverlay', !skin && shaded);
     if (shaded){ ['shade0','shade1','shade2'].forEach(i=>$(i).setAttribute('stop-color',patternHex(pA))); }
 
-    /* white spotting */
+    /* white spotting — pinkish unpigmented skin on a hairless cat */
+    $('whiteLayer').setAttribute('fill', skin ? SKIN_WHITE : 'var(--fur-white)');
     const gr = desc.white.grade;
     show('wg-gloves', gr===1); show('wg-mild', gr===2);
     show('wg-tuxedo', gr===3); show('wg-bicolor', gr===4);
     show('wg-full', gr>=5); show('wg-patches', gr>=5);
     if (gr>=5){
       show('wp-body', gr===5);
-      fill('wp-head', hexA); fill('wp-body', tortie?hexB:hexA); fill('wp-tail', hexA);
+      fill('wp-head', P(hexA)); fill('wp-body', P(tortie?hexB:hexA)); fill('wp-tail', P(hexA));
     }
     /* residual barring */
-    const barr = desc.pattern.residualBarring && anyTabby && !desc.coat.hairless;
+    const barr = desc.pattern.residualBarring && anyTabby && !skin;
     show('barring', !!barr);
     if (barr) $('barring').setAttribute('stroke', patternHex(pA));
     $('texRex').setAttribute('stroke', mixHex(baseAHex,'#000',.3));
     $('texRex').setAttribute('stroke-width','2.5');
+    if (skin){
+      $('texWrinkles').setAttribute('stroke', mixHex(pointed ? bodyTint(desc.point,P(hexA)) : baseAHex, '#000', .3));
+      $('texWrinkles').setAttribute('stroke-width','3');
+    }
   }
 
   /* eyes & nose */
   const eye = pointed ? (desc.point==='point'?EYE.point:desc.point==='mink'?EYE.mink:EYE.sepia)
     : (pA.silver ? EYE.green : EYE.default);
-  fill('eyeL',eye); fill('eyeR',eye);
+  fill('eyeL',eye); fill('eyeR',eye); fill('cfEyeL',eye); fill('cfEyeR',eye);
   fill('pupilL','#1c1a20'); fill('pupilR','#1c1a20');
   fill('nose', pA.pigment==='pheo' ? '#c96f52' : mixHex(hexA,'#b0605a',.5));
 }
