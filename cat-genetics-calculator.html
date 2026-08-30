@@ -148,7 +148,7 @@
             <rect x="0" y="0" width="320" height="340" fill="black"/>
             <g fill="white" filter="url(#softer)">
               <ellipse id="mpEarL" cx="108" cy="52" rx="26" ry="30"/><ellipse id="mpEarR" cx="212" cy="52" rx="26" ry="30"/>
-              <ellipse cx="160" cy="150" rx="40" ry="30"/>
+              <ellipse id="mpFace" cx="160" cy="150" rx="40" ry="30"/>
               <ellipse cx="130" cy="322" rx="26" ry="16"/><ellipse cx="190" cy="322" rx="26" ry="16"/>
               <ellipse cx="92" cy="316" rx="18" ry="16"/><ellipse cx="228" cy="316" rx="18" ry="16"/>
               <path d="M226,266 C270,280 300,310 274,336 C240,354 190,346 168,338 L180,314 C212,322 250,322 256,308 C260,294 240,282 222,282 Z"/>
@@ -611,7 +611,7 @@ const FUR = { black:'#241f26', chocolate:'#59372a', cinnamon:'#8c5a3a',
   silverBase:'#e9ebee', goldenBase:'#e8c48e' };
 const EYE = { default:'#d9a63f', green:'#7cae62', point:'#6ea3dc', mink:'#7fc9c4',
   sepia:'#e0b23c', albino:'#e8b7c6', domWhite:'#7cb2e0' };
-const SKIN_PINK='#e8b0a0', NOSE_PINK='#d98a86';
+const SKIN_PINK='#e8b0a0', NOSE_PINK='#d98a86', SKIN_WHITE='#f4e3da';
 
 function hx(c){ return c.length===4 ? '#'+[...c.slice(1)].map(x=>x+x).join('') : c; }
 function mixHex(a,b,t){
@@ -721,6 +721,7 @@ function renderCat(desc){
     setD('ol-head', SHAPES.none); setD('ol-earL', SHAPES.none); setD('ol-earR', SHAPES.none);
     $('mpEarL').setAttribute('cx',100); $('mpEarL').setAttribute('cy',60); $('mpEarL').setAttribute('rx',42); $('mpEarL').setAttribute('ry',46);
     $('mpEarR').setAttribute('cx',220); $('mpEarR').setAttribute('cy',60); $('mpEarR').setAttribute('rx',42); $('mpEarR').setAttribute('ry',46);
+    $('mpFace').setAttribute('cy',118); $('mpFace').setAttribute('rx',50); $('mpFace').setAttribute('ry',52);
   } else {
     $('clip-head').removeAttribute('transform');
     setD('clip-head', SHAPES.head); setD('ol-head', SHAPES.head);
@@ -728,6 +729,7 @@ function renderCat(desc){
     setD('clip-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR); setD('ol-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR);
     $('mpEarL').setAttribute('cx',108); $('mpEarL').setAttribute('cy',52); $('mpEarL').setAttribute('rx',26); $('mpEarL').setAttribute('ry',30);
     $('mpEarR').setAttribute('cx',212); $('mpEarR').setAttribute('cy',52); $('mpEarR').setAttribute('rx',26); $('mpEarR').setAttribute('ry',30);
+    $('mpFace').setAttribute('cy',150); $('mpFace').setAttribute('rx',40); $('mpFace').setAttribute('ry',30);
   }
   setD('innerEarL', earKey ? SHAPES.innerCurlL : SHAPES.innerEarL);
   setD('innerEarR', earKey ? SHAPES.innerCurlR : SHAPES.innerEarR);
@@ -745,7 +747,7 @@ function renderCat(desc){
   /* specials */
   if (desc.special){
     hideAllCoat(true);
-    fill('ground','var(--fur-white)');
+    fill('ground', desc.coat.hairless ? SKIN_WHITE : 'var(--fur-white)');
     const eye = desc.special==='albino' ? EYE.albino : EYE.domWhite;
     fill('eyeL',eye); fill('eyeR',eye); fill('cfEyeL',eye); fill('cfEyeR',eye);
     const pup = desc.special==='albino' ? '#d391a4' : '#1c1a20';
@@ -762,60 +764,66 @@ function renderCat(desc){
   const shaded = desc.shading!=='none';
   const anyTabby = desc.patches.some(p=>p.tabbyVisible);
 
-  /* hairless: skin ghost of the coat colour */
-  if (desc.coat.hairless){
-    hideAllCoat(true);
-    fill('ground', mixHex(SKIN_PINK, pointed?bodyTint(desc.point,hexA):hexA, .35));
-    $('texWrinkles').setAttribute('stroke', mixHex(SKIN_PINK,'#000',.35));
-    $('texWrinkles').setAttribute('stroke-width','3');
-    show('texWrinkles',true);
-  } else {
+  /* Hairless cats pigment their SKIN with the pattern the fur would have had:
+     points, tortie patches, white spotting and ghost tabby all still show,
+     with colours softened toward skin tones. */
+  const skin = desc.coat.hairless;
+  const P = h => skin ? mixHex(h, SKIN_PINK, .32) : h;
+  {
     show('coatDirect',!pointed);
     show('coatPoints',pointed);
     $('coatPoints').setAttribute('opacity', desc.contrast||1);
-    fill('ground', pointed ? bodyTint(desc.point,hexA) : hexA);
+    fill('ground', pointed ? bodyTint(desc.point,P(hexA)) : P(hexA));
 
     /* base + patterns */
     const silverOn = pA.silver;
     let baseAHex = hexA;
     if (shaded) baseAHex = desc.shading==='shaded' ? FUR.silverBase : FUR.goldenBase;
     else if (silverOn && pA.tabbyVisible) baseAHex = mixHex(FUR.silverBase, hexA, .18);
+    baseAHex = P(baseAHex);
     fill('baseA', baseAHex);
     const patId = PATTERN_ID[desc.pattern.type];
     const showTabA = pA.tabbyVisible && !shaded;
     show('tabbyA', showTabA);
-    if (showTabA){ $('tabbyA').setAttribute('fill',`url(#${patId}A)`); setPatternColor('A', patternHex(pA)); }
+    $('tabbyA').setAttribute('opacity', skin ? .45 : 1);
+    if (showTabA){ $('tabbyA').setAttribute('fill',`url(#${patId}A)`); setPatternColor('A', P(patternHex(pA))); }
     show('patchB', !!pB);
     if (pB){
       let baseBHex = hexB;
       if (shaded) baseBHex = desc.shading==='shaded' ? mixHex(FUR.silverBase,hexB,.3) : mixHex(FUR.goldenBase,hexB,.4);
       else if (pB.silver && pB.tabbyVisible) baseBHex = mixHex(FUR.silverBase, hexB, .35);
-      fill('baseB', baseBHex);
+      fill('baseB', P(baseBHex));
       const showTabB = pB.tabbyVisible && !shaded;
       show('tabbyB', showTabB);
-      if (showTabB){ $('tabbyB').setAttribute('fill',`url(#${patId}B)`); setPatternColor('B', patternHex(pB)); }
+      $('tabbyB').setAttribute('opacity', skin ? .45 : 1);
+      if (showTabB){ $('tabbyB').setAttribute('fill',`url(#${patId}B)`); setPatternColor('B', P(patternHex(pB))); }
       buildTortieBlobs(JSON.stringify(state.loci)+state.sex);
     }
-    /* smoke & shading overlays */
-    show('smokeOverlay', silverOn && !anyTabby && !pointed);
-    show('shadeOverlay', shaded);
+    /* smoke & shading overlays — silver has little to show on bare skin */
+    show('smokeOverlay', !skin && silverOn && !anyTabby && !pointed);
+    show('shadeOverlay', !skin && shaded);
     if (shaded){ ['shade0','shade1','shade2'].forEach(i=>$(i).setAttribute('stop-color',patternHex(pA))); }
 
-    /* white spotting */
+    /* white spotting — pinkish unpigmented skin on a hairless cat */
+    $('whiteLayer').setAttribute('fill', skin ? SKIN_WHITE : 'var(--fur-white)');
     const gr = desc.white.grade;
     show('wg-gloves', gr===1); show('wg-mild', gr===2);
     show('wg-tuxedo', gr===3); show('wg-bicolor', gr===4);
     show('wg-full', gr>=5); show('wg-patches', gr>=5);
     if (gr>=5){
       show('wp-body', gr===5);
-      fill('wp-head', hexA); fill('wp-body', tortie?hexB:hexA); fill('wp-tail', hexA);
+      fill('wp-head', P(hexA)); fill('wp-body', P(tortie?hexB:hexA)); fill('wp-tail', P(hexA));
     }
     /* residual barring */
-    const barr = desc.pattern.residualBarring && anyTabby && !desc.coat.hairless;
+    const barr = desc.pattern.residualBarring && anyTabby && !skin;
     show('barring', !!barr);
     if (barr) $('barring').setAttribute('stroke', patternHex(pA));
     $('texRex').setAttribute('stroke', mixHex(baseAHex,'#000',.3));
     $('texRex').setAttribute('stroke-width','2.5');
+    if (skin){
+      $('texWrinkles').setAttribute('stroke', mixHex(pointed ? bodyTint(desc.point,P(hexA)) : baseAHex, '#000', .3));
+      $('texWrinkles').setAttribute('stroke-width','3');
+    }
   }
 
   /* eyes & nose */
