@@ -104,9 +104,6 @@
   .slider-row output{font-size:.8rem; color:var(--muted)}
   footer{margin-top:36px; color:var(--muted); font-size:.85rem; max-width:70ch}
   :is(button,select,summary,input):focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:6px}
-  @media (prefers-reduced-motion:no-preference){
-    #cat *{transition:fill .25s ease, opacity .25s ease}
-  }
   /* mobile mini preview */
   #minibar{display:none}
   @media (max-width:919px){
@@ -126,129 +123,11 @@
   the breeder-style phenotype name, what it carries, and a live portrait.</p>
 </header>
 
-<div id="minibar" aria-hidden="true"><svg viewBox="0 0 320 340"><use href="#catRoot"></use></svg><span id="mini-name"></span></div>
+<div id="minibar" aria-hidden="true"><svg viewBox="22 8 320 340"><use href="#catRoot"></use></svg><span id="mini-name"></span></div>
 
 <main>
   <aside class="result" id="result">
-    <div class="stage"><svg id="cat" viewBox="0 0 320 340" role="img" aria-labelledby="pheno-name">
-      <g id="catRoot">
-        <defs id="catDefs">
-          <clipPath id="sil">
-            <path id="clip-body"></path><path id="clip-head"></path>
-            <path id="clip-earL"></path><path id="clip-earR"></path>
-            <path id="clip-tail"></path><path id="clip-tufts" display="none"></path>
-          </clipPath>
-          <filter id="soft"><feGaussianBlur stdDeviation="5"/></filter>
-          <filter id="softer"><feGaussianBlur stdDeviation="8"/></filter>
-          <mask id="mTortie">
-            <rect x="0" y="0" width="320" height="340" fill="black"/>
-            <g fill="white" filter="url(#soft)" id="tortieBlobs"></g>
-          </mask>
-          <mask id="mPoint">
-            <rect x="0" y="0" width="320" height="340" fill="black"/>
-            <g fill="white" filter="url(#softer)">
-              <ellipse cx="108" cy="52" rx="26" ry="30"/><ellipse cx="212" cy="52" rx="26" ry="30"/>
-              <ellipse cx="160" cy="150" rx="40" ry="30"/>
-              <ellipse cx="130" cy="322" rx="26" ry="16"/><ellipse cx="190" cy="322" rx="26" ry="16"/>
-              <ellipse cx="92" cy="316" rx="18" ry="16"/><ellipse cx="228" cy="316" rx="18" ry="16"/>
-              <path d="M226,266 C270,280 300,310 274,336 C240,354 190,346 168,338 L180,314 C212,322 250,322 256,308 C260,294 240,282 222,282 Z"/>
-            </g>
-          </mask>
-          <linearGradient id="gSmoke" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0" stop-color="var(--fur-white)" stop-opacity=".85"/>
-            <stop offset=".45" stop-color="var(--fur-white)" stop-opacity=".35"/>
-            <stop offset="1" stop-color="var(--fur-white)" stop-opacity="0"/>
-          </linearGradient>
-          <linearGradient id="gShade" x1="0" y1="0" x2="0" y2="1">
-            <stop id="shade0" offset="0" stop-opacity=".95"/>
-            <stop id="shade1" offset=".55" stop-opacity=".35"/>
-            <stop id="shade2" offset="1" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-
-        <g id="paint" clip-path="url(#sil)">
-          <rect id="ground" x="0" y="0" width="320" height="340"/>
-          <g id="coatDirect">
-            <g id="coatFull">
-              <rect id="baseA" x="0" y="0" width="320" height="340"/>
-              <rect id="tabbyA" x="0" y="0" width="320" height="340"/>
-              <g id="patchB" mask="url(#mTortie)">
-                <rect id="baseB" x="0" y="0" width="320" height="340"/>
-                <rect id="tabbyB" x="0" y="0" width="320" height="340"/>
-              </g>
-              <rect id="smokeOverlay" x="0" y="0" width="320" height="340" fill="url(#gSmoke)"/>
-              <rect id="shadeOverlay" x="0" y="0" width="320" height="340" fill="url(#gShade)"/>
-            </g>
-          </g>
-          <use id="coatPoints" href="#coatFull" mask="url(#mPoint)" display="none"/>
-          <g id="whiteLayer" fill="var(--fur-white)">
-            <g id="wg-gloves" display="none">
-              <ellipse cx="130" cy="326" rx="14" ry="9"/><ellipse cx="190" cy="326" rx="14" ry="9"/>
-              <ellipse cx="94" cy="320" rx="11" ry="8"/><ellipse cx="226" cy="320" rx="11" ry="8"/>
-            </g>
-            <g id="wg-mild" display="none">
-              <ellipse cx="160" cy="208" rx="15" ry="11"/>
-              <ellipse cx="130" cy="328" rx="12" ry="7"/><ellipse cx="190" cy="328" rx="12" ry="7"/>
-            </g>
-            <g id="wg-tuxedo" display="none">
-              <path d="M160,178 C142,186 132,214 136,248 C140,276 150,290 160,290 C170,290 180,276 184,248 C188,214 178,186 160,178 Z"/>
-              <ellipse cx="160" cy="160" rx="22" ry="15"/>
-              <ellipse cx="130" cy="324" rx="16" ry="11"/><ellipse cx="190" cy="324" rx="16" ry="11"/>
-            </g>
-            <g id="wg-bicolor" display="none">
-              <path d="M160,172 C132,182 118,220 122,262 C126,300 142,318 160,318 C178,318 194,300 198,262 C202,220 188,182 160,172 Z"/>
-              <ellipse cx="160" cy="158" rx="26" ry="18"/>
-              <path d="M160,64 C154,84 152,104 154,120 L166,120 C168,104 166,84 160,64 Z"/>
-              <ellipse cx="128" cy="320" rx="22" ry="16"/><ellipse cx="192" cy="320" rx="22" ry="16"/>
-              <ellipse cx="92" cy="314" rx="16" ry="14"/><ellipse cx="228" cy="314" rx="16" ry="14"/>
-            </g>
-            <rect id="wg-full" x="0" y="0" width="320" height="340" display="none"/>
-            <g id="wg-patches" display="none">
-              <ellipse id="wp-head" cx="126" cy="96" rx="34" ry="26"/>
-              <ellipse id="wp-body" cx="112" cy="262" rx="40" ry="34"/>
-              <path id="wp-tail" d="M226,266 C270,280 300,310 274,336 C240,354 190,346 168,338 L180,314 C212,322 250,322 256,308 C260,294 240,282 222,282 Z"/>
-            </g>
-          </g>
-          <g id="texRex" stroke-linecap="round" fill="none" display="none"></g>
-          <g id="texWrinkles" stroke-linecap="round" fill="none" display="none"></g>
-        </g>
-
-        <g id="outline" fill="none" stroke="var(--line)" stroke-width="5" stroke-linejoin="round">
-          <path id="ol-tail"></path><path id="ol-body"></path>
-          <path id="ol-earL"></path><path id="ol-earR"></path><path id="ol-head"></path>
-          <path id="ol-tufts" display="none" stroke-width="4"></path>
-        </g>
-
-        <g id="details">
-          <path id="innerEarL" fill="#d98a86" opacity=".85"></path>
-          <path id="innerEarR" fill="#d98a86" opacity=".85"></path>
-          <g id="eyes">
-            <ellipse id="eyeL" cx="138" cy="128" rx="10" ry="12"/>
-            <ellipse id="eyeR" cx="182" cy="128" rx="10" ry="12"/>
-            <ellipse id="pupilL" cx="138" cy="129" rx="3.4" ry="9"/>
-            <ellipse id="pupilR" cx="182" cy="129" rx="3.4" ry="9"/>
-            <circle cx="141" cy="123" r="2.4" fill="#fff" opacity=".9"/>
-            <circle cx="185" cy="123" r="2.4" fill="#fff" opacity=".9"/>
-          </g>
-          <path id="nose" d="M154,148 L166,148 L160,156 Z"/>
-          <path id="mouth" d="M160,156 C160,162 154,165 149,163 M160,156 C160,162 166,165 171,163"
-                fill="none" stroke="var(--line)" stroke-width="2.4" stroke-linecap="round"/>
-          <g id="whiskers" stroke="var(--line)" stroke-width="1.8" stroke-linecap="round" opacity=".65">
-            <path d="M132,148 C116,146 102,142 92,138" fill="none"/><path d="M132,154 C116,155 102,155 90,152" fill="none"/>
-            <path d="M188,148 C204,146 218,142 228,138" fill="none"/><path d="M188,154 C204,155 218,155 230,152" fill="none"/>
-          </g>
-          <g id="legLines" stroke="var(--line)" stroke-width="3.4" stroke-linecap="round" fill="none">
-            <path d="M136,290 C134,304 134,316 136,330"/><path d="M184,290 C186,304 186,316 184,330"/>
-            <path d="M124,332 C127,327 133,327 136,332"/><path d="M184,332 C187,327 193,327 196,332"/>
-          </g>
-          <g id="barring" stroke-linecap="round" fill="none" display="none" stroke-width="5" opacity=".8">
-            <path d="M120,300 C126,302 134,302 140,300"/><path d="M118,312 C126,314 134,314 142,312"/>
-            <path d="M180,300 C186,302 194,302 200,300"/><path d="M178,312 C186,314 194,314 202,312"/>
-            <path d="M250,300 C256,306 260,312 262,318"/><path d="M264,296 C270,302 274,308 275,315"/>
-          </g>
-        </g>
-      </g>
-    </svg></div>
+    <div class="stage"><svg id="cat" viewBox="22 8 320 340" role="img" aria-labelledby="pheno-name"><g id="catRoot"></g></svg></div>
 
     <h2 class="pheno-name" id="pheno-name"></h2>
     <p class="pheno-sub" id="pheno-sub" hidden></p>
@@ -592,19 +471,14 @@ function genotypeString(g){
 }
 
 /* ================================================================
-   4. RENDER — colours + SVG
+   4. RENDER — colours + SVG portrait
    ================================================================ */
 const FUR = { black:'#241f26', chocolate:'#59372a', cinnamon:'#8c5a3a',
   blue:'#7e8290', lilac:'#a9989e', fawn:'#c2a78e',
   blueCaramel:'#8b8377', caramel:'#a5917f', fawnCaramel:'#c9b193',
   red:'#d97b3f', cream:'#efc79c', apricot:'#f0b87e',
   amber:'#c08a4e', lightAmber:'#d8b184', russet:'#a05236', carnelian:'#b8643f',
-  dRusset:'#c08a72', dCarnelian:'#cc9078',
-  silverBase:'#e9ebee', goldenBase:'#e8c48e' };
-const EYE = { default:'#d9a63f', green:'#7cae62', point:'#6ea3dc', mink:'#7fc9c4',
-  sepia:'#e0b23c', albino:'#e8b7c6', domWhite:'#7cb2e0' };
-const SKIN_PINK='#e8b0a0', NOSE_PINK='#d98a86';
-
+  dRusset:'#c08a72', dCarnelian:'#cc9078' };
 function hx(c){ return c.length===4 ? '#'+[...c.slice(1)].map(x=>x+x).join('') : c; }
 function mixHex(a,b,t){
   a=hx(a); b=hx(b);
@@ -612,187 +486,515 @@ function mixHex(a,b,t){
   return '#'+[1,3,5].map(i=>ch(i).toString(16).padStart(2,'0')).join('');
 }
 const patchHex = p => FUR[patchKey(p)];
-function patternHex(p){
-  const h = patchHex(p);
-  return p.pigment==='pheo' ? mixHex(h,'#7a3410',.45) : mixHex(h,'#000000',.42);
-}
-function bodyTint(point, hex){
-  return mixHex('#f0e8dc', hex, {point:.12, mink:.4, sepia:.58, mocha:.55}[point] ?? 1);
-}
 function hashStr(s){ let h=1779033703; for (let i=0;i<s.length;i++){ h=Math.imul(h^s.charCodeAt(i),3432918353); h=h<<13|h>>>19; } return h>>>0; }
 function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 
-/* silhouette geometry */
-const SHAPES = {
-  bodyShort:'M160,176 C112,182 80,232 75,288 C72,318 94,328 160,328 C226,328 248,318 245,288 C240,232 208,182 160,176 Z',
-  bodyFluffy:'M160,172 C106,178 72,230 66,288 C63,320 92,332 160,332 C228,332 257,320 254,288 C248,230 214,178 160,172 Z',
-  head:'M160,68 C121,68 96,99 96,134 C96,169 125,192 160,192 C195,192 224,169 224,134 C224,99 199,68 160,68 Z',
-  earL:'M113,88 C104,66 100,49 101,37 C114,42 133,53 148,63 C134,69 122,77 113,88 Z',
-  earR:'M207,88 C216,66 220,49 219,37 C206,42 187,53 172,63 C186,69 198,77 207,88 Z',
-  earCurlL:'M114,86 C104,72 100,58 105,46 C112,55 119,55 125,47 C131,55 139,60 148,64 C135,70 123,76 114,86 Z',
-  earCurlR:'M206,86 C216,72 220,58 215,46 C208,55 201,55 195,47 C189,55 181,60 172,64 C185,70 197,76 206,86 Z',
-  earTightL:'M115,84 C106,73 102,62 108,52 C113,60 122,59 126,51 C131,57 139,61 148,64 C135,70 124,75 115,84 Z',
-  earTightR:'M205,84 C214,73 218,62 212,52 C207,60 198,59 194,51 C189,57 181,61 172,64 C185,70 196,75 205,84 Z',
-  tail:'M226,266 C270,278 298,306 274,330 C244,352 192,346 170,338 L179,316 C210,324 246,322 254,308 C259,295 240,283 221,283 Z',
-  tailFluffy:'M224,262 C274,272 306,304 278,332 C244,358 188,350 166,340 L177,314 C212,324 252,322 260,306 C266,291 242,280 218,280 Z',
-  tufts:'M96,196 C88,192 80,192 74,196 C80,200 86,203 92,206 Z M224,196 C232,192 240,192 246,196 C240,200 234,203 228,206 Z M120,206 C112,212 108,220 108,228 C114,222 120,217 127,214 Z M200,206 C208,212 212,220 212,228 C206,222 200,217 193,214 Z',
-  innerEarL:'M118,78 C113,66 110,55 110,47 C118,51 129,58 138,64 C130,68 123,72 118,78 Z',
-  innerEarR:'M202,78 C207,66 210,55 210,47 C202,51 191,58 182,64 C190,68 197,72 202,78 Z',
-  innerCurlL:'M119,76 C113,67 110,58 112,51 C117,57 124,57 128,52 C132,57 137,60 141,63 C133,67 125,71 119,76 Z',
-  innerCurlR:'M201,76 C207,67 210,58 208,51 C203,57 196,57 192,52 C188,57 183,60 179,63 C187,67 195,71 201,76 Z',
-};
 const $ = id => document.getElementById(id);
-function setD(id,d){ $(id).setAttribute('d',d); }
 
-/* patterns built per patch-suffix at init */
-function buildPatterns(defs, suffix){
-  const NS='http://www.w3.org/2000/svg';
-  const mk=(tag,attrs)=>{ const el=document.createElementNS(NS,tag); for(const k in attrs) el.setAttribute(k,attrs[k]); return el; };
-  const pat=(id,w,h,children)=>{ const p=mk('pattern',{id:id+suffix, width:w, height:h, patternUnits:'userSpaceOnUse'});
-    children.forEach(c=>p.appendChild(c)); defs.appendChild(p); return p; };
-  pat('pMackerel',30,340,[ mk('path',{d:'M15,-10 C8,60 22,120 13,200 C8,260 18,310 15,350', fill:'none','stroke-width':9,class:'pk'}) ]);
-  pat('pBroken',30,340,[ mk('path',{d:'M15,-10 C8,60 22,120 13,200 C8,260 18,310 15,350', fill:'none','stroke-width':9,'stroke-dasharray':'26 20','stroke-linecap':'round',class:'pk'}) ]);
-  pat('pClassic',112,112,[ mk('circle',{cx:56,cy:56,r:17,fill:'none','stroke-width':11,class:'pk'}),
-    mk('circle',{cx:56,cy:56,r:41,fill:'none','stroke-width':11,class:'pk'}) ]);
-  pat('pSpots',52,52,[ mk('ellipse',{cx:14,cy:14,rx:8.5,ry:7,class:'pkf'}), mk('ellipse',{cx:40,cy:40,rx:8.5,ry:7,class:'pkf'}),
-    mk('ellipse',{cx:40,cy:12,rx:6,ry:5,class:'pkf'}), mk('ellipse',{cx:12,cy:40,rx:6,ry:5,class:'pkf'}) ]);
-  pat('pTicked',13,13,[ mk('circle',{cx:3.5,cy:3.5,r:1.8,class:'pkf',opacity:.75}), mk('circle',{cx:9.5,cy:9.5,r:1.8,class:'pkf',opacity:.75}) ]);
-}
-function setPatternColor(suffix, hex){
-  document.querySelectorAll(`[id$="${suffix}"] .pk`).forEach(e=>e.setAttribute('stroke',hex));
-  document.querySelectorAll(`[id$="${suffix}"] .pkf`).forEach(e=>e.setAttribute('fill',hex));
-}
-const PATTERN_ID = { mackerel:'pMackerel', broken:'pBroken', classic:'pClassic', spotted:'pSpots', ticked:'pTicked' };
+/* ---------- portrait: pure desc → SVG markup ---------- */
+const CatArt = (() => {
+  const f1 = n => +n.toFixed(1);
+  const mapPts = (d, fn) => d.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (m, x, y) => { const p = fn(+x, +y); return f1(p[0]) + ',' + f1(p[1]); });
+  const mirX = d => mapPts(d, (x, y) => [280 - x, y]);
+  const both = d => d + ' ' + mirX(d);
+  const scaleAbout = (d, cx, cy, k) => mapPts(d, (x, y) => [cx + (x - cx)*k, cy + (y - cy)*k]);
 
-function buildTortieBlobs(seedStr){
-  const g=$('tortieBlobs'); g.innerHTML='';
-  const rnd = mulberry32(hashStr(seedStr));
-  const NS='http://www.w3.org/2000/svg';
-  const spots=[[150,90,30,24],[210,150,34,30],[110,240,36,32],[190,270,34,30],[240,300,26,20],[130,150,22,20]];
-  for (const [cx,cy,rx,ry] of spots){
-    const e=document.createElementNS(NS,'ellipse');
-    e.setAttribute('cx',cx+(rnd()*28-14)); e.setAttribute('cy',cy+(rnd()*24-12));
-    e.setAttribute('rx',rx*(0.8+rnd()*0.5)); e.setAttribute('ry',ry*(0.8+rnd()*0.5));
-    g.appendChild(e);
+  /* --- path sampling (absolute M/L/C/Z only) --- */
+  function segsOf(d){
+    const tk = d.match(/[MLCZ]|-?\d*\.?\d+/g); const segs = [];
+    let cmd, cur, start, i = 0;
+    const n = () => +tk[i++];
+    const lin = (a, b) => [a, [a[0]+(b[0]-a[0])/3, a[1]+(b[1]-a[1])/3], [a[0]+2*(b[0]-a[0])/3, a[1]+2*(b[1]-a[1])/3], b];
+    while (i < tk.length){
+      if (/[MLCZ]/.test(tk[i])){ cmd = tk[i++];
+        if (cmd === 'Z'){ if (cur[0] !== start[0] || cur[1] !== start[1]) segs.push(lin(cur, start)); cur = start; }
+        continue; }
+      if (cmd === 'M'){ cur = start = [n(), n()]; cmd = 'L'; }
+      else if (cmd === 'L'){ const p = [n(), n()]; segs.push(lin(cur, p)); cur = p; }
+      else if (cmd === 'C'){ const a = [n(), n()], b = [n(), n()], p = [n(), n()]; segs.push([cur, a, b, p]); cur = p; }
+    }
+    return segs;
   }
-}
-function buildTextures(){
-  const NS='http://www.w3.org/2000/svg';
-  const rex=$('texRex');
-  const pts=[[120,220],[160,240],[200,220],[135,265],[185,268],[112,190],[208,190],[150,300]];
-  for (const [x,y] of pts){
-    const p=document.createElementNS(NS,'path');
-    p.setAttribute('d',`M${x},${y} q5,-6 10,0 q5,6 10,0`);
-    rex.appendChild(p);
+  function bez(s, t){ const u = 1 - t;
+    return [0, 1].map(k => u*u*u*s[0][k] + 3*u*u*t*s[1][k] + 3*u*t*t*s[2][k] + t*t*t*s[3][k]); }
+  /* points ~every `step` px with unit tangents; s = fraction along the whole path */
+  function sample(d, step){
+    const out = []; let acc = 0;
+    for (const s of segsOf(d)){
+      let L = 0, prev = s[0];
+      for (let i = 1; i <= 20; i++){ const p = bez(s, i/20); L += Math.hypot(p[0]-prev[0], p[1]-prev[1]); prev = p; }
+      const n = Math.max(1, Math.round(L / step));
+      for (let i = 0; i < n; i++){
+        const t = i / n, p = bez(s, t), a = bez(s, Math.max(0, t - .01)), b = bez(s, Math.min(1, t + .01));
+        const l = Math.hypot(b[0]-a[0], b[1]-a[1]) || 1;
+        out.push({ x:p[0], y:p[1], tx:(b[0]-a[0])/l, ty:(b[1]-a[1])/l, len:acc + L*t });
+      }
+      acc += L;
+    }
+    out.forEach(p => p.s = p.len / acc);
+    return out;
   }
-  const wr=$('texWrinkles');
-  [['M120,200 q40,14 80,0'],['M118,222 q42,16 84,0'],['M126,246 q34,12 68,0'],['M138,96 q22,10 44,0']]
-    .forEach(([d])=>{ const p=document.createElementNS(NS,'path'); p.setAttribute('d',d); wr.appendChild(p); });
-}
+  const area = pts => pts.reduce((s, p, i) => { const q = pts[(i+1) % pts.length]; return s + p.x*q.y - q.x*p.y; }, 0);
 
-function show(id,on){ $(id).setAttribute('display', on?'inline':'none'); }
-function fill(id,c){ $(id).setAttribute('fill',c); }
+  /* grow fur tufts along a closed outline; amp(x,y) → tuft length */
+  function furrify(d, amp, step, rnd, lean = .45){
+    const pts = sample(d, step), sgn = area(pts) > 0 ? 1 : -1;
+    let o = `M${f1(pts[0].x)},${f1(pts[0].y)}`;
+    for (let i = 0; i < pts.length; i++){
+      const a = pts[i], b = pts[(i+1) % pts.length];
+      const nx = sgn*a.ty, ny = -sgn*a.tx;
+      const h = amp(a.x, a.y) * (.55 + .9*rnd());
+      if (h < .4){ o += ` L${f1(b.x)},${f1(b.y)}`; continue; }
+      const tip = [(a.x+b.x)/2 + nx*h + a.tx*h*lean, (a.y+b.y)/2 + ny*h + a.ty*h*lean];
+      o += ` Q${f1(a.x + nx*h*.7)},${f1(a.y + ny*h*.7)} ${f1(tip[0])},${f1(tip[1])}`
+         + ` Q${f1(b.x + nx*h*.15)},${f1(b.y + ny*h*.15)} ${f1(b.x)},${f1(b.y)}`;
+    }
+    return o + ' Z';
+  }
+  /* tube outline around a centreline; w(s) = half-width at s∈[0,1]; round cap at the end */
+  function tube(center, w, step = 3){
+    const pts = sample(center, step); const n = pts.length;
+    const L = [], R = [];
+    pts.forEach(p => { const h = w(p.s);
+      L.push([p.x - p.ty*h, p.y + p.tx*h]); R.push([p.x + p.ty*h, p.y - p.tx*h]); });
+    const e = pts[n-1], he = w(1), cap = [];
+    for (let k = 1; k < 8; k++){ const a = Math.PI * k / 8, c = Math.cos(a), s = Math.sin(a);
+      cap.push([e.x + (-e.ty*c + e.tx*s)*he, e.y + (e.tx*c + e.ty*s)*he]); }
+    const all = [...L, ...cap, ...R.reverse()];
+    return 'M' + all.map(p => f1(p[0]) + ',' + f1(p[1])).join(' L') + ' Z';
+  }
+  /* short strokes across a centreline at fractions `at` */
+  function across(center, at, half){
+    const pts = sample(center, 2);
+    return at.map(s => { const p = pts.reduce((b, q) => Math.abs(q.s - s) < Math.abs(b.s - s) ? q : b);
+      return `M${f1(p.x - p.ty*half)},${f1(p.y + p.tx*half)} L${f1(p.x + p.ty*half)},${f1(p.y - p.tx*half)}`; }).join(' ');
+  }
+  function brush(d, w, taper = .7){
+    return d.split(/(?=M)/).filter(x => x.trim()).map(sub => tube(sub.trim(),
+      s => Math.max(.25, w/2 * Math.pow(Math.sin(Math.PI*(.05 + .9*s)), taper)), 3.2)).join(' ');
+  }
+  function subPath(center, s0, s1){
+    const pts = sample(center, 2).filter(p => p.s >= s0 && p.s <= s1);
+    return 'M' + pts.map(p => f1(p.x) + ',' + f1(p.y)).join(' L');
+  }
+
+  /* --- base geometry (viewBox 22 8 320 340; head centred on x = 140) --- */
+  const G = {
+    head:'M140,62 C162,62 182,66 193,79 C202,90 206,104 207,118 C208,135 201,150 187,159 C173,168 157,171 140,171 C123,171 107,168 93,159 C79,150 72,135 73,118 C74,104 78,90 87,79 C98,66 118,62 140,62 Z',
+    earL:'M92,104 C86,80 83,54 86,30 C87,24 92,22 97,25 C112,35 126,48 138,66 L114,90 Z',
+    earInL:'M98,82 C95,66 94,50 95,38 C106,45 116,54 124,64 C114,68 105,74 98,82 Z',
+    earCurlL:'M92,104 C86,84 83,62 85,46 C87,32 97,24 108,26 C117,28 121,37 117,43 C114,47 109,45 110,41 C111,37 106,35 102,38 C112,45 126,52 138,66 L114,90 Z',
+    earInCurlL:'M98,84 C95,70 94,58 95,48 C104,50 115,57 124,66 C114,70 105,76 98,84 Z',
+    curlRollL:'M86,48 C88,36 98,30 106,34 C112,38 112,44 110,44',
+    earTightL:'M92,104 C86,88 84,72 86,60 C88,46 98,38 110,40 C120,42 124,52 118,58 C114,62 108,58 111,54 C113,50 108,48 103,51 C113,56 127,58 138,66 L114,90 Z',
+    earInTightL:'M98,86 C95,76 94,68 95,60 C104,61 115,63 124,66 C114,71 105,78 98,86 Z',
+    curlTightL:'M87,60 C90,50 100,44 108,47 C114,50 114,56 111,56',
+    torso:'M104,148 C92,172 86,200 94,224 L150,246 C162,272 170,296 176,322 L272,324 C292,320 299,290 295,262 C291,224 271,182 241,152 C225,136 208,125 190,117 Z',
+    torsoLong:'M100,144 C82,170 76,200 86,228 L150,246 C162,272 170,296 176,322 L276,324 C298,320 305,290 301,258 C296,218 274,174 244,146 C226,130 208,120 190,112 Z',
+    hindFoot:'M240,298 C214,298 190,301 180,309 C172,316 175,325 188,325 L248,325 Z',
+    legFar:'M96,210 C92,236 94,262 98,288 C99,296 99,302 97,308 C91,313 91,324 102,324 L123,324 C131,324 131,313 124,308 C122,300 121,292 122,284 C124,262 128,240 128,220 Z',
+    legNear:'M124,204 C120,234 124,262 128,288 C129,296 129,302 127,308 C120,313 120,326 132,326 L156,326 C166,326 166,313 157,308 C155,300 155,292 156,284 C159,258 164,236 164,208 Z',
+    lineFar:'M94,238 C94,262 98,288 98,288 C99,296 99,302 97,308 C91,313 91,324 102,324 L123,324 C131,324 131,313 124,308 C122,300 121,292 122,284 C123,270 125,256 126,244',
+    lineNear:'M122,232 C122,256 126,276 128,288 C129,296 129,302 127,308 C120,313 120,326 132,326 L156,326 C166,326 166,313 157,308 C155,300 155,292 156,284 C158,266 161,250 162,236',
+    lineFoot:'M244,299 C214,298 190,301 180,309 C172,316 175,325 188,325',
+    haunch:'M254,196 C216,210 198,250 202,286 C203,300 210,310 222,315',
+    tailC:'M280,292 C300,314 288,331 258,331 C220,331 172,331 138,329 C108,327 86,320 76,306 C70,297 72,287 79,283',
+    lynxL:'M89,31 C89,25 90,19 92,13 C93,19 95,24 98,29 Z',
+    dorsal:'M186,121 C212,133 238,151 257,175 C276,200 288,231 293,262',
+  };
+  for (const k of ['earL','earInL','earCurlL','earInCurlL','earTightL','earInTightL','curlRollL','curlTightL']) G[k.replace(/L$/, 'R')] = mirX(G[k]);
+
+  /* tabby markings, per body part */
+  const MK = {
+    faceM: both('M122,101 C117,93 115,85 118,75 M131,98 C129,90 129,80 131,69') + ' M140,97 C140,87 140,77 140,66',
+    crown: both('M126,71 C128,66 132,64 136,63'),
+    mascara: both('M102,118 C95,120 88,124 80,131 M107,132 C99,136 92,141 85,148'),
+    necklace: 'M93,186 C110,197 140,199 172,186 M91,206 C108,219 138,221 168,208',
+    barsFar: 'M92,242 C102,246 116,246 130,240 M94,260 C104,264 116,264 128,258 M96,278 C104,282 116,282 126,276',
+    barsNear: 'M120,238 C132,244 150,244 166,236 M122,256 C134,262 150,262 164,254 M124,274 C136,280 150,280 162,272',
+    barsFoot: 'M214,298 C211,308 210,317 212,326 M228,298 C225,308 224,317 226,326',
+    mackerel: 'M197,125 C193,141 188,157 182,171 M211,132 C206,151 199,170 192,187 M225,142 C219,162 212,182 203,199 M239,154 C232,174 224,193 214,208 M252,168 C245,185 237,200 229,210 M189,133 C186,146 183,157 178,166'
+      + ' M272,204 C246,216 229,242 227,270 M283,226 C262,236 249,256 249,282 M292,252 C278,260 270,274 270,296'
+      + ' M202,212 C198,228 195,244 193,262 M216,218 C212,234 209,250 208,268 M178,178 C175,194 172,208 170,222 M191,192 C187,208 184,222 182,238',
+    classicRing: 'M213,164 C236,158 262,176 264,204 C266,228 246,244 226,240 C210,236 202,222 206,208',
+    classicBlotch: 'M231,184 C243,183 251,194 249,207 C247,219 236,224 227,219 C219,215 222,207 217,200 C213,192 221,185 231,184 Z',
+    classicButterfly: 'M190,124 C198,120 210,124 214,133 C218,142 212,150 204,149 C200,148 199,143 195,142 C190,141 186,137 187,131 C187,128 188,126 190,124 Z',
+    classicSpine: 'M200,138 C222,150 242,168 256,190 C268,210 276,232 280,256',
+    classicMisc: 'M183,138 C188,156 184,174 172,190 M274,222 C254,238 246,264 252,292 M289,252 C276,266 272,284 276,306 M198,230 C194,248 196,266 202,282',
+  };
+
+  /* --- silhouette per coat type (memoised; tufts use a fixed seed so outlines don't jitter) --- */
+  const geoCache = {};
+  function geometry(long, tex, ears){
+    const key = long + tex + ears;
+    if (geoCache[key]) return geoCache[key];
+    const rnd = mulberry32(90210);
+    const bald = tex === 'sphynx' || tex === 'peterbald', rex = ['devon','cornish','rexoid'].includes(tex);
+    const earK = ears === 'tightCurl' ? 'Tight' : ears === 'curl' ? 'Curl' : '';
+    const big = bald || tex === 'devon' ? 1.16 : 1;
+    let earL = scaleAbout(G['ear'+earK+'L'], 112, 92, big), earR = scaleAbout(G['ear'+earK+'R'], 168, 92, big);
+    const earInL = scaleAbout(G['earIn'+earK+'L'], 112, 92, big), earInR = scaleAbout(G['earIn'+earK+'R'], 168, 92, big);
+    const tailW = long ? s => 15 - 5*s : bald ? s => 8.5 - 4.5*s : s => 10.5 - 3.5*s;
+    let tail = tube(G.tailC, tailW), torso = long ? G.torsoLong : G.torso, head = G.head;
+    let legFar = G.legFar, legNear = G.legNear, hindFoot = G.hindFoot;
+    if (long){
+      const ruff = (x, y) => x < 150 && y > 130 && y < 240 ? 6 : y > 296 ? 2.5 : x > 250 && y > 220 ? 5 : 3.6;
+      torso = furrify(torso, ruff, 12, rnd, .55);
+      head = furrify(head, (x, y) => y > 128 ? 5 : y > 108 ? 2.6 : 0, 11, rnd, .35);
+      tail = furrify(tail, (x, y) => Math.hypot(x - 280, y - 292) < 24 ? 0 : 5, 11, rnd, .7);
+      legFar = furrify(legFar, (x, y) => y < 296 ? 1.6 : 0, 9, rnd);
+      legNear = furrify(legNear, (x, y) => y < 296 ? 1.6 : 0, 9, rnd);
+    } else if (rex){
+      torso = furrify(torso, () => 1.8, 7, rnd, 0);
+      tail = furrify(tail, (x, y) => Math.hypot(x - 280, y - 292) < 16 ? 0 : 1.6, 6, rnd, 0);
+    } else if (!bald){
+      torso = furrify(torso, (x, y) => x < 150 && y > 140 && y < 230 ? 2.2 : 1.1, 6, rnd);
+      tail = furrify(tail, (x, y) => Math.hypot(x - 280, y - 292) < 16 ? 0 : 1, 6, rnd);
+      head = furrify(head, (x, y) => y > 120 && (x < 96 || x > 184) ? 1.8 : 0, 6, rnd, .1);
+    }
+    const parts = [
+      ['torso', torso, null], ['hindFoot', hindFoot, G.lineFoot], ['tail', tail, tail],
+      ['legFar', legFar, G.lineFar], ['legNear', legNear, G.lineNear],
+      ['earL', earL, earL], ['earR', earR, earR], ['head', head, head],
+    ];
+    if (long && !earK) parts.splice(5, 0, ['tuftL', G.lynxL, null], ['tuftR', mirX(G.lynxL), null]);
+    return geoCache[key] = { parts, earInL, earInR, tail, big };
+  }
+
+  /* --- colour --- */
+  const mix = (a, b, t) => mixHex(a, b, t);
+  const lum = h => { h = hx(h); const c = [1,3,5].map(i => parseInt(h.slice(i, i+2), 16)/255); return .2126*c[0] + .7152*c[1] + .0722*c[2]; };
+  const IVORY = '#f2ebdf', WHITE = '#faf7f2';
+  function palette(p, desc, pointed){
+    const key = patchKey(p); let hex = FUR[key];
+    if (pointed && key === 'black') hex = '#3b2b26';
+    const pheo = p.pigment === 'pheo', shaded = desc.shading !== 'none';
+    const P = { key, hex, pheo, dilute:p.dilute, tabby:p.tabbyVisible && !shaded, silver:p.silver, smoke:false, shaded };
+    if (!p.tabbyVisible){ P.ground = hex; P.mark = hex; P.smoke = p.silver; }
+    else if (shaded){
+      P.ground = desc.shading === 'golden' ? '#f1c682' : pheo ? '#f7eee8' : '#eef0f2';
+      P.under = mix(P.ground, '#ffffff', .6);
+      P.mark = pheo ? mix(hex, '#c0501e', .15) : desc.shading === 'golden' ? mix(hex, '#7a4a22', .4) : hex;
+    } else if (pheo){
+      P.mark = p.silver ? hex : mix(hex, '#8a3510', .3);
+      P.ground = p.silver ? '#f6ede7' : mix(hex, '#f7d6b0', .45);
+      P.under = p.silver ? '#fbf8f6' : mix(hex, '#fcefe0', .72);
+    } else {
+      const band = p.silver ? '#e2e5e8' : p.dilute ? '#dccbb2' : '#c89d62';
+      P.mark = hex;
+      P.ground = mix(band, hex, p.silver ? .1 : .26);
+      P.under = p.silver ? '#f3f4f5' : mix(band, '#f5e9d3', .62);
+    }
+    P.nose = pheo ? (p.dilute ? '#e3a497' : '#d7806c')
+      : P.tabby ? mix('#b5574a', hex, .12) : mix(hex, '#b0605a', .22);
+    return P;
+  }
+  function paled(P, desc){
+    const amt = { point:.1, mink:.36, sepia:.6, mocha:.55 }[desc.point];
+    return { ...P, ground:mix(IVORY, P.ground, amt + .04), under:P.under && mix(IVORY, P.under, amt), mark:mix(IVORY, P.mark, amt*.9 + .05) };
+  }
+  const EYES = { gold:['#f2cf6a','#d9a63f','#8a5a12'], copper:['#f0a24a','#cc6f22','#7a3a0e'], green:['#c9dd7a','#7cae52','#35602a'],
+    emerald:['#a8dc9a','#4fa262','#1f5a33'], blue:['#bfe0ff','#5c9be0','#1f4f94'], aqua:['#bff0e6','#56c1b6','#1f6d67'],
+    chartreuse:['#eaeb86','#c6bd3c','#6c6414'], albino:['#f1e4ec','#c9c3e0','#b06078'], hazel:['#d9d27a','#a6a24a','#5c5a1c'] };
+
+  /* --- the portrait --- */
+  function catSVG(desc, seedStr, uid = 'k'){
+    const seed = hashStr(seedStr), rnd = mulberry32(seed);
+    const tex = desc.coat.texture, bald = desc.coat.hairless;
+    const long = desc.coat.length === 'long' && !bald;
+    const rex = ['devon','cornish','rexoid'].includes(tex);
+    const geo = geometry(long, tex, desc.coat.ears);
+    const parts = geo.parts, idx = {}; parts.forEach(([n], i) => idx[n] = i);
+    const partD = n => parts[idx[n]][1];
+    const partUse = n => `<use href="#kP-${n}"/>`;
+    const tufts = idx.tuftL != null;
+    const earTufts = attrs => tufts ? on('tuftL', `<use href="#kP-tuftL" ${attrs}/>`) + on('tuftR', `<use href="#kP-tuftR" ${attrs}/>`) : '';
+
+    /* each part's outline is defined once and referenced everywhere else */
+    const defs = parts.map(([n, d]) => `<path id="kP-${n}" d="${d}"/>`);
+    const ref = (n, attrs = '') => `<use href="#kP-${n}" ${attrs}/>`;
+    const later = i => parts.slice(i+1).map(p => ref(p[0], 'fill="#000"')).join('');
+    /* visibility mask per part: itself minus everything painted in front of it */
+    for (let i = 0; i < parts.length; i++)
+      defs.push(`<mask id="kV-${parts[i][0]}" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360">${ref(parts[i][0], 'fill="#fff"')}${later(i)}</mask>`);
+    const on = (part, inner) => inner ? `<g mask="url(#kV-${part})">${inner}</g>` : '';
+    defs.push(`<clipPath id="kSil">${parts.map(p => ref(p[0])).join('')}</clipPath>`);
+    defs.push(`<filter id="kB3" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>`);
+    defs.push(`<filter id="kB6" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>`);
+    defs.push(`<filter id="kB10" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="10"/></filter>`);
+    /* agouti ticking: fine salt-and-pepper */
+    defs.push(`<filter id="kTickF" filterUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><feTurbulence type="fractalNoise" baseFrequency=".8 .5" numOctaves="1" seed="11"/>`
+      + `<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  6 0 0 0 -2.75"/></filter>`);
+    defs.push(`<filter id="kStrF" filterUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><feTurbulence type="fractalNoise" baseFrequency="1.1 .06" numOctaves="2" seed="21"/>`
+      + `<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  5 0 0 0 -2.2"/></filter>`);
+    defs.push(`<mask id="kStr" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><rect width="360" height="360" filter="url(#kStrF)"/></mask>`);
+    defs.push(`<mask id="kTick" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><rect width="360" height="360" filter="url(#kTickF)"/></mask>`);
+    /* fur grain */
+    defs.push(`<filter id="kGrainD" filterUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><feTurbulence type="fractalNoise" baseFrequency=".9 .07" numOctaves="2" seed="4"/>`
+      + `<feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -1.55"/></filter>`);
+    defs.push(`<filter id="kGrainL" filterUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><feTurbulence type="fractalNoise" baseFrequency=".9 .07" numOctaves="2" seed="9"/>`
+      + `<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 3 0 0 -1.6"/></filter>`);
+
+    /* ---------- palettes ---------- */
+    const special = desc.special;
+    const pointed = !special && desc.point !== 'none';
+    let pals;
+    if (special){
+      const g = special === 'albino' ? '#f8f1ee' : WHITE;
+      pals = [{ ground:g, mark:g, tabby:false, nose:'#e6a2a0', hex:g, key:'white' }];
+    } else pals = desc.patches.map(p => palette(p, desc, pointed));
+    const PA = pals[0];
+    const tortie = pals.length === 2;
+    const ptype = desc.pattern && desc.pattern.type;
+    const dark = lum(PA.ground) < .1 && !pointed;
+
+    /* ---------- one full coat for a palette ---------- */
+    function markings(P){
+      if (!P.tabby) return '';
+      const ticked = ptype === 'ticked', barr = desc.pattern.residualBarring;
+      const st = (d, w, extra = '') => `<path d="${d}" fill="none" stroke="${P.mark}" stroke-width="${w}" stroke-linecap="round" ${extra}/>`;
+      const dash = ptype === 'spotted' ? 'stroke-dasharray="0.1 13"' : ptype === 'broken' ? 'stroke-dasharray="17 10"' : '';
+      const heavy = ptype === 'classic';
+      const br = (d, w, o = '') => `<path d="${brush(d, w)}" fill="${P.mark}" ${o}/>`;
+      let head = br(MK.faceM, ticked ? 2.6 : 3.6) + br(MK.mascara, ticked ? 2.6 : 3.8);
+      let torso = '', far = '', near = '', foot = '', tail = '';
+      if (!ticked || barr){
+        const o = ticked ? 'opacity=".7"' : '';
+        far = br(MK.barsFar, heavy ? 8.5 : 6.5, o); near = br(MK.barsNear, heavy ? 8.5 : 6.5, o); foot = br(MK.barsFoot, 6, o);
+        tail = br(across(G.tailC, [.2, .31, .42, .53, .63, .72, .8, .87], 17), 8, o);
+        torso = ptype === 'spotted' ? st(MK.necklace, 5.5, 'stroke-dasharray="0.1 12"' + o) : br(MK.necklace, heavy ? 10 : 7, o);
+      }
+      tail += `<path d="${subPath(G.tailC, .92, 1)}" fill="none" stroke="${P.mark}" stroke-width="30" stroke-linecap="round"/>`;
+      if (ticked) torso += st(G.dorsal, 7, 'opacity=".55"');
+      else if (heavy){
+        torso += st(G.dorsal, 12) + br(MK.classicSpine, 7) + `<path d="${MK.classicBlotch} ${MK.classicButterfly}" fill="${P.mark}"/>`
+          + br(MK.classicRing, 12, .45) + br(MK.classicMisc, 11, .5);
+      } else if (dash) torso += st(G.dorsal, 9) + st(MK.mackerel, ptype === 'spotted' ? 11 : 7, dash);
+      else torso += st(G.dorsal, 9) + br(MK.mackerel, 8);
+      return on('head', head) + on('torso', torso) + on('legFar', far) + on('legNear', near) + on('hindFoot', foot) + on('tail', tail);
+    }
+    function under(P){
+      if (!P.under) return '';
+      return `<g fill="${P.under}" filter="url(#kB6)">`
+        + on('head', `<ellipse cx="140" cy="152" rx="26" ry="17"/><ellipse cx="116" cy="114" rx="18" ry="15"/><ellipse cx="164" cy="114" rx="18" ry="15"/>`)
+        + on('torso', `<ellipse cx="128" cy="204" rx="24" ry="36"/><ellipse cx="172" cy="292" rx="14" ry="30"/>`)
+        + on('legNear', `<ellipse cx="160" cy="276" rx="6" ry="40"/>`) + `</g>`;
+    }
+    function coat(P){
+      let s = `<rect width="360" height="360" fill="${P.ground}"/>` + under(P);
+      if (P.tabby && ptype === 'ticked') s += `<rect width="360" height="360" fill="${P.mark}" mask="url(#kTick)" opacity=".5"/><rect width="360" height="360" fill="${P.mark}" mask="url(#kStr)" opacity=".25"/>`;
+      else if (P.tabby) s += `<rect width="360" height="360" fill="${P.mark}" mask="url(#kTick)" opacity=".16"/>`;
+      return s + markings(P);
+    }
+    /* tortoiseshell: organic X-inactivation patches from thresholded noise; calicos patch bigger */
+    if (tortie){
+      const freq = desc.white.grade >= 3 ? .011 : .02, thr = .44 + rnd()*.12;
+      defs.push(`<filter id="kTortF" filterUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><feTurbulence type="fractalNoise" baseFrequency="${freq}" numOctaves="3" seed="${seed % 997}"/>`
+        + `<feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  14 0 0 0 ${f1(-14*thr)}"/><feGaussianBlur stdDeviation=".7"/></filter>`);
+      defs.push(`<mask id="kTort" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><rect width="360" height="360" filter="url(#kTortF)"/></mask>`);
+    }
+    const coatAll = pp => coat(pp[0]) + (pp[1] ? `<g mask="url(#kTort)">${coat(pp[1])}</g>` : '');
+
+    let paint = '';
+    if (pointed){
+      /* temperature-sensitive points: pale body, colour at the cool extremities */
+      defs.push(`<linearGradient id="kLegG" gradientUnits="userSpaceOnUse" x1="0" y1="226" x2="0" y2="300"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>`);
+      defs.push(`<mask id="kPt" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360">`
+        + `<g filter="url(#kB6)" fill="#fff">` + on('head', `<ellipse cx="140" cy="136" rx="38" ry="33"/><ellipse cx="140" cy="100" rx="14" ry="20"/>`)
+        + on('earL', partUse('earL')) + on('earR', partUse('earR')) + earTufts('') + on('tail', partUse('tail'))
+        + on('hindFoot', `<ellipse cx="212" cy="314" rx="40" ry="18"/>`) + `</g>`
+        + `<g fill="url(#kLegG)" filter="url(#kB3)">` + on('legFar', `<rect x="80" y="200" width="60" height="140"/>`) + on('legNear', `<rect x="110" y="200" width="70" height="140"/>`) + `</g>`
+        + `</mask>`);
+      paint += coatAll(pals.map(P => paled(P, desc))) + `<g mask="url(#kPt)" opacity="${desc.contrast}">${coatAll(pals)}</g>`;
+    } else paint += coatAll(pals);
+
+    /* silver undercoat on solids (smoke) */
+    if (PA.smoke && !pointed){
+      defs.push(`<mask id="kSmk" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><g fill="#fff" filter="url(#kB10)">`
+        + on('torso', `<ellipse cx="122" cy="194" rx="30" ry="36"/><ellipse cx="240" cy="290" rx="56" ry="30"/><ellipse cx="210" cy="230" rx="30" ry="30" opacity=".5"/>`)
+        + on('head', `<ellipse cx="84" cy="142" rx="10" ry="20"/><ellipse cx="196" cy="142" rx="10" ry="20"/>`)
+        + on('tail', `<path d="${G.tailC}" fill="none" stroke="#fff" stroke-width="12" opacity=".5" transform="translate(0 5)"/>`) + `</g></mask>`);
+      paint += `<g mask="url(#kSmk)"><rect width="360" height="360" fill="#dfe3e8" mask="url(#kStr)"/><rect width="360" height="360" fill="#c9ced6" opacity=".35"/></g>`;
+    }
+    /* shaded / golden tipping: dense on the back, fading to a clear underside */
+    if (!special && desc.shading !== 'none'){
+      defs.push(`<linearGradient id="kTipG" gradientUnits="userSpaceOnUse" x1="270" y1="120" x2="140" y2="300"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`);
+      defs.push(`<linearGradient id="kTipH" gradientUnits="userSpaceOnUse" x1="0" y1="40" x2="0" y2="104"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`);
+      const body = ['torso','hindFoot','legFar','legNear'].map(n => on(n, `<rect width="360" height="360" fill="url(#kTipG)"/>`)).join('');
+      defs.push(`<mask id="kTip" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360">${body}`
+        + on('head', `<rect width="360" height="360" fill="url(#kTipH)"/>`) + on('earL', `<use href="#kP-earL" fill="#fff" opacity=".8"/>`)
+        + on('earR', `<use href="#kP-earR" fill="#fff" opacity=".8"/>`) + earTufts('fill="#fff"') + on('tail', `<use href="#kP-tail" fill="#fff" opacity=".7"/>`) + `</mask>`);
+      const tipCol = pals.map(P => P.mark);
+      const tipLayer = c => `<rect width="360" height="360" fill="${c}" mask="url(#kStr)" opacity=".4"/><rect width="360" height="360" fill="${c}" mask="url(#kTick)" opacity=".22"/><rect width="360" height="360" fill="${c}" opacity=".2"/>`;
+      paint += `<g mask="url(#kTip)">${tipLayer(tipCol[0])}${tortie ? `<g mask="url(#kTort)">${tipLayer(tipCol[1])}</g>` : ''}</g>`;
+    }
+
+    /* ---------- white spotting (KIT): grows up from the belly and paws ---------- */
+    const gr = special ? 0 : desc.white.grade;
+    if (gr > 0){
+      defs.push(`<filter id="kRag" filterUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="${(seed>>>3) % 991}" result="t"/>`
+        + `<feDisplacementMap in="SourceGraphic" in2="t" scale="${gr >= 5 ? 16 : 11}" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation=".6"/></filter>`);
+      const W = {
+        paws: on('legFar', '<ellipse cx="111" cy="318" rx="20" ry="10"/>') + on('legNear', '<ellipse cx="143" cy="320" rx="22" ry="10"/>') + on('hindFoot', '<ellipse cx="192" cy="318" rx="16" ry="9"/>'),
+        mitts: on('legFar', '<rect x="80" y="304" width="60" height="30"/>') + on('legNear', '<rect x="110" y="304" width="70" height="30"/>') + on('hindFoot', '<ellipse cx="206" cy="316" rx="36" ry="14"/>'),
+        locket: on('torso', '<ellipse cx="124" cy="192" rx="11" ry="15"/>'),
+        tux: on('head', '<ellipse cx="140" cy="156" rx="23" ry="15"/>')
+          + on('torso', '<path d="M94,164 C120,176 160,176 182,162 C180,186 170,206 154,216 C144,222 136,228 130,238 C124,228 110,220 100,212 C92,196 90,178 94,164 Z M150,244 C162,270 170,296 176,320 L146,322 Z"/>')
+          + on('legFar', '<path d="M114,206 L132,206 C130,228 128,248 125,262 C120,244 116,226 114,206 Z"/><rect x="80" y="292" width="60" height="44"/>')
+          + on('legNear', '<path d="M120,200 L142,200 C138,222 132,242 128,258 C124,240 121,220 120,200 Z"/><rect x="110" y="290" width="70" height="44"/>')
+          + on('hindFoot', '<ellipse cx="200" cy="318" rx="30" ry="14"/>'),
+        bi: on('head', '<path d="M140,86 C135,104 124,120 108,134 C96,146 102,170 140,172 C178,170 184,146 172,134 C156,120 145,104 140,86 Z"/>')
+          + on('torso', '<path d="M92,160 C120,172 170,172 186,160 C196,196 204,236 226,262 C246,268 272,276 300,280 L300,340 L90,340 Z"/>')
+          + on('legFar', '<rect x="80" y="200" width="60" height="140"/>') + on('legNear', '<rect x="110" y="200" width="70" height="140"/>')
+          + on('hindFoot', '<rect x="160" y="290" width="100" height="50"/>'),
+        cap: on('head', '<path d="M60,50 L220,50 L220,100 C200,96 182,100 170,108 C160,98 150,90 140,98 C130,90 120,98 110,108 C98,100 80,96 60,100 Z"/>')
+          + on('earL', partUse('earL')) + on('earR', partUse('earR')),
+        vanCap: on('head', '<path d="M60,50 L134,50 L134,92 C124,90 114,94 106,104 C96,100 82,98 60,100 Z M146,50 L220,50 L220,100 C198,98 184,100 174,104 C166,94 156,90 146,92 Z"/>')
+          + on('earL', partUse('earL')) + on('earR', partUse('earR')),
+        tail: on('tail', partUse('tail')),
+        harlBody: on('torso', '<ellipse cx="236" cy="176" rx="34" ry="24" transform="rotate(35 236 176)"/><ellipse cx="270" cy="276" rx="22" ry="28"/>'),
+        vanSpot: on('torso', '<ellipse cx="214" cy="148" rx="11" ry="8"/>'),
+      };
+      let content;
+      if (gr === 1) content = `<g fill="#fff">${W.mitts}</g>`;
+      else if (gr === 2) content = `<g fill="#fff">${W.paws}${W.locket}</g>`;
+      else if (gr === 3) content = `<g fill="#fff">${W.tux}</g>`;
+      else if (gr === 4) content = `<g fill="#fff">${W.bi}</g>`;
+      else content = `<rect width="360" height="360" fill="#fff"/><g fill="#000">${gr === 5 ? W.cap + W.harlBody : W.vanCap + (seed % 3 === 0 ? W.vanSpot : '')}${W.tail}</g>`;
+      defs.push(`<mask id="kW" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><g filter="${gr === 1 ? '' : 'url(#kRag)'}">${content}</g></mask>`);
+      paint += `<rect width="360" height="360" style="fill:var(--fur-white)" mask="url(#kW)"/>`;
+    }
+
+    /* hairless: skin over the pigment pattern, which still shows through */
+    if (bald) paint += `<rect width="360" height="360" fill="#e9b5a4" opacity=".5"/>`;
+
+    /* ---------- form shading ---------- */
+    paint += `<g fill="#20160f" filter="url(#kB6)">`
+      + on('torso', `<ellipse cx="140" cy="176" rx="46" ry="12" opacity=".2"/><ellipse cx="166" cy="276" rx="10" ry="46" opacity=".16"/>`
+        + `<path d="${G.haunch}" fill="none" stroke="#20160f" stroke-width="12" opacity=".2" transform="translate(-5 0)"/><ellipse cx="232" cy="322" rx="70" ry="9" opacity=".25"/>`
+        + `<path d="${G.dorsal}" fill="none" stroke="#20160f" stroke-width="14" opacity=".12" transform="translate(6 -3)"/>`)
+      + on('legFar', `<rect x="80" y="200" width="60" height="140" opacity=".12"/>`)
+      + on('legNear', `<path d="M164,210 C160,250 156,280 158,320" fill="none" stroke="#20160f" stroke-width="8" opacity=".16"/>`)
+      + on('head', `<path d="M80,140 C100,166 180,166 200,140" fill="none" stroke="#20160f" stroke-width="10" opacity=".1"/>`)
+      + on('tail', `<path d="${G.tailC}" fill="none" stroke="#20160f" stroke-width="10" opacity=".16" transform="translate(0 6)"/>`)
+      + on('hindFoot', `<path d="M244,300 C214,300 190,303 180,311" fill="none" stroke="#20160f" stroke-width="6" opacity=".14"/>`)
+      + `</g><g fill="${dark ? '#b8c6e0' : '#fff'}" filter="url(#kB6)" opacity="${dark ? 1.9 : 1}">`
+      + on('head', `<ellipse cx="140" cy="76" rx="34" ry="10" opacity=".16"/>`)
+      + on('torso', `<ellipse cx="210" cy="140" rx="22" ry="9" transform="rotate(30 210 140)" opacity=".14"/><ellipse cx="262" cy="226" rx="16" ry="30" opacity=".1"/><ellipse cx="112" cy="196" rx="12" ry="24" opacity=".1"/>`)
+      + on('tail', `<path d="${G.tailC}" fill="none" stroke="#fff" stroke-width="6" opacity=".12" transform="translate(0 -5)"/>`)
+      + `</g>`;
+    /* fur grain */
+    if (!bald) paint += `<rect width="360" height="360" filter="url(#kGrainD)" opacity=".11"/><rect width="360" height="360" filter="url(#kGrainL)" opacity="${dark ? .16 : .09}"/>`;
+
+    /* rex waves */
+    if (rex){
+      let tile;
+      if (tex === 'cornish'){
+        const wave = y => `M0,${y} C2.5,${y-2.6} 5,${y-2.6} 7.5,${y} S12.5,${y+2.6} 15,${y}`;
+        tile = `<pattern id="kRex" patternUnits="userSpaceOnUse" width="15" height="7"><path d="${wave(3.5)}" fill="none" stroke="#000" stroke-opacity=".13" stroke-width="1.4"/><path d="${wave(5)}" fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="1"/></pattern>`;
+      } else {
+        const curls = 'M3,6 C1,2 7,0 8,4 C9,8 4,9 4,6 M15,3 C13,-1 19,-2 20,2 C21,6 16,7 16,4 M10,15 C8,11 14,9 15,13 C16,17 11,18 11,15 M21,17 C19,13 25,12 25,16 C26,20 21,20 22,17';
+        tile = `<pattern id="kRex" patternUnits="userSpaceOnUse" width="26" height="21"><path d="${curls}" fill="none" stroke="#000" stroke-opacity=".16" stroke-width="1.4" stroke-linecap="round"/><path d="${curls}" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="1" stroke-linecap="round" transform="translate(.8 1.2)"/></pattern>`;
+      }
+      defs.push(tile);
+      paint += on('torso', `<rect width="360" height="360" fill="url(#kRex)"/>`) + on('tail', `<rect width="360" height="360" fill="url(#kRex)"/>`)
+        + on('legFar', `<rect width="360" height="360" fill="url(#kRex)" opacity=".6"/>`) + on('legNear', `<rect width="360" height="360" fill="url(#kRex)" opacity=".6"/>`);
+    }
+    /* hairless wrinkles */
+    if (bald){
+      const wr = both('M118,86 C128,82 136,82 140,84 M122,78 C130,74 136,74 140,76 M126,94 C132,92 136,92 140,93')
+        + ' M96,178 C112,186 150,188 172,178 M100,192 C118,200 148,200 168,192 M194,140 C204,150 210,162 212,178 M206,140 C216,150 224,164 226,180 M180,246 C192,258 198,272 200,290';
+      paint += `<path d="${wr}" fill="none" stroke="#7a4a44" stroke-opacity=".38" stroke-width="1.8" stroke-linecap="round"/>`
+        + `<path d="${wr}" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="1.4" stroke-linecap="round" transform="translate(0 2.2)"/>`;
+    }
+
+    /* ---------- assemble ---------- */
+    const LINE = 'var(--line)';
+    let out = `<ellipse cx="190" cy="330" rx="122" ry="9" fill="#000" opacity=".13" filter="url(#kB3)"/>`;
+    out += `<g fill="none" style="stroke:${LINE}" stroke-width="4.6" stroke-linejoin="round">${parts.map(p => ref(p[0])).join('')}</g>`;
+    out += `<g clip-path="url(#kSil)">${paint}</g>`;
+    /* interior contours: each part's edge, hidden by whatever sits in front of it */
+    for (let i = 1; i < parts.length; i++){
+      const [n, , line] = parts[i]; if (!line) continue;
+      const ln = line === parts[i][1] ? `<use href="#kP-${n}"` : `<path d="${line}"`;
+      out += `<g mask="url(#kN-${n})">${ln} fill="none" style="stroke:${LINE}" stroke-width="${long ? 1.7 : 2.2}" stroke-linejoin="round" stroke-linecap="round" opacity="${long ? .6 : .75}"/>${dark ? `${ln} fill="none" stroke="#a9a3b8" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" opacity=".45" transform="translate(-1.2 0)"/>` : ''}</g>`;
+      defs.push(`<mask id="kN-${n}" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><rect width="360" height="360" fill="#fff"/>`
+        + (n === 'tail' ? `<circle cx="281" cy="291" r="${long ? 22 : 15}" fill="#000" filter="url(#kB3)"/>` : '')
+        + later(i) + `</mask>`);
+    }
+    out += on('torso', `<path d="${G.haunch}" fill="none" style="stroke:${dark ? '#a9a3b8' : LINE}" stroke-width="2" stroke-linecap="round" opacity="${dark ? .4 : .55}"/>`);
+    const toes = d => `<path d="${d}" fill="none" style="stroke:${LINE}" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>`;
+    out += on('legFar', toes('M106,316 L106,323 M114,315 L114,323')) + on('legNear', toes('M137,317 L137,325 M146,317 L146,325'))
+      + on('hindFoot', toes('M186,313 L186,324 M195,310 L195,322'));
+
+    /* ---------- face ---------- */
+    out = `<defs>${defs.join('')}</defs>` + out + face(desc, pals, pointed, gr, geo, rex, bald, long, seed);
+    return uid === 'k' ? out : out.replace(/(id="|url\(#|href="#)k(?=[A-Z])/g, '$1' + uid);
+  }
+
+  function face(desc, pals, pointed, gr, geo, rex, bald, long, seed){
+    const PA = pals[0], LINE = 'var(--line)';
+    let s = '';
+    /* inner ears */
+    const skin = desc.special ? '#f0b4b0' : pointed ? mix('#e8a3a0', PA.mark, .55) : mix('#e3a19c', PA.ground, lum(PA.ground) < .2 ? .45 : .28);
+    s += `<g fill="${skin}"><path d="${geo.earInL}"/><path d="${geo.earInR}"/></g>`;
+    if (!bald){
+      const tuftCol = long ? '#f5efe6' : mix('#f5efe6', PA.ground, .3);
+      const wisps = both(long
+        ? 'M102,84 C100,74 99,64 101,54 M106,82 C106,72 108,64 112,57 M110,82 C112,74 116,68 121,64 M99,80 C96,72 95,62 96,50'
+        : 'M103,82 C102,74 102,66 104,58 M108,81 C109,74 112,68 116,63');
+      s += `<path d="${brush(wisps, long ? 2.4 : 1.4, .5)}" fill="${tuftCol}" opacity="${long ? .9 : .55}"/>`;
+    }
+    if (desc.coat.ears !== 'normal'){
+      const roll = desc.coat.ears === 'curl' ? 'curlRoll' : 'curlTight';
+      s += `<path d="${scaleAbout(G[roll+'L'], 112, 92, geo.big)} ${scaleAbout(G[roll+'R'], 168, 92, geo.big)}" fill="none" style="stroke:${LINE}" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>`;
+    }
+    /* eyes */
+    let eyeL, eyeR;
+    const E = EYES;
+    if (desc.special === 'albino') eyeL = eyeR = E.albino;
+    else if (desc.special === 'dominantWhite') { eyeL = E.blue; eyeR = seed % 2 ? E.copper : E.blue; }
+    else if (pointed) eyeL = eyeR = desc.point === 'point' ? E.blue : desc.point === 'mink' ? E.aqua : E.chartreuse;
+    else if (desc.shading === 'shaded') eyeL = eyeR = E.emerald;
+    else if (desc.shading === 'golden') eyeL = eyeR = E.green;
+    else if (PA.silver) eyeL = eyeR = E.green;
+    else if (PA.pheo) eyeL = eyeR = E.copper;
+    else eyeL = eyeR = E.gold;
+    const eyeD = 'M101,116 C103,106 110,101 117,101 C125,101 131,107 131,114 C131,122 124,127 116,127 C108,127 101,123 101,116 Z';
+    const lid = 'M101,115 C103,106 110,101 117,101 C125,101 130,106 131,112';
+    const grad = (id, c, cx) => `<radialGradient id="${id}" gradientUnits="userSpaceOnUse" cx="${cx}" cy="116" r="15"><stop offset="0" stop-color="${c[0]}"/><stop offset=".55" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient>`;
+    s += `<defs>${grad('kIrisL', eyeL, 116)}${grad('kIrisR', eyeR, 164)}</defs>`;
+    const pupil = desc.special === 'albino' ? '#a0405a' : '#141018';
+    const oneEye = (d, lidD, fillId, px, hx1, hx2) =>
+      `<path d="${d}" fill="url(#${fillId})"/>`
+      + `<ellipse cx="${px}" cy="114.5" rx="4.4" ry="10.2" fill="${pupil}"/>`
+      + `<path d="${lidD}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="3.2"/>`
+      + `<path d="${d}" fill="none" style="stroke:${LINE}" stroke-width="2"/>`
+      + `<circle cx="${hx1}" cy="108" r="2.7" fill="#fff" opacity=".95"/><circle cx="${hx2}" cy="121" r="1.3" fill="#fff" opacity=".6"/>`;
+    s += oneEye(eyeD, lid, 'kIrisL', 117, 121, 112) + oneEye(mirX(eyeD), mirX(lid), 'kIrisR', 163, 167, 158);
+    /* nose, mouth */
+    const whiteNose = gr >= 4 || desc.special;
+    const nose = whiteNose ? '#e6a2a0' : PA.nose;
+    s += `<path d="M131,134 C134,131 146,131 149,134 C150,137 145,141 140,144 C135,141 130,137 131,134 Z" fill="${nose}" style="stroke:${LINE}" stroke-width="1.2" stroke-opacity=".7"/>`;
+    s += `<path d="M137,134 C139,133 142,133 144,134" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.2" stroke-linecap="round"/>`;
+    s += `<path d="M140,144 L140,149 M140,149 C137,154 131,155 127,152 M140,149 C143,154 149,155 153,152" fill="none" style="stroke:${LINE}" stroke-width="2" stroke-linecap="round"/>`;
+    /* whisker pads and whiskers */
+    const muzzle = whiteNose || gr >= 3 ? WHITE : pointed ? PA.mark : (PA.under || PA.ground);
+    const wcol = lum(muzzle) < .3 ? '#f4efe6' : '#3a3238';
+    s += `<g fill="${wcol}" opacity=".45">${[[127,145],[122,147],[128,150],[123,152]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r=".9"/><circle cx="${280-x}" cy="${y}" r=".9"/>`).join('')}</g>`;
+    if (bald) return s;
+    let wh = both('M123,147 C104,142 84,140 58,144 M123,150 C104,150 84,153 60,160 M124,153 C107,158 90,165 70,176 M110,99 C104,89 100,83 94,78');
+    if (rex) wh = wh.replace(/C(-?[\d.]+),(-?[\d.]+) (-?[\d.]+),(-?[\d.]+) (-?[\d.]+),(-?[\d.]+)/g,
+      (m, a, b, c, d, e, f) => `C${a},${+b - 9} ${c},${+d + 9} ${e},${f}`);
+    s += `<path d="${wh}" fill="none" stroke="${wcol}" stroke-width="1.3" stroke-linecap="round" opacity=".85"/>`;
+    return s;
+  }
+
+  return { catSVG };
+})();
 
 function renderCat(desc){
-  /* silhouette */
-  const long = desc.coat.length==='long' && !desc.coat.hairless;
-  setD('clip-body', long?SHAPES.bodyFluffy:SHAPES.bodyShort); setD('ol-body', long?SHAPES.bodyFluffy:SHAPES.bodyShort);
-  setD('clip-head', SHAPES.head); setD('ol-head', SHAPES.head);
-  setD('clip-tail', long?SHAPES.tailFluffy:SHAPES.tail); setD('ol-tail', long?SHAPES.tailFluffy:SHAPES.tail);
-  const earKey = desc.coat.ears==='tightCurl' ? 'Tight' : desc.coat.ears==='curl' ? 'Curl' : '';
-  setD('clip-earL', SHAPES['ear'+(earKey||'')+'L'] || SHAPES.earL); setD('ol-earL', SHAPES['ear'+(earKey||'')+'L'] || SHAPES.earL);
-  setD('clip-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR); setD('ol-earR', SHAPES['ear'+(earKey||'')+'R'] || SHAPES.earR);
-  setD('innerEarL', earKey ? SHAPES.innerCurlL : SHAPES.innerEarL);
-  setD('innerEarR', earKey ? SHAPES.innerCurlR : SHAPES.innerEarR);
-  show('clip-tufts', false); show('ol-tufts', false);
-  show('texWrinkles', desc.coat.hairless);
-  show('texRex', !desc.coat.hairless && ['devon','cornish','rexoid'].includes(desc.coat.texture));
-  $('whiskers').setAttribute('opacity', desc.coat.texture==='sphynx'||desc.coat.texture==='peterbald' ? .18 : ['devon','cornish','rexoid'].includes(desc.coat.texture) ? .4 : .65);
-
-  const hideAllCoat = on => { show('coatDirect',!on); show('coatPoints',false); ['wg-gloves','wg-mild','wg-tuxedo','wg-bicolor','wg-full','wg-patches','barring','smokeOverlay','shadeOverlay'].forEach(i=>show(i,false)); };
-
-  /* specials */
-  if (desc.special){
-    hideAllCoat(true);
-    fill('ground','var(--fur-white)');
-    const eye = desc.special==='albino' ? EYE.albino : EYE.domWhite;
-    fill('eyeL',eye); fill('eyeR',eye);
-    const pup = desc.special==='albino' ? '#d391a4' : '#1c1a20';
-    fill('pupilL',pup); fill('pupilR',pup);
-    fill('nose',NOSE_PINK);
-    $('texRex').setAttribute('stroke','#c9c2b6'); $('texWrinkles').setAttribute('stroke','#d8a294');
-    return;
-  }
-
-  const tortie = desc.patches.length===2;
-  const pA = desc.patches[0], pB = tortie?desc.patches[1]:null;
-  const hexA = patchHex(pA), hexB = pB?patchHex(pB):null;
-  const pointed = desc.point!=='none';
-  const shaded = desc.shading!=='none';
-  const anyTabby = desc.patches.some(p=>p.tabbyVisible);
-
-  /* hairless: skin ghost of the coat colour */
-  if (desc.coat.hairless){
-    hideAllCoat(true);
-    fill('ground', mixHex(SKIN_PINK, pointed?bodyTint(desc.point,hexA):hexA, .35));
-    $('texWrinkles').setAttribute('stroke', mixHex(SKIN_PINK,'#000',.35));
-    $('texWrinkles').setAttribute('stroke-width','3');
-    show('texWrinkles',true);
-  } else {
-    show('coatDirect',!pointed);
-    show('coatPoints',pointed);
-    $('coatPoints').setAttribute('opacity', desc.contrast||1);
-    fill('ground', pointed ? bodyTint(desc.point,hexA) : hexA);
-
-    /* base + patterns */
-    const silverOn = pA.silver;
-    let baseAHex = hexA;
-    if (shaded) baseAHex = desc.shading==='shaded' ? FUR.silverBase : FUR.goldenBase;
-    else if (silverOn && pA.tabbyVisible) baseAHex = mixHex(FUR.silverBase, hexA, .18);
-    fill('baseA', baseAHex);
-    const patId = PATTERN_ID[desc.pattern.type];
-    const showTabA = pA.tabbyVisible && !shaded;
-    show('tabbyA', showTabA);
-    if (showTabA){ $('tabbyA').setAttribute('fill',`url(#${patId}A)`); setPatternColor('A', patternHex(pA)); }
-    show('patchB', !!pB);
-    if (pB){
-      let baseBHex = hexB;
-      if (shaded) baseBHex = desc.shading==='shaded' ? mixHex(FUR.silverBase,hexB,.3) : mixHex(FUR.goldenBase,hexB,.4);
-      else if (pB.silver && pB.tabbyVisible) baseBHex = mixHex(FUR.silverBase, hexB, .35);
-      fill('baseB', baseBHex);
-      const showTabB = pB.tabbyVisible && !shaded;
-      show('tabbyB', showTabB);
-      if (showTabB){ $('tabbyB').setAttribute('fill',`url(#${patId}B)`); setPatternColor('B', patternHex(pB)); }
-      buildTortieBlobs(JSON.stringify(state.loci)+state.sex);
-    }
-    /* smoke & shading overlays */
-    show('smokeOverlay', silverOn && !anyTabby && !pointed);
-    show('shadeOverlay', shaded);
-    if (shaded){ ['shade0','shade1','shade2'].forEach(i=>$(i).setAttribute('stop-color',patternHex(pA))); }
-
-    /* white spotting */
-    const gr = desc.white.grade;
-    show('wg-gloves', gr===1); show('wg-mild', gr===2);
-    show('wg-tuxedo', gr===3); show('wg-bicolor', gr===4);
-    show('wg-full', gr>=5); show('wg-patches', gr>=5);
-    if (gr>=5){
-      show('wp-body', gr===5);
-      fill('wp-head', hexA); fill('wp-body', tortie?hexB:hexA); fill('wp-tail', hexA);
-    }
-    /* residual barring */
-    const barr = desc.pattern.residualBarring && anyTabby && !desc.coat.hairless;
-    show('barring', !!barr);
-    if (barr) $('barring').setAttribute('stroke', patternHex(pA));
-    $('texRex').setAttribute('stroke', mixHex(baseAHex,'#000',.3));
-    $('texRex').setAttribute('stroke-width','2.5');
-  }
-
-  /* eyes & nose */
-  const eye = pointed ? (desc.point==='point'?EYE.point:desc.point==='mink'?EYE.mink:EYE.sepia)
-    : (pA.silver ? EYE.green : EYE.default);
-  fill('eyeL',eye); fill('eyeR',eye);
-  fill('pupilL','#1c1a20'); fill('pupilR','#1c1a20');
-  fill('nose', pA.pigment==='pheo' ? '#c96f52' : mixHex(hexA,'#b0605a',.5));
+  $('catRoot').innerHTML = CatArt.catSVG(desc, JSON.stringify(state.loci)+state.sex);
 }
 
 /* ================================================================
@@ -945,8 +1147,6 @@ function update(){
 
 /* init */
 buildControls();
-const defs=$('catDefs'); buildPatterns(defs,'A'); buildPatterns(defs,'B');
-buildTextures(); buildTortieBlobs('init');
 update();
 $('copy-geno').addEventListener('click', async ()=>{
   const txt=$('geno').textContent;
