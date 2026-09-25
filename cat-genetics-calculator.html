@@ -160,7 +160,7 @@ const O_TWO_X = [['o','o','non-orange'],['O','o','tortoiseshell'],['O','O','red'
 const LOCI = [
   { id:'O', sym:'O', label:'Orange (red)', group:'base', xLinked:true,
     blurb:'X-linked. O forces yellow pigment (pheomelanin) and blocks black; o allows both. Females can be O/o — random X-inactivation gives tortoiseshell patches. Normal XY males cannot be tortie (the rare male torties are XXY or chimeras). Red areas always show tabby, even on a genetically solid cat.',
-    optionsBySex:{ XX:O_TWO_X, XXY:O_TWO_X, XY:[['o','Y','non-orange'],['O','Y','red']] } },
+    optionsBySex:{ XX:O_TWO_X, XXY:O_TWO_X, 'XY/XY':O_TWO_X, XY:[['o','Y','non-orange'],['O','Y','red']] } },
   { id:'C', sym:'C', label:'Colourpoint (tyrosinase)', group:'base',
     blurb:'Master pigment gene (TYR). Point alleles are temperature-sensitive: more pigment on the cool ears, face, paws and tail. C > cb (sepia) > cs (point) > c (albino); cb/cs is codominant Mink (Tonkinese — which is why Tonkinese don’t breed true). cm is the Burmese “Mocha/Bangkok” allele (Yu, Grahn & Lyons 2019): a paler, more even colour, co-dominant with cb and dominant over cs. c/c albino hides every other colour gene.',
     options:[ ['C','C','full colour'],['C','cb','full colour · carries sepia'],['C','cs','full colour · carries point'],
@@ -291,7 +291,7 @@ function computePhenotype(g){
     return desc;
   }
 
-  /* patch channels from X-linked O; XXY toms have two X chromosomes, so they can be tortie */
+  /* patch channels from X-linked O; XXY toms and XY/XY chimeras carry two X's, so they can be tortie */
   const nO = pair('O').filter(a=>a==='O').length;
   const twoX = g.sex!=='XY';
   const mk = pig => ({ pigment:pig, base:null, dilute:false, caramel:false, tabbyVisible:false, silver:false });
@@ -301,6 +301,9 @@ function computePhenotype(g){
   if (g.sex==='XXY') desc.notes.push(nO===1
     ? 'XXY tom — two X chromosomes let a male be tortoiseshell. XXY males are usually sterile.'
     : 'XXY tom — the extra X only shows when its O allele differs (O/o → tortie). XXY males are usually sterile.');
+  if (g.sex==='XY/XY') desc.notes.push(nO===1
+    ? 'XY/XY chimera — two fused male embryos, one O line and one o line, so the coat patches like a tortie. Often fertile: each sperm carries whichever line populates the testes, and only daughters inherit his X.'
+    : 'XY/XY chimera — two fused male embryos. With matching O alleles the lines look identical in coat colour (other loci can still differ between them). Only daughters inherit his X.');
 
   /* eumelanin base from B, overridden by E */
   const bBase = has('B','B') ? 'black' : has('B','b') ? 'chocolate' : 'cinnamon';
@@ -1146,8 +1149,9 @@ function buildControls(){
           <label><input type="radio" name="sex" value="XX"><span>♀ XX</span></label>
           <label><input type="radio" name="sex" value="XY" checked><span>♂ XY</span></label>
           <label><input type="radio" name="sex" value="XXY"><span>♂ XXY</span></label>
+          <label><input type="radio" name="sex" value="XY/XY"><span>♂ chimera</span></label>
         </span>
-        <details class="info"><summary>about</summary><p>Sex matters for one locus: Orange sits on the X chromosome, so females carry two O-alleles and males only one. XXY (Klinefelter) toms carry two, which is how the rare male tortoiseshell happens.</p></details>`;
+        <details class="info"><summary>about</summary><p>Sex matters for one locus: Orange sits on the X chromosome, so females carry two O-alleles and males only one. The rare male tortoiseshell has two: either XXY (Klinefelter, usually sterile), or an XY/XY chimera — two fused embryos, one orange and one not, often fertile. A chimera’s gametes carry one line’s genotype, so his daughters get either his O or his o.</p></details>`;
       grid.appendChild(sexDiv);
     }
     for (const l of LOCI.filter(x=>x.group===gid)){
@@ -1303,6 +1307,7 @@ if (matchMedia('(max-width:919px)').matches && 'IntersectionObserver' in window)
   t(C(G({C:['c','c'],L:['L','l']})),'longhair');
   /* XXY toms can be tortie; Selkirk is a dominant KRT71 allele */
   t(N(G({O:['O','o'],A:['a','a']},'XXY')),'Tortoiseshell');
+  t(N(G({O:['O','o'],A:['a','a']},'XY/XY')),'Tortoiseshell');
   console.assert(computePhenotype(G({K:['Se','k']})).coat.texture==='selkirk','Se/k = Selkirk');
   t(C(G({K:['Se','re']})),'Devon rex');
   t(N(G({})),'Black Mackerel Tabby');
