@@ -498,6 +498,9 @@ const CatArt = (() => {
   const mirX = d => mapPts(d, (x, y) => [280 - x, y]);
   const both = d => d + ' ' + mirX(d);
   const scaleAbout = (d, cx, cy, k) => mapPts(d, (x, y) => [cx + (x - cx)*k, cy + (y - cy)*k]);
+  /* scale by k and rotate by deg about (cx,cy), then shift by (dx,dy) */
+  const splay = (d, cx, cy, k, deg, dx = 0, dy = 0) => { const a = deg*Math.PI/180, c = Math.cos(a), sn = Math.sin(a);
+    return mapPts(d, (x, y) => [cx + ((x-cx)*c - (y-cy)*sn)*k + dx, cy + ((x-cx)*sn + (y-cy)*c)*k + dy]); };
 
   /* --- path sampling (absolute M/L/C/Z only) --- */
   function segsOf(d){
@@ -599,6 +602,18 @@ const CatArt = (() => {
     lineFoot:'M244,299 C214,298 190,301 180,309 C172,316 175,325 188,325',
     haunch:'M254,196 C216,210 198,250 202,286 C203,300 210,310 222,315',
     tailC:'M280,292 C300,314 288,331 258,331 C220,331 172,331 138,329 C108,327 86,320 76,306 C70,297 72,287 79,283',
+    /* foreign/oriental type (Sphynx, Peterbald, Cornish): wedge head, fine legs, belly tuck-up */
+    headW:'M140,66 C157,66 174,70 185,80 C195,90 200,102 201,113 C202,124 197,133 189,142 C181,151 171,160 162,166 C155,170 148,172 140,172 C132,172 125,170 118,166 C109,160 99,151 91,142 C83,133 78,124 79,113 C80,102 85,90 95,80 C106,70 123,66 140,66 Z',
+    torsoT:'M108,150 C98,174 93,200 99,224 L150,244 C164,254 178,258 192,254 C188,272 186,292 188,312 L190,324 L272,324 C293,321 300,290 295,262 C289,226 268,188 239,158 C223,143 207,132 190,124 Z',
+    legFarS:'M100,212 C97,238 98,262 101,288 C102,296 102,302 100,308 C95,313 95,324 104,324 L121,324 C128,324 128,313 122,308 C120,300 119,292 120,284 C121,262 125,240 125,222 Z',
+    legNearS:'M128,206 C124,234 127,262 130,288 C131,296 131,302 129,308 C123,313 123,326 134,326 L153,326 C162,326 162,313 154,308 C152,300 152,292 153,284 C156,258 160,236 160,210 Z',
+    lineFarS:'M98,240 C98,262 101,288 101,288 C102,296 102,302 100,308 C95,313 95,324 104,324 L121,324 C128,324 128,313 122,308 C120,300 119,292 120,284 C121,270 122,258 123,246',
+    lineNearS:'M126,234 C126,256 129,276 130,288 C131,296 131,302 129,308 C123,313 123,326 134,326 L153,326 C162,326 162,313 154,308 C152,300 152,292 153,284 C155,266 157,250 158,238',
+    haunchT:'M252,198 C224,208 204,230 196,252',
+    earOL:'M84,114 C74,88 64,56 58,26 C57,19 62,15 68,18 C90,32 112,48 130,68 L112,96 Z',
+    earInOL:'M91,100 C83,79 74,56 69,33 C87,45 105,58 120,72 C108,78 98,88 91,100 Z',
+    earCL:'M88,104 C80,80 74,54 72,28 C72,21 77,18 83,21 C100,33 118,48 132,66 L112,92 Z',
+    earInCL:'M94,92 C88,74 82,54 80,35 C94,46 108,58 120,70 C110,76 100,84 94,92 Z',
     lynxL:'M89,31 C89,25 90,19 92,13 C93,19 95,24 98,29 Z',
     dorsal:'M186,121 C212,133 238,151 257,175 C276,200 288,231 293,262',
   };
@@ -622,21 +637,30 @@ const CatArt = (() => {
     classicSpine: 'M200,138 C222,150 242,168 256,190 C268,210 276,232 280,256',
     classicMisc: 'M183,138 C188,156 184,174 172,190 M274,222 C254,238 246,264 252,292 M289,252 C276,266 272,284 276,306 M198,230 C194,248 196,266 202,282',
   };
+  /* forelegs reach the floor in front of the tail: stretch the shin, drop the paw 12px */
+  const legY = (x, y) => [x, y + Math.min(1, Math.max(0, (y - 240)/60))*12];
+  for (const k of ['legFar','legNear','lineFar','lineNear','legFarS','legNearS','lineFarS','lineNearS']) G[k] = mapPts(G[k], legY);
+  for (const k of ['barsFar','barsNear']) MK[k] = mapPts(MK[k], legY);
 
   /* --- silhouette per coat type (memoised; tufts use a fixed seed so outlines don't jitter) --- */
   const geoCache = {};
+  const FOREIGN = ['sphynx','peterbald','cornish'];
   function geometry(long, tex, ears){
     const key = long + tex + ears;
     if (geoCache[key]) return geoCache[key];
     const rnd = mulberry32(90210);
     const bald = tex === 'sphynx' || tex === 'peterbald', rex = ['devon','cornish','rexoid'].includes(tex);
     const earK = ears === 'tightCurl' ? 'Tight' : ears === 'curl' ? 'Curl' : '';
-    const big = bald || tex === 'devon' ? 1.16 : 1;
-    let earL = scaleAbout(G['ear'+earK+'L'], 112, 92, big), earR = scaleAbout(G['ear'+earK+'R'], 168, 92, big);
-    const earInL = scaleAbout(G['earIn'+earK+'L'], 112, 92, big), earInR = scaleAbout(G['earIn'+earK+'R'], 168, 92, big);
+    const foreign = FOREIGN.includes(tex);
+    const big = bald ? 1.3 : tex === 'cornish' ? 1.2 : tex === 'devon' ? 1.16 : 1;
+    /* hairless ears are huge and splay outward, Cornish ears large and high; the rest scale in place */
+    const earT = d => bald ? splay(d, 114, 94, big, -15, -1, 8) : tex === 'cornish' ? splay(d, 114, 94, big, -7, 0, 5) : scaleAbout(d, 112, 92, big);
+    const own = foreign && !earK ? (bald ? 'OL' : tex === 'cornish' ? 'CL' : null) : null;
+    let earL = own ? G['ear'+own] : earT(G['ear'+earK+'L']), earR = mirX(earL);
+    const earInL = own ? G['earIn'+own] : earT(G['earIn'+earK+'L']), earInR = mirX(earInL);
     const tailW = long ? s => 15 - 5*s : bald ? s => 8.5 - 4.5*s : s => 10.5 - 3.5*s;
-    let tail = tube(G.tailC, tailW), torso = long ? G.torsoLong : G.torso, head = G.head;
-    let legFar = G.legFar, legNear = G.legNear, hindFoot = G.hindFoot;
+    let tail = tube(G.tailC, tailW), torso = foreign ? G.torsoT : long ? G.torsoLong : G.torso, head = foreign ? G.headW : G.head;
+    let legFar = foreign ? G.legFarS : G.legFar, legNear = foreign ? G.legNearS : G.legNear, hindFoot = G.hindFoot;
     if (long){
       const ruff = (x, y) => x < 150 && y > 130 && y < 240 ? 6 : y > 296 ? 2.5 : x > 250 && y > 220 ? 5 : 3.6;
       torso = furrify(torso, ruff, 12, rnd, .55);
@@ -654,11 +678,11 @@ const CatArt = (() => {
     }
     const parts = [
       ['torso', torso, null], ['hindFoot', hindFoot, G.lineFoot], ['tail', tail, tail],
-      ['legFar', legFar, G.lineFar], ['legNear', legNear, G.lineNear],
+      ['legFar', legFar, foreign ? G.lineFarS : G.lineFar], ['legNear', legNear, foreign ? G.lineNearS : G.lineNear],
       ['earL', earL, earL], ['earR', earR, earR], ['head', head, head],
     ];
-    if (long && !earK) parts.splice(5, 0, ['tuftL', G.lynxL, null], ['tuftR', mirX(G.lynxL), null]);
-    return geoCache[key] = { parts, earInL, earInR, tail, big };
+    if (long && !earK && !foreign) parts.splice(5, 0, ['tuftL', G.lynxL, null], ['tuftR', mirX(G.lynxL), null]);
+    return geoCache[key] = { parts, earInL, earInR, tail, big, earT, foreign, haunch: foreign ? G.haunchT : G.haunch };
   }
 
   /* --- colour --- */
@@ -689,9 +713,17 @@ const CatArt = (() => {
       : P.tabby ? mix('#b5574a', hex, .12) : mix(hex, '#b0605a', .22);
     return P;
   }
-  function paled(P, desc){
-    const amt = { point:.1, mink:.36, sepia:.6, mocha:.55 }[desc.point];
-    return { ...P, ground:mix(IVORY, P.ground, amt + .04), under:P.under && mix(IVORY, P.under, amt), mark:mix(IVORY, P.mark, amt*.9 + .05) };
+  function paled(P, desc, bald){
+    const amt = { point:.1, mink:.36, sepia:.6, mocha:.55 }[desc.point], base = bald ? SKIN_PALE : IVORY;
+    return { ...P, ground:mix(base, P.ground, amt + .04), under:P.under && mix(base, P.under, amt), mark:mix(base, P.mark, amt*.9 + .05) };
+  }
+  /* hairless: the skin carries the pigment the coat would have had. Dark pigment stays dark,
+     light pigment warms toward skin pink; tabby survives only as a ghost, ticking and silver vanish. */
+  const SKIN = '#f3c4b6', SKIN_PALE = '#e8c7bd', SKIN_WHITE = '#f0d6c8', GREIGE = '#c9b8ab';
+  const onSkin = h => mix(h, SKIN, Math.min(.5, .08 + lum(h)*.5));
+  function skinify(P){
+    const ground = onSkin(P.ground);
+    return { ...P, ground, under:null, mark:P.tabby ? mix(onSkin(P.mark), ground, .42) : ground, smoke:false, shaded:false, skin:true };
   }
   const EYES = { gold:['#f2cf6a','#d9a63f','#8a5a12'], copper:['#f0a24a','#cc6f22','#7a3a0e'], green:['#c9dd7a','#7cae52','#35602a'],
     emerald:['#a8dc9a','#4fa262','#1f5a33'], blue:['#bfe0ff','#5c9be0','#1f4f94'], aqua:['#bff0e6','#56c1b6','#1f6d67'],
@@ -715,8 +747,14 @@ const CatArt = (() => {
     const ref = (n, attrs = '') => `<use href="#kP-${n}" ${attrs}/>`;
     const later = i => parts.slice(i+1).map(p => ref(p[0], 'fill="#000"')).join('');
     /* visibility mask per part: itself minus everything painted in front of it */
-    for (let i = 0; i < parts.length; i++)
-      defs.push(`<mask id="kV-${parts[i][0]}" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360">${ref(parts[i][0], 'fill="#fff"')}${later(i)}</mask>`);
+    /* the tail passes behind the rump: where it overlaps the body near its root, the rump owns the pixels,
+       so the tail seems to emerge from under the body instead of being pasted on top */
+    const root = c => `<ellipse cx="284" cy="298" rx="17" ry="21" fill="${c}" filter="url(#kB3)"/>`;
+    for (let i = 0; i < parts.length; i++){
+      const n = parts[i][0];
+      defs.push(`<mask id="kV-${n}" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360">${ref(n, 'fill="#fff"')}${later(i)}`
+        + (n === 'torso' ? root('#fff') : n === 'tail' ? root('#000') : '') + `</mask>`);
+    }
     const on = (part, inner) => inner ? `<g mask="url(#kV-${part})">${inner}</g>` : '';
     defs.push(`<clipPath id="kSil">${parts.map(p => ref(p[0])).join('')}</clipPath>`);
     defs.push(`<filter id="kB3" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>`);
@@ -743,6 +781,7 @@ const CatArt = (() => {
       const g = special === 'albino' ? '#f8f1ee' : WHITE;
       pals = [{ ground:g, mark:g, tabby:false, nose:'#e6a2a0', hex:g, key:'white' }];
     } else pals = desc.patches.map(p => palette(p, desc, pointed));
+    if (bald) pals = special ? [{ ...pals[0], ground:SKIN_WHITE, mark:SKIN_WHITE, hex:SKIN_WHITE }] : pals.map(skinify);
     const PA = pals[0];
     const tortie = pals.length === 2;
     const ptype = desc.pattern && desc.pattern.type;
@@ -782,7 +821,8 @@ const CatArt = (() => {
     }
     function coat(P){
       let s = `<rect width="360" height="360" fill="${P.ground}"/>` + under(P);
-      if (P.tabby && ptype === 'ticked') s += `<rect width="360" height="360" fill="${P.mark}" mask="url(#kTick)" opacity=".5"/><rect width="360" height="360" fill="${P.mark}" mask="url(#kStr)" opacity=".25"/>`;
+      if (P.skin) {}
+      else if (P.tabby && ptype === 'ticked') s += `<rect width="360" height="360" fill="${P.mark}" mask="url(#kTick)" opacity=".5"/><rect width="360" height="360" fill="${P.mark}" mask="url(#kStr)" opacity=".25"/>`;
       else if (P.tabby) s += `<rect width="360" height="360" fill="${P.mark}" mask="url(#kTick)" opacity=".16"/>`;
       return s + markings(P);
     }
@@ -798,18 +838,33 @@ const CatArt = (() => {
     let paint = '';
     if (pointed){
       /* temperature-sensitive points: pale body, colour at the cool extremities */
-      defs.push(`<linearGradient id="kLegG" gradientUnits="userSpaceOnUse" x1="0" y1="226" x2="0" y2="300"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>`);
+      defs.push(`<linearGradient id="kLegG" gradientUnits="userSpaceOnUse" x1="0" y1="${bald ? 214 : 230}" x2="0" y2="${bald ? 284 : 312}"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>`);
       defs.push(`<mask id="kPt" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360">`
-        + `<g filter="url(#kB6)" fill="#fff">` + on('head', `<ellipse cx="140" cy="136" rx="38" ry="33"/><ellipse cx="140" cy="100" rx="14" ry="20"/>`)
-        + on('earL', partUse('earL')) + on('earR', partUse('earR')) + earTufts('') + on('tail', partUse('tail'))
+        + `<g filter="url(#kB6)" fill="#fff">` + on('head', bald ? `<ellipse cx="140" cy="130" rx="50" ry="42"/><ellipse cx="140" cy="92" rx="26" ry="24"/>` : `<ellipse cx="140" cy="136" rx="38" ry="33"/><ellipse cx="140" cy="100" rx="14" ry="20"/>`)
+        + on('earL', partUse('earL')) + on('earR', partUse('earR')) + earTufts('') + on('tail', partUse('tail') + '<circle cx="283" cy="294" r="17" fill="#000" opacity=".8"/>')
         + on('hindFoot', `<ellipse cx="212" cy="314" rx="40" ry="18"/>`) + `</g>`
-        + `<g fill="url(#kLegG)" filter="url(#kB3)">` + on('legFar', `<rect x="80" y="200" width="60" height="140"/>`) + on('legNear', `<rect x="110" y="200" width="70" height="140"/>`) + `</g>`
+        + `<g fill="url(#kLegG)" filter="url(#kB3)">` + on('legFar', `<rect x="80" y="200" width="60" height="152"/>`) + on('legNear', `<rect x="110" y="200" width="70" height="152"/>`) + `</g>`
         + `</mask>`);
-      paint += coatAll(pals.map(P => paled(P, desc))) + `<g mask="url(#kPt)" opacity="${desc.contrast}">${coatAll(pals)}</g>`;
+      if (bald){
+        /* bare skin runs cool almost everywhere, so hairless points shade the whole body: a warm greige
+           underside (belly, throat, inner thigh, armpits), dark outer surfaces (spine, outer thigh,
+           forelegs), and near-black points. Sepia and mink flatten the gradient. */
+        const K = { point:[.62, .12], mink:[.54, .26], sepia:[.46, .36], mocha:[.46, .34] }[desc.point];
+        const tone = (P, t) => { const pts = P.pheo ? mix(P.ground, '#7a3a20', .2) : mix(P.hex, '#0c060d', .4), g = mix(pts, GREIGE, t);
+          return { ...P, ground:g, mark:P.tabby ? mix(g, '#000', .2) : g }; };
+        defs.push(`<linearGradient id="kColdLeg" gradientUnits="userSpaceOnUse" x1="0" y1="214" x2="0" y2="258"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>`);
+        defs.push(`<mask id="kCold" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360">`
+          + on('torso', `<g fill="#fff" filter="url(#kB10)"><path d="${G.dorsal}" fill="none" stroke="#fff" stroke-width="30" transform="translate(4 -2)"/>`
+            + `<ellipse cx="262" cy="266" rx="36" ry="50"/><ellipse cx="284" cy="302" rx="16" ry="22"/><ellipse cx="200" cy="160" rx="20" ry="26"/><ellipse cx="226" cy="222" rx="28" ry="34" opacity=".3"/></g>`)
+          + on('legFar', `<rect width="360" height="360" fill="url(#kColdLeg)"/>`) + on('legNear', `<rect width="360" height="360" fill="url(#kColdLeg)"/>`)
+          + on('hindFoot', `<use href="#kP-hindFoot" fill="#fff"/>`) + on('tail', `<use href="#kP-tail" fill="#fff"/>`) + `</mask>`);
+        paint += coatAll(pals.map(P => tone(P, K[0]))) + `<g mask="url(#kCold)">${coatAll(pals.map(P => tone(P, K[1])))}</g>`
+          + `<g mask="url(#kPt)">${coatAll(pals.map(P => tone(P, 0)))}</g>`;
+      } else paint += coatAll(pals.map(P => paled(P, desc, bald))) + `<g mask="url(#kPt)" opacity="${desc.contrast}">${coatAll(pals)}</g>`;
     } else paint += coatAll(pals);
 
     /* silver undercoat on solids (smoke) */
-    if (PA.smoke && !pointed){
+    if (PA.smoke && !pointed && !bald){
       defs.push(`<mask id="kSmk" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><g fill="#fff" filter="url(#kB10)">`
         + on('torso', `<ellipse cx="122" cy="194" rx="30" ry="36"/><ellipse cx="240" cy="290" rx="56" ry="30"/><ellipse cx="210" cy="230" rx="30" ry="30" opacity=".5"/>`)
         + on('head', `<ellipse cx="84" cy="142" rx="10" ry="20"/><ellipse cx="196" cy="142" rx="10" ry="20"/>`)
@@ -817,7 +872,7 @@ const CatArt = (() => {
       paint += `<g mask="url(#kSmk)"><rect width="360" height="360" fill="#dfe3e8" mask="url(#kStr)"/><rect width="360" height="360" fill="#c9ced6" opacity=".35"/></g>`;
     }
     /* shaded / golden tipping: dense on the back, fading to a clear underside */
-    if (!special && desc.shading !== 'none'){
+    if (!special && !bald && desc.shading !== 'none'){
       defs.push(`<linearGradient id="kTipG" gradientUnits="userSpaceOnUse" x1="270" y1="120" x2="140" y2="300"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`);
       defs.push(`<linearGradient id="kTipH" gradientUnits="userSpaceOnUse" x1="0" y1="40" x2="0" y2="104"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`);
       const body = ['torso','hindFoot','legFar','legNear'].map(n => on(n, `<rect width="360" height="360" fill="url(#kTipG)"/>`)).join('');
@@ -835,46 +890,46 @@ const CatArt = (() => {
       defs.push(`<filter id="kRag" filterUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="${(seed>>>3) % 991}" result="t"/>`
         + `<feDisplacementMap in="SourceGraphic" in2="t" scale="${gr >= 5 ? 16 : 11}" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation=".6"/></filter>`);
       const W = {
-        paws: on('legFar', '<ellipse cx="111" cy="318" rx="20" ry="10"/>') + on('legNear', '<ellipse cx="143" cy="320" rx="22" ry="10"/>') + on('hindFoot', '<ellipse cx="192" cy="318" rx="16" ry="9"/>'),
-        mitts: on('legFar', '<rect x="80" y="304" width="60" height="30"/>') + on('legNear', '<rect x="110" y="304" width="70" height="30"/>') + on('hindFoot', '<ellipse cx="206" cy="316" rx="36" ry="14"/>'),
+        paws: on('legFar', '<ellipse cx="111" cy="330" rx="20" ry="10"/>') + on('legNear', '<ellipse cx="143" cy="332" rx="22" ry="10"/>') + on('hindFoot', '<ellipse cx="192" cy="318" rx="16" ry="9"/>'),
+        mitts: on('legFar', '<rect x="80" y="316" width="60" height="34"/>') + on('legNear', '<rect x="110" y="316" width="70" height="34"/>') + on('hindFoot', '<ellipse cx="206" cy="316" rx="36" ry="14"/>'),
         locket: on('torso', '<ellipse cx="124" cy="192" rx="11" ry="15"/>'),
+        chin: on('head', '<ellipse cx="140" cy="161" rx="11" ry="7"/>'),
         tux: on('head', '<ellipse cx="140" cy="156" rx="23" ry="15"/>')
           + on('torso', '<path d="M94,164 C120,176 160,176 182,162 C180,186 170,206 154,216 C144,222 136,228 130,238 C124,228 110,220 100,212 C92,196 90,178 94,164 Z M150,244 C162,270 170,296 176,320 L146,322 Z"/>')
-          + on('legFar', '<path d="M114,206 L132,206 C130,228 128,248 125,262 C120,244 116,226 114,206 Z"/><rect x="80" y="292" width="60" height="44"/>')
-          + on('legNear', '<path d="M120,200 L142,200 C138,222 132,242 128,258 C124,240 121,220 120,200 Z"/><rect x="110" y="290" width="70" height="44"/>')
+          + on('legFar', '<path d="M114,206 L132,206 C130,228 128,248 125,262 C120,244 116,226 114,206 Z"/><rect x="80" y="304" width="60" height="48"/>')
+          + on('legNear', '<path d="M120,200 L142,200 C138,222 132,242 128,258 C124,240 121,220 120,200 Z"/><rect x="110" y="302" width="70" height="48"/>')
           + on('hindFoot', '<ellipse cx="200" cy="318" rx="30" ry="14"/>'),
         bi: on('head', '<path d="M140,86 C135,104 124,120 108,134 C96,146 102,170 140,172 C178,170 184,146 172,134 C156,120 145,104 140,86 Z"/>')
           + on('torso', '<path d="M92,160 C120,172 170,172 186,160 C196,196 204,236 226,262 C246,268 272,276 300,280 L300,340 L90,340 Z"/>')
-          + on('legFar', '<rect x="80" y="200" width="60" height="140"/>') + on('legNear', '<rect x="110" y="200" width="70" height="140"/>')
+          + on('legFar', '<rect x="80" y="200" width="60" height="152"/>') + on('legNear', '<rect x="110" y="200" width="70" height="152"/>')
           + on('hindFoot', '<rect x="160" y="290" width="100" height="50"/>'),
         cap: on('head', '<path d="M60,50 L220,50 L220,100 C200,96 182,100 170,108 C160,98 150,90 140,98 C130,90 120,98 110,108 C98,100 80,96 60,100 Z"/>')
           + on('earL', partUse('earL')) + on('earR', partUse('earR')),
         vanCap: on('head', '<path d="M60,50 L134,50 L134,92 C124,90 114,94 106,104 C96,100 82,98 60,100 Z M146,50 L220,50 L220,100 C198,98 184,100 174,104 C166,94 156,90 146,92 Z"/>')
           + on('earL', partUse('earL')) + on('earR', partUse('earR')),
         tail: on('tail', partUse('tail')),
+        tailRoot: on('tail', '<ellipse cx="287" cy="300" rx="15" ry="19"/>'),
         harlBody: on('torso', '<ellipse cx="236" cy="176" rx="34" ry="24" transform="rotate(35 236 176)"/><ellipse cx="270" cy="276" rx="22" ry="28"/>'),
         vanSpot: on('torso', '<ellipse cx="214" cy="148" rx="11" ry="8"/>'),
       };
       let content;
       if (gr === 1) content = `<g fill="#fff">${W.mitts}</g>`;
-      else if (gr === 2) content = `<g fill="#fff">${W.paws}${W.locket}</g>`;
+      else if (gr === 2) content = `<g fill="#fff">${W.paws}${W.locket}${W.chin}</g>`;
       else if (gr === 3) content = `<g fill="#fff">${W.tux}</g>`;
-      else if (gr === 4) content = `<g fill="#fff">${W.bi}</g>`;
-      else content = `<rect width="360" height="360" fill="#fff"/><g fill="#000">${gr === 5 ? W.cap + W.harlBody : W.vanCap + (seed % 3 === 0 ? W.vanSpot : '')}${W.tail}</g>`;
+      else if (gr === 4) content = `<g fill="#fff">${W.bi}${W.tailRoot}</g>`;
+      else content = `<rect width="360" height="360" fill="#fff"/><g fill="#000">${gr === 5 ? W.cap + W.harlBody : W.vanCap + (seed % 3 === 0 ? W.vanSpot : '')}${W.tail}</g><g fill="#fff">${W.tailRoot}</g>`;
       defs.push(`<mask id="kW" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><g filter="${gr === 1 ? '' : 'url(#kRag)'}">${content}</g></mask>`);
-      paint += `<rect width="360" height="360" style="fill:var(--fur-white)" mask="url(#kW)"/>`;
+      paint += `<rect width="360" height="360" style="fill:${bald ? SKIN_WHITE : 'var(--fur-white)'}" mask="url(#kW)"/>`;
     }
 
-    /* hairless: skin over the pigment pattern, which still shows through */
-    if (bald) paint += `<rect width="360" height="360" fill="#e9b5a4" opacity=".5"/>`;
 
     /* ---------- form shading ---------- */
     paint += `<g fill="#20160f" filter="url(#kB6)">`
       + on('torso', `<ellipse cx="140" cy="176" rx="46" ry="12" opacity=".2"/><ellipse cx="166" cy="276" rx="10" ry="46" opacity=".16"/>`
-        + `<path d="${G.haunch}" fill="none" stroke="#20160f" stroke-width="12" opacity=".2" transform="translate(-5 0)"/><ellipse cx="232" cy="322" rx="70" ry="9" opacity=".25"/>`
+        + `<path d="${geo.haunch}" fill="none" stroke="#20160f" stroke-width="12" opacity=".2" transform="translate(-5 0)"/><ellipse cx="232" cy="322" rx="70" ry="9" opacity=".25"/>`
         + `<path d="${G.dorsal}" fill="none" stroke="#20160f" stroke-width="14" opacity=".12" transform="translate(6 -3)"/>`)
-      + on('legFar', `<rect x="80" y="200" width="60" height="140" opacity=".12"/>`)
-      + on('legNear', `<path d="M164,210 C160,250 156,280 158,320" fill="none" stroke="#20160f" stroke-width="8" opacity=".16"/>`)
+      + on('legFar', `<rect x="80" y="200" width="60" height="152" opacity=".12"/>`)
+      + on('legNear', `<path d="M164,210 C160,250 156,286 158,332" fill="none" stroke="#20160f" stroke-width="8" opacity=".16"/>`)
       + on('head', `<path d="M80,140 C100,166 180,166 200,140" fill="none" stroke="#20160f" stroke-width="10" opacity=".1"/>`)
       + on('tail', `<path d="${G.tailC}" fill="none" stroke="#20160f" stroke-width="10" opacity=".16" transform="translate(0 6)"/>`)
       + on('hindFoot', `<path d="M244,300 C214,300 190,303 180,311" fill="none" stroke="#20160f" stroke-width="6" opacity=".14"/>`)
@@ -883,6 +938,11 @@ const CatArt = (() => {
       + on('torso', `<ellipse cx="210" cy="140" rx="22" ry="9" transform="rotate(30 210 140)" opacity=".14"/><ellipse cx="262" cy="226" rx="16" ry="30" opacity=".1"/><ellipse cx="112" cy="196" rx="12" ry="24" opacity=".1"/>`)
       + on('tail', `<path d="${G.tailC}" fill="none" stroke="#fff" stroke-width="6" opacity=".12" transform="translate(0 -5)"/>`)
       + `</g>`;
+    if (bald) paint += `<g fill="#fff" filter="url(#kB3)" opacity="${dark ? .5 : .26}">`
+      + on('head', `<ellipse cx="140" cy="74" rx="22" ry="5"/><ellipse cx="96" cy="124" rx="4" ry="9" transform="rotate(20 96 124)"/><ellipse cx="184" cy="124" rx="4" ry="9" transform="rotate(-20 184 124)"/>`)
+      + on('torso', `<ellipse cx="214" cy="146" rx="16" ry="5" transform="rotate(32 214 146)"/><ellipse cx="268" cy="232" rx="7" ry="22" transform="rotate(-12 268 232)"/><ellipse cx="108" cy="192" rx="6" ry="16"/>`)
+      + on('legFar', `<ellipse cx="100" cy="262" rx="3" ry="20"/>`) + on('legNear', `<ellipse cx="130" cy="258" rx="3.5" ry="22"/>`)
+      + on('tail', `<path d="${subPath(G.tailC, .25, .7)}" fill="none" stroke="#fff" stroke-width="3" transform="translate(0 -4)"/>`) + `</g>`;
     /* fur grain */
     if (!bald) paint += `<rect width="360" height="360" filter="url(#kGrainD)" opacity=".11"/><rect width="360" height="360" filter="url(#kGrainL)" opacity="${dark ? .16 : .09}"/>`;
 
@@ -902,15 +962,17 @@ const CatArt = (() => {
     }
     /* hairless wrinkles */
     if (bald){
-      const wr = both('M118,86 C128,82 136,82 140,84 M122,78 C130,74 136,74 140,76 M126,94 C132,92 136,92 140,93')
-        + ' M96,178 C112,186 150,188 172,178 M100,192 C118,200 148,200 168,192 M194,140 C204,150 210,162 212,178 M206,140 C216,150 224,164 226,180 M180,246 C192,258 198,272 200,290';
-      paint += `<path d="${wr}" fill="none" stroke="#7a4a44" stroke-opacity=".38" stroke-width="1.8" stroke-linecap="round"/>`
-        + `<path d="${wr}" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="1.4" stroke-linecap="round" transform="translate(0 2.2)"/>`;
+      const face = both('M128,90 C132,88 136,88 140,89 M130,83 C133,81 137,81 140,82 M132,76 C135,75 138,75 140,75');
+      const body = 'M112,180 C124,186 146,187 166,180 M116,190 C128,195 144,195 158,190 M198,138 C206,146 211,156 213,168';
+      const legs = { far:'M114,238 C117,240 121,240 124,237', near:'M148,232 C152,234 156,234 159,231' };
+      const crease = (d, part) => on(part, `<path d="${d}" fill="none" stroke="#1a0e0c" stroke-opacity="${dark ? .32 : .16}" stroke-width="1.5" stroke-linecap="round"/>`
+        + `<path d="${d}" fill="none" stroke="#fff" stroke-opacity="${dark ? .14 : .22}" stroke-width="1.1" stroke-linecap="round" transform="translate(0 2)"/>`);
+      paint += crease(face, 'head') + crease(body, 'torso') + crease(legs.far, 'legFar') + crease(legs.near, 'legNear');
     }
 
     /* ---------- assemble ---------- */
     const LINE = 'var(--line)';
-    let out = `<ellipse cx="190" cy="330" rx="122" ry="9" fill="#000" opacity=".13" filter="url(#kB3)"/>`;
+    let out = `<ellipse cx="188" cy="334" rx="124" ry="11" fill="#000" opacity=".13" filter="url(#kB3)"/>`;
     out += `<g fill="none" style="stroke:${LINE}" stroke-width="4.6" stroke-linejoin="round">${parts.map(p => ref(p[0])).join('')}</g>`;
     out += `<g clip-path="url(#kSil)">${paint}</g>`;
     /* interior contours: each part's edge, hidden by whatever sits in front of it */
@@ -919,12 +981,12 @@ const CatArt = (() => {
       const ln = line === parts[i][1] ? `<use href="#kP-${n}"` : `<path d="${line}"`;
       out += `<g mask="url(#kN-${n})">${ln} fill="none" style="stroke:${LINE}" stroke-width="${long ? 1.7 : 2.2}" stroke-linejoin="round" stroke-linecap="round" opacity="${long ? .6 : .75}"/>${dark ? `${ln} fill="none" stroke="#a9a3b8" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" opacity=".45" transform="translate(-1.2 0)"/>` : ''}</g>`;
       defs.push(`<mask id="kN-${n}" maskUnits="userSpaceOnUse" x="0" y="0" width="360" height="360"><rect width="360" height="360" fill="#fff"/>`
-        + (n === 'tail' ? `<circle cx="281" cy="291" r="${long ? 22 : 15}" fill="#000" filter="url(#kB3)"/>` : '')
+        + (n === 'tail' ? root('#000') : '')
         + later(i) + `</mask>`);
     }
-    out += on('torso', `<path d="${G.haunch}" fill="none" style="stroke:${dark ? '#a9a3b8' : LINE}" stroke-width="2" stroke-linecap="round" opacity="${dark ? .4 : .55}"/>`);
+    out += on('torso', `<path d="${geo.haunch}" fill="none" style="stroke:${dark ? '#a9a3b8' : LINE}" stroke-width="2" stroke-linecap="round" opacity="${dark ? .4 : .55}"/>`);
     const toes = d => `<path d="${d}" fill="none" style="stroke:${LINE}" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>`;
-    out += on('legFar', toes('M106,316 L106,323 M114,315 L114,323')) + on('legNear', toes('M137,317 L137,325 M146,317 L146,325'))
+    out += on('legFar', toes('M106,328 L106,335 M114,327 L114,335')) + on('legNear', toes('M137,329 L137,337 M146,329 L146,337'))
       + on('hindFoot', toes('M186,313 L186,324 M195,310 L195,322'));
 
     /* ---------- face ---------- */
@@ -937,7 +999,11 @@ const CatArt = (() => {
     let s = '';
     /* inner ears */
     const skin = desc.special ? '#f0b4b0' : pointed ? mix('#e8a3a0', PA.mark, .55) : mix('#e3a19c', PA.ground, lum(PA.ground) < .2 ? .45 : .28);
-    s += `<g fill="${skin}"><path d="${geo.earInL}"/><path d="${geo.earInR}"/></g>`;
+    if (bald){
+      const tone = desc.special ? '#f0b8b0' : mix(pointed ? PA.mark : PA.ground, '#e8a3a0', .22);
+      s += `<defs><linearGradient id="kEarG" gradientUnits="userSpaceOnUse" x1="0" y1="92" x2="0" y2="20"><stop offset="0" stop-color="#d9776a"/><stop offset=".45" stop-color="${mix(tone, '#d9776a', .35)}"/><stop offset="1" stop-color="${tone}"/></linearGradient></defs>`
+        + `<g fill="url(#kEarG)"><path d="${geo.earInL}"/><path d="${geo.earInR}"/></g>`;
+    } else s += `<g fill="${skin}"><path d="${geo.earInL}"/><path d="${geo.earInR}"/></g>`;
     if (!bald){
       const tuftCol = long ? '#f5efe6' : mix('#f5efe6', PA.ground, .3);
       const wisps = both(long
@@ -947,7 +1013,7 @@ const CatArt = (() => {
     }
     if (desc.coat.ears !== 'normal'){
       const roll = desc.coat.ears === 'curl' ? 'curlRoll' : 'curlTight';
-      s += `<path d="${scaleAbout(G[roll+'L'], 112, 92, geo.big)} ${scaleAbout(G[roll+'R'], 168, 92, geo.big)}" fill="none" style="stroke:${LINE}" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>`;
+      s += `<path d="${both(geo.earT(G[roll+'L']))}" fill="none" style="stroke:${LINE}" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>`;
     }
     /* eyes */
     let eyeL, eyeR;
@@ -960,18 +1026,24 @@ const CatArt = (() => {
     else if (PA.silver) eyeL = eyeR = E.green;
     else if (PA.pheo) eyeL = eyeR = E.copper;
     else eyeL = eyeR = E.gold;
-    const eyeD = 'M101,116 C103,106 110,101 117,101 C125,101 131,107 131,114 C131,122 124,127 116,127 C108,127 101,123 101,116 Z';
-    const lid = 'M101,115 C103,106 110,101 117,101 C125,101 130,106 131,112';
+    const eyeD = geo.foreign ? 'M98,108 C103,100 113,98 121,101 C128,104 133,111 134,119 C127,125 116,127 108,123 C101,119 98,114 98,108 Z'
+      : 'M101,116 C103,106 110,101 117,101 C125,101 131,107 131,114 C131,122 124,127 116,127 C108,127 101,123 101,116 Z';
+    const lid = geo.foreign ? 'M98,107 C103,100 113,98 121,101 C128,104 133,111 134,118' : 'M101,115 C103,106 110,101 117,101 C125,101 130,106 131,112';
+    const tilt = 0;
     const grad = (id, c, cx) => `<radialGradient id="${id}" gradientUnits="userSpaceOnUse" cx="${cx}" cy="116" r="15"><stop offset="0" stop-color="${c[0]}"/><stop offset=".55" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[2]}"/></radialGradient>`;
     s += `<defs>${grad('kIrisL', eyeL, 116)}${grad('kIrisR', eyeR, 164)}</defs>`;
     const pupil = desc.special === 'albino' ? '#a0405a' : '#141018';
-    const oneEye = (d, lidD, fillId, px, hx1, hx2) =>
-      `<path d="${d}" fill="url(#${fillId})"/>`
-      + `<ellipse cx="${px}" cy="114.5" rx="4.4" ry="10.2" fill="${pupil}"/>`
-      + `<path d="${lidD}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="3.2"/>`
-      + `<path d="${d}" fill="none" style="stroke:${LINE}" stroke-width="2"/>`
-      + `<circle cx="${hx1}" cy="108" r="2.7" fill="#fff" opacity=".95"/><circle cx="${hx2}" cy="121" r="1.3" fill="#fff" opacity=".6"/>`;
-    s += oneEye(eyeD, lid, 'kIrisL', 117, 121, 112) + oneEye(mirX(eyeD), mirX(lid), 'kIrisR', 163, 167, 158);
+    /* the eye shape tilts with the breed; the pupil stays vertical */
+    const oneEye = (d, lidD, fillId, px, hx1, hx2, rot) => {
+      const t = rot ? ` transform="rotate(${rot} ${px} 114)"` : '';
+      return `<path d="${d}" fill="url(#${fillId})"${t}/>`
+        + `<clipPath id="${fillId}C"><path d="${d}"${t}/></clipPath>`
+        + `<ellipse cx="${px}" cy="114.5" rx="4.4" ry="10.2" fill="${pupil}" clip-path="url(#${fillId}C)"/>`
+        + `<path d="${lidD}" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="3.2"${t}/>`
+        + `<path d="${d}" fill="none" style="stroke:${LINE}" stroke-width="2"${t}/>`
+        + `<circle cx="${hx1}" cy="108" r="2.7" fill="#fff" opacity=".95"/><circle cx="${hx2}" cy="121" r="1.3" fill="#fff" opacity=".6"/>`;
+    };
+    s += oneEye(eyeD, lid, 'kIrisL', 117, 121, 112, tilt) + oneEye(mirX(eyeD), mirX(lid), 'kIrisR', 163, 167, 158, -tilt);
     /* nose, mouth */
     const whiteNose = gr >= 4 || desc.special;
     const nose = whiteNose ? '#e6a2a0' : PA.nose;
@@ -982,7 +1054,7 @@ const CatArt = (() => {
     const muzzle = whiteNose || gr >= 3 ? WHITE : pointed ? PA.mark : (PA.under || PA.ground);
     const wcol = lum(muzzle) < .3 ? '#f4efe6' : '#3a3238';
     s += `<g fill="${wcol}" opacity=".45">${[[127,145],[122,147],[128,150],[123,152]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r=".9"/><circle cx="${280-x}" cy="${y}" r=".9"/>`).join('')}</g>`;
-    if (bald) return s;
+    if (bald) return s + `<path d="${both('M123,148 C115,146 108,145 101,146 M123,151 C116,151 111,152 105,154 M111,99 C108,94 106,91 103,89')}" fill="none" stroke="${wcol}" stroke-width="1.1" stroke-linecap="round" opacity=".6"/>`;
     let wh = both('M123,147 C104,142 84,140 58,144 M123,150 C104,150 84,153 60,160 M124,153 C107,158 90,165 70,176 M110,99 C104,89 100,83 94,78');
     if (rex) wh = wh.replace(/C(-?[\d.]+),(-?[\d.]+) (-?[\d.]+),(-?[\d.]+) (-?[\d.]+),(-?[\d.]+)/g,
       (m, a, b, c, d, e, f) => `C${a},${+b - 9} ${c},${+d + 9} ${e},${f}`);
