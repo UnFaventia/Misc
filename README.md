@@ -5,11 +5,16 @@ Assorted small projects.
 ## Cat Coat Genetics Calculator
 
 `cat-genetics-calculator.html` — a single-file, zero-dependency interactive calculator for cat coat
-genetics. Set the full genotype at every coat locus (Colourpoint C, Agouti A, Orange O, Extension E,
-Brown B, Dilution D, Dilute-Modifier, Silver I, White W/KIT, Tabby Mc/Sp/Ta/Wb, hair length, rex and
-hairless genes, ear curl) and it derives the breeder-style phenotype name (e.g. "Chocolate Mink &
-White (tuxedo)"), the carried recessives, warnings (Wd deafness, Hp/Hp ectodermal dysplasia), and a
-live SVG portrait of the cat.
+genetics. Set the sex (XX, XY, or XXY for the rare tortoiseshell tom) and the full genotype at every
+coat locus (Colourpoint C incl. Mocha, Agouti A, Orange O, Extension E, Brown B, Dilution D,
+Dilute-Modifier, Silver I, White W/KIT, Tabby Mc/Sp/Ta/Wb, hair length, the KRT71 Selkirk/Devon/Sphynx
+series, Cornish rex, dominant hairless, ear curl) and it derives the breeder-style phenotype name (e.g.
+"Chocolate Mink & White (tuxedo)"), the carried recessives (including those hidden under Dominant White
+or albinism), warnings (Wd deafness, Hp/Hp ectodermal dysplasia), and a live SVG portrait of the cat.
+
+Naming follows the A genotype rather than what merely shows: red fur always shows tabby, but an a/a red
+is still a solid Red, a Red Point (not Lynx), and a Red Smoke (not Cameo). The Mocha allele follows Yu,
+Grahn & Lyons 2019: co-dominant with Burmese sepia (cb/cm) and dominant over Siamese (cs/cm).
 
 The portrait (`CatArt.catSVG`) is also a pure function of the phenotype descriptor. It draws a
 three-quarter seated cat and places every marking anatomically: the forehead M, cheek lines,
