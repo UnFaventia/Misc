@@ -156,18 +156,17 @@
 /* ================================================================
    1. DATA — loci, alleles, genotype options, blurbs
    ================================================================ */
+const O_TWO_X = [['o','o','non-orange'],['O','o','tortoiseshell'],['O','O','red']];
 const LOCI = [
   { id:'O', sym:'O', label:'Orange (red)', group:'base', xLinked:true,
     blurb:'X-linked. O forces yellow pigment (pheomelanin) and blocks black; o allows both. Females can be O/o — random X-inactivation gives tortoiseshell patches. Normal XY males cannot be tortie (the rare male torties are XXY or chimeras). Red areas always show tabby, even on a genetically solid cat.',
-    optionsBySex:{
-      XX:[['o','o','non-orange'],['O','o','tortoiseshell'],['O','O','red']],
-      XY:[['o','Y','non-orange'],['O','Y','red']] } },
+    optionsBySex:{ XX:O_TWO_X, XXY:O_TWO_X, 'XY/XY':O_TWO_X, XY:[['o','Y','non-orange'],['O','Y','red']] } },
   { id:'C', sym:'C', label:'Colourpoint (tyrosinase)', group:'base',
-    blurb:'Master pigment gene (TYR). Point alleles are temperature-sensitive: more pigment on the cool ears, face, paws and tail. C > cb (sepia) > cs (point) > c (albino); cb/cs is codominant Mink (Tonkinese — which is why Tonkinese don’t breed true). cm is the Burmese “Mocha/Bangkok” allele. c/c albino hides every other colour gene.',
+    blurb:'Master pigment gene (TYR). Point alleles are temperature-sensitive: more pigment on the cool ears, face, paws and tail. C > cb (sepia) > cs (point) > c (albino); cb/cs is codominant Mink (Tonkinese — which is why Tonkinese don’t breed true). cm is the Burmese “Mocha/Bangkok” allele (Yu, Grahn & Lyons 2019): a paler, more even colour, co-dominant with cb and dominant over cs. c/c albino hides every other colour gene.',
     options:[ ['C','C','full colour'],['C','cb','full colour · carries sepia'],['C','cs','full colour · carries point'],
       ['C','cm','full colour · carries mocha'],['C','c','full colour · carries albino'],
-      ['cb','cb','Sepia (Burmese)'],['cb','cs','Mink (Tonkinese)'],['cb','cm','Sepia · carries mocha'],
-      ['cb','c','Sepia · carries albino'],['cs','cs','Colourpoint (Siamese)'],['cs','cm','Point · carries mocha'],
+      ['cb','cb','Sepia (Burmese)'],['cb','cs','Mink (Tonkinese)'],['cb','cm','Sepia-Mocha (co-dominant)'],
+      ['cb','c','Sepia · carries albino'],['cs','cs','Colourpoint (Siamese)'],['cs','cm','Mocha · carries point'],
       ['cs','c','Point · carries albino'],['cm','cm','Mocha (Bangkok)'],['cm','c','Mocha · carries albino'],
       ['c','c','Albino'] ] },
   { id:'A', sym:'A', label:'Agouti', group:'base',
@@ -212,10 +211,12 @@ const LOCI = [
   { id:'L', sym:'L', label:'Hair length', group:'coat',
     blurb:'FGF5. Short hair L is dominant; l/l gives longhair.',
     options:[ ['L','L','shorthair'],['L','l','shorthair · carries longhair'],['l','l','longhair'] ] },
-  { id:'K', sym:'K', label:'KRT71 series (Devon/Sphynx)', group:'coat',
-    blurb:'One gene, allelic series: re Devon Rex curl, hr Sphynx hairless; both recessive to normal, and re is incompletely dominant over hr (re/hr cats are rexoid).',
+  { id:'K', sym:'K', label:'KRT71 series (Selkirk/Devon/Sphynx)', group:'coat',
+    blurb:'One gene, allelic series. Se Selkirk Rex is dominant (a KRT71 splice variant). re Devon Rex curl and hr Sphynx hairless are both recessive to normal, and re is incompletely dominant over hr (re/hr cats are rexoid). Se paired with re or hr is unstudied — shown as Selkirk.',
     options:[ ['k','k','normal'],['k','re','normal · carries Devon'],['k','hr','normal · carries Sphynx'],
-      ['re','re','Devon Rex'],['re','hr','rexoid (re/hr)'],['hr','hr','Sphynx (hairless)'] ] },
+      ['re','re','Devon Rex'],['re','hr','rexoid (re/hr)'],['hr','hr','Sphynx (hairless)'],
+      ['Se','k','Selkirk Rex'],['Se','re','Selkirk Rex · carries Devon'],['Se','hr','Selkirk Rex · carries Sphynx'],
+      ['Se','Se','Selkirk Rex (homozygous)'] ] },
   { id:'R', sym:'R', label:'Cornish Rex (LPAR6)', group:'coat',
     blurb:'A separate recessive rex gene: r/r gives the Cornish Rex wavy coat.',
     options:[ ['r+','r+','normal'],['r+','r','normal · carries Cornish'],['r','r','Cornish Rex'] ] },
@@ -239,9 +240,10 @@ const GROUPS = [
 /* ================================================================
    2. ENGINE — pure genotype → phenotype descriptor
    ================================================================ */
-const C_TABLE = { 'C':'none','cb/cb':'sepia','cb/cs':'mink','cb/cm':'sepia','cb/c':'sepia',
-  'cs/cs':'point','cs/cm':'point','cs/c':'point','cm/cm':'mocha','cm/c':'mocha' };
-const POINT_CONTRAST = { none:0, point:1, mink:.68, sepia:.45, mocha:.42 };
+/* cm: co-dominant with cb, dominant over cs (Yu, Grahn & Lyons 2019); cm/c is unobserved, assumed mocha */
+const C_TABLE = { 'C':'none','cb/cb':'sepia','cb/cs':'mink','cb/cm':'sepiaMocha','cb/c':'sepia',
+  'cs/cs':'point','cs/cm':'mocha','cs/c':'point','cm/cm':'mocha','cm/c':'mocha' };
+const POINT_CONTRAST = { none:0, point:1, mink:.68, sepia:.45, sepiaMocha:.38, mocha:.3 };
 const WHITE_GRADES = ['none','gloves','mild spotting','tuxedo','bicolor','harlequin','van'];
 
 function computePhenotype(g){
@@ -260,36 +262,48 @@ function computePhenotype(g){
     k==='hr/hr'    ? 'sphynx' :
     k==='hr/re'    ? 'rexoid' :
     k==='re/re'    ? 'devon' :
+    has('K','Se')  ? 'selkirk' :
     hom('R','r')   ? 'cornish' : 'normal';
   desc.coat.hairless = ['peterbald','sphynx'].includes(desc.coat.texture);
   desc.coat.ears = has('Cu','Cu') ? (hom('Cu','Cu') ? 'tightCurl' : 'curl') : 'normal';
   if (hom('Hp','Hp')) desc.warnings.push('Hp/Hp — homozygous dominant hairless causes feline ectodermal dysplasia (poor dentition, impaired sweating and lactation).');
   if (has('Hp','Hp') && (k!=='k/k' || hom('R','r'))) desc.notes.push('Peterbald hairlessness shown; the rex/KRT71 genotype is hidden underneath it.');
   else if (desc.coat.texture==='sphynx' && hom('R','r')) desc.notes.push('Sphynx hairlessness shown; the Cornish rex coat is hidden underneath it.');
+  else if (['devon','rexoid','selkirk'].includes(desc.coat.texture) && hom('R','r'))
+    desc.notes.push('Cornish r/r is present too — a double-rex coat (KRT71 + LPAR6) is uncharacterised; the KRT71 coat is shown.');
 
-  /* epistatic whites */
+  /* epistatic whites: the hidden colour is still carried, so report what it carries */
   if (hom('C','c')) {
     desc.special='albino';
     desc.masked = computePhenotype({...g, loci:{...g.loci, C:['C','C']}});
+    desc.carried = desc.masked.carried;
     desc.notes.push('c/c — recessive white: no working tyrosinase, so no pigment anywhere (pale pink-blue eyes). Every other colour gene is hidden.');
     return desc;
   }
   if (has('W','Wd')) {
     desc.special='dominantWhite';
-    desc.masked = computePhenotype({...g, loci:{...g.loci, W:['w','w']}});
+    /* Wd is dominant to Ws and wg, so keep the other allele: Wd/Ws hides a spotted cat, Wd/wg a gloving carrier */
+    desc.masked = computePhenotype({...g, loci:{...g.loci, W:[pair('W').find(a=>a!=='Wd') || 'w', 'w']}});
+    desc.carried = desc.masked.carried;
     desc.warnings.push(hom('W','Wd')
       ? 'Wd/Wd — dominant white with two copies: high risk of deafness.'
       : 'Wd — dominant white is associated with deafness (often one or both ears, blue-eyed sides especially).');
     return desc;
   }
 
-  /* patch channels from X-linked O */
+  /* patch channels from X-linked O; XXY toms and XY/XY chimeras carry two X's, so they can be tortie */
   const nO = pair('O').filter(a=>a==='O').length;
-  const isXX = g.sex==='XX';
+  const twoX = g.sex!=='XY';
   const mk = pig => ({ pigment:pig, base:null, dilute:false, caramel:false, tabbyVisible:false, silver:false });
-  if (isXX && nO===2 || !isXX && nO===1) desc.patches=[mk('pheo')];
-  else if (isXX && nO===1) desc.patches=[mk('eu'),mk('pheo')];
+  if (twoX && nO===2 || !twoX && nO===1) desc.patches=[mk('pheo')];
+  else if (twoX && nO===1) desc.patches=[mk('eu'),mk('pheo')];
   else desc.patches=[mk('eu')];
+  if (g.sex==='XXY') desc.notes.push(nO===1
+    ? 'XXY tom — two X chromosomes let a male be tortoiseshell. XXY males are usually sterile.'
+    : 'XXY tom — the extra X only shows when its O allele differs (O/o → tortie). XXY males are usually sterile.');
+  if (g.sex==='XY/XY') desc.notes.push(nO===1
+    ? 'XY/XY chimera — two fused male embryos, one O line and one o line, so the coat patches like a tortie. Often fertile: each sperm carries whichever line populates the testes, and only daughters inherit his X.'
+    : 'XY/XY chimera — two fused male embryos. With matching O alleles the lines look identical in coat colour (other loci can still differ between them). Only daughters inherit his X.');
 
   /* eumelanin base from B, overridden by E */
   const bBase = has('B','B') ? 'black' : has('B','b') ? 'chocolate' : 'cinnamon';
@@ -303,24 +317,26 @@ function computePhenotype(g){
   const caramel = dilute && has('Dm','Dm');
   const silver = has('I','I');
   const agouti = has('A','A');
+  desc.agouti = agouti;
   for (const p of desc.patches){
     p.base = p.pigment==='pheo' ? 'red' : (eBase || bBase);
     p.euBase = bBase;
-    p.dilute = dilute; p.caramel = caramel; p.silver = silver;
+    p.dilute = dilute; p.caramel = caramel; p.silver = silver; p.agouti = agouti;
+    /* red fur shows its tabby pattern whatever the agouti genotype */
     p.tabbyVisible = p.pigment==='pheo' ? true : agouti;
   }
   if (has('Dm','Dm') && !dilute) desc.notes.push('Dm is carried but silent — the caramel modifier only acts on dilute (d/d) coats.');
   if (eBase && desc.patches.every(p=>p.pigment==='pheo')) desc.notes.push('The E-locus variant has no visible effect on an all-red cat — there is no black pigment to modify.');
   if (eBase && desc.patches.some(p=>p.pigment==='eu')) desc.notes.push(`Genetically ${bBase}-based; the E-locus allele repaints it ${eBase} (kittens are born dark and lighten with age).`);
+  if (eBase && caramel && desc.patches.some(p=>p.pigment==='eu')) desc.notes.push(`Dm on ${eBase} is uncharacterised — shown as dilute ${eBase} without caramel.`);
+  if (!agouti && desc.patches.every(p=>p.pigment==='pheo')) desc.notes.push('a/a on red: non-agouti can’t hide tabby on red fur, so ghost markings still show. Registries call this a solid Red and select for faint markings.');
 
   /* pattern */
   const anyTabby = desc.patches.some(p=>p.tabbyVisible);
   if (has('Ta','Ta')) {
     desc.pattern.type='ticked';
     desc.pattern.residualBarring = !hom('Ta','Ta');
-    if (has('Sp','Sp') || true===false) {}
     if (has('Sp','Sp')) desc.notes.push('Ticked (Ta) is epistatic — the spotted pattern is masked.');
-    else if (!hom('Mc','Mc')||hom('Mc','mc')) {/*no note; ticked masks stripes silently*/}
     if (desc.pattern.residualBarring && anyTabby) desc.notes.push('Ta/ta — heterozygous ticked: residual barring shows on the legs, tail and face.');
   } else if (has('Sp','Sp')) {
     if (has('Mc','Mc')) desc.pattern.type = hom('Sp','Sp') ? 'spotted' : 'broken';
@@ -328,18 +344,24 @@ function computePhenotype(g){
       desc.notes.push('Sp normally needs at least one Mc allele; on a classic (mc/mc) background the result is an odd broken/rosetted pattern.'); }
   } else desc.pattern.type = has('Mc','Mc') ? 'mackerel' : 'classic';
 
-  /* wide band / shading */
+  /* wide band / shading: built on banded agouti hairs, so it needs A — red fur alone doesn't count */
   const wb = has('Wb','Wb');
-  if (wb && anyTabby) desc.shading = silver ? 'shaded' : 'golden';
-  else if (wb) desc.notes.push('Wide Band is carried but needs visible agouti to show.');
+  if (wb && agouti) desc.shading = silver ? 'shaded' : 'golden';
+  else if (wb) desc.notes.push('Wide Band is carried but needs agouti (A) to show — shaded and tipped coats are built on banded agouti hairs.');
+  if (desc.shading==='golden' && desc.patches.every(p=>p.pigment==='pheo'))
+    desc.notes.push('Golden on red: without silver the widened band is still red-toned, so it reads as a pale, washed-out red tabby.');
+  if (desc.coat.hairless && (silver || desc.shading!=='none' || desc.pattern.type==='ticked' && agouti))
+    desc.notes.push('Silver, shading and ticking act on hair — on a hairless cat the name records the genetic colour, but the skin shows only the base pigment.');
 
   /* colourpoint */
   const cKey = has('C','C') ? 'C' : pair('C').slice().sort((a,b)=>['cb','cs','cm','c'].indexOf(a)-['cb','cs','cm','c'].indexOf(b)).join('/');
   desc.point = C_TABLE[cKey] || 'none';
   desc.contrast = POINT_CONTRAST[desc.point];
+  if (cKey==='cb/cm') desc.notes.push('cb/cm is co-dominant, like mink: lighter than sepia (Yu, Grahn & Lyons 2019).');
+  if (cKey==='cs/cm') desc.notes.push('cm is dominant over cs — cs/cm kittens show mocha, not Siamese points (Yu, Grahn & Lyons 2019).');
+  if (cKey==='cm/c') desc.notes.push('cm/c hasn’t been observed; c is recessive to every pigmented allele, so it is shown as mocha.');
 
   /* white spotting */
-  const w = pair('W');
   if (has('W','Ws')) {
     desc.white.band = hom('W','Ws') ? [5,6] : [2,3,4];
     const def = hom('W','Ws') ? 5 : 3;
@@ -353,13 +375,17 @@ function computePhenotype(g){
   if (has('B','B')) { if (het('B','b')) carry.push('chocolate'); if (het('B','bl')) carry.push('cinnamon'); }
   else if (has('B','b') && het('B','bl')) carry.push('cinnamon');
   if (has('C','C')) { const other = pair('C').find(a=>a!=='C'); if (other) carry.push({cb:'sepia',cs:'colourpoint',cm:'mocha',c:'albino'}[other]); }
-  else if (has('C','c') && !hom('C','c')) carry.push('albino');
+  else {
+    if (has('C','cs') && has('C','cm')) carry.push('colourpoint');
+    if (has('C','c')) carry.push('albino');
+  }
   if (het('D','d')) carry.push('dilute');
   if (has('E','E')) { const o = pair('E').find(a=>a!=='E'); if (o) carry.push({ea:'amber',er:'russet',ec:'carnelian'}[o]); }
+  if (het('Mc','mc')) carry.push('classic tabby (mc)');
   if (het('L','l')) carry.push('longhair');
-  if (has('K','k')) { if (het('K','re')) carry.push('Devon rex'); if (het('K','hr')) carry.push('Sphynx'); }
+  if (has('K','k') || has('K','Se')) { if (has('K','re')) carry.push('Devon rex'); if (has('K','hr')) carry.push('Sphynx'); }
   if (has('R','r+') && het('R','r')) carry.push('Cornish rex');
-  if (has('W','w') && het('W','wg')) carry.push('gloving (wg)');
+  if (het('W','wg')) carry.push('gloving (wg)');
   desc.carried = carry;
   return desc;
 }
@@ -378,7 +404,8 @@ const TORTIE_NAME = { black:'Tortoiseshell', blue:'Blue-Cream (Dilute Tortoisesh
   lilac:'Lilac-Cream', fawn:'Fawn-Cream',
   blueCaramel:'Caramel Tortoiseshell (Blue-Caramel & Apricot)' };
 const PATTERN_WORD = { mackerel:'Mackerel', classic:'Classic', spotted:'Spotted', broken:'Broken Mackerel', ticked:'Ticked' };
-const POINT_WORD = { point:'Point', mink:'Mink', sepia:'Sepia', mocha:'Mocha' };
+const POINT_WORD = { point:'Point', mink:'Mink', sepia:'Sepia', sepiaMocha:'Sepia-Mocha', mocha:'Mocha' };
+const CAMEO = { red:'Cameo', cream:'Dilute Cameo', apricot:'Apricot Cameo' };
 
 function patchKey(p){
   if (p.pigment==='pheo') return p.caramel ? 'apricot' : p.dilute ? 'cream' : 'red';
@@ -394,7 +421,7 @@ function patchKey(p){
 function describe(desc){
   const out = { name:'', sub:'', coatLine:'', notes:desc.notes.slice(), warnings:desc.warnings.slice(), carried:desc.carried };
   /* coat line always */
-  const texWord = { normal:'', cornish:'Cornish rex coat', devon:'Devon rex coat',
+  const texWord = { normal:'', cornish:'Cornish rex coat', devon:'Devon rex coat', selkirk:'Selkirk rex coat',
     rexoid:'rexoid coat (re/hr)', sphynx:'hairless (Sphynx)', peterbald:'hairless (Peterbald)' }[desc.coat.texture];
   const earWord = { normal:'', curl:'curled ears', tightCurl:'tightly curled ears' }[desc.coat.ears];
   const bits = [];
@@ -412,52 +439,54 @@ function describe(desc){
   const anyTabby = desc.patches.some(p=>p.tabbyVisible);
   const pointed = desc.point!=='none';
   const silver = p0.silver;
+  /* naming follows the A genotype, not "does any tabby show": red fur shows tabby even on a/a,
+     but a/a red is still a solid Red, a Red Point (not Lynx), and a Smoke (not Silver/Cameo) */
+  const agouti = desc.agouti;
+  const shaded = desc.shading!=='none';
   const grade = desc.white.grade;
   const gradeName = WHITE_GRADES[grade];
   let name;
 
   if (tortie && !pointed){
     const euKey = patchKey(eu);
-    let t = TORTIE_NAME[euKey] || `${FURNAME[euKey]} Tortoiseshell`;
-    if (eu.tabbyVisible) t = t.includes('Tortoiseshell') ? t.replace(/Tortoiseshell/g,'Torbie') : t+' Torbie';
-    if (silver) t = 'Silver '+t;
+    const base = TORTIE_NAME[euKey] || `${FURNAME[euKey]} Tortoiseshell`;
+    const torbie = agouti && !shaded;
+    const lead = shaded ? (silver ? 'Silver Shaded ' : 'Golden Shaded ') : silver ? (agouti ? 'Silver ' : 'Smoke ') : '';
     if (grade>=3){
-      const cal = (eu.tabbyVisible?'Caliby':'Calico');
-      name = (eu.dilute?'Dilute ':'')+cal+` (${gradeName} white)`;
-      if (silver) name = 'Silver '+name;
+      const tint = { black:'', blue:'Dilute ' }[euKey] ?? FURNAME[euKey]+' ';
+      name = lead + tint + (torbie ? 'Caliby' : 'Calico') + ` (${gradeName} white)`;
     } else {
-      name = t + (grade>0 ? ` & White (${gradeName})` : '');
+      const t = !torbie ? base : base.includes('Tortoiseshell') ? base.replace(/Tortoiseshell/g,'Torbie') : base+' Torbie';
+      name = lead + t + (grade>0 ? ` & White (${gradeName})` : '');
     }
-    if (eu.tabbyVisible && desc.shading==='none') name += ` — ${PATTERN_WORD[desc.pattern.type].toLowerCase()} pattern`;
+    if (torbie) name += ` — ${PATTERN_WORD[desc.pattern.type].toLowerCase()} pattern`;
   } else {
-    /* single patch, or pointed tortie */
-    const key = patchKey(tortie ? eu : p0);
+    /* single patch, or pointed tortie (named by its eumelanin patch) */
+    const P = tortie ? eu : p0, pheo = P.pigment==='pheo';
+    const key = patchKey(P);
     let word = FURNAME[key];
     if (pointed && key==='black') word = 'Seal';
     const parts = [];
-    if (silver && !anyTabby) { parts.push(word+' Smoke'); }
-    else if (silver && anyTabby && desc.shading==='none'){
-      if ((tortie?eu:p0).pigment==='pheo') parts.push({red:'Cameo', cream:'Dilute Cameo', apricot:'Apricot Cameo'}[key] || word+' Cameo');
-      else parts.push(word+' Silver');
-    } else if (desc.shading!=='none' && (tortie?eu:p0).pigment==='pheo') parts.push({red:'', cream:'Dilute', apricot:'Apricot'}[key]||'');
+    if (shaded){
+      if (pheo) parts.push(silver ? CAMEO[key].replace('Cameo','Shaded Cameo') : word+' Golden Shaded');
+      else parts.push(word, silver ? 'Silver Shaded' : 'Golden Shaded');
+    }
+    else if (silver) parts.push(!agouti ? word+' Smoke' : pheo ? CAMEO[key] : word+' Silver');
     else parts.push(word);
-    if (desc.shading!=='none'){
-      if ((tortie?eu:p0).pigment==='pheo') parts.push('Shaded Cameo');
-      else parts.push(silver ? 'Silver Shaded' : 'Golden Shaded');
-    }
-    else if (anyTabby && !pointed && !tortie) parts.push(PATTERN_WORD[desc.pattern.type]+' Tabby');
+    if (!shaded && agouti && !pointed && !tortie) parts.push(PATTERN_WORD[desc.pattern.type]+' Tabby');
     if (pointed){
-      const mod = tortie ? (eu.tabbyVisible?'Torbie ':'Tortie ') : (anyTabby?'Lynx ':'');
+      const mod = tortie ? (eu.tabbyVisible?'Torbie ':'Tortie ') : (agouti?'Lynx ':'');
       parts.push(mod + POINT_WORD[desc.point]);
-      if (anyTabby && desc.shading==='none') out.notes.unshift(`Pattern under the points: ${PATTERN_WORD[desc.pattern.type].toLowerCase()}.`);
+      if (anyTabby && !shaded) out.notes.unshift(`Pattern under the points: ${PATTERN_WORD[desc.pattern.type].toLowerCase()}.`);
     }
-    name = parts.filter(Boolean).join(' ');
+    name = parts.join(' ');
     if (grade>0) name += ` & White (${gradeName})`;
   }
   out.name = name;
   if (pointed) out.sub = { point:'pointed — colour restricted to the cool extremities',
     mink:'mink — mid-contrast points, aqua eyes (Tonkinese)', sepia:'sepia — low-contrast points (Burmese)',
-    mocha:'mocha — low-contrast points (Bangkok)' }[desc.point];
+    sepiaMocha:'sepia-mocha — co-dominant, lighter than sepia',
+    mocha:'mocha — pale, even colour with soft points, aqua eyes (Bangkok)' }[desc.point];
   return out;
 }
 
@@ -645,11 +674,12 @@ const CatArt = (() => {
   /* --- silhouette per coat type (memoised; tufts use a fixed seed so outlines don't jitter) --- */
   const geoCache = {};
   const FOREIGN = ['sphynx','peterbald','cornish'];
+  const REX = ['devon','cornish','rexoid','selkirk'];
   function geometry(long, tex, ears){
     const key = long + tex + ears;
     if (geoCache[key]) return geoCache[key];
     const rnd = mulberry32(90210);
-    const bald = tex === 'sphynx' || tex === 'peterbald', rex = ['devon','cornish','rexoid'].includes(tex);
+    const bald = tex === 'sphynx' || tex === 'peterbald', rex = REX.includes(tex);
     const earK = ears === 'tightCurl' ? 'Tight' : ears === 'curl' ? 'Curl' : '';
     const foreign = FOREIGN.includes(tex);
     const big = bald ? 1.3 : tex === 'cornish' ? 1.2 : tex === 'devon' ? 1.16 : 1;
@@ -669,7 +699,8 @@ const CatArt = (() => {
       legFar = furrify(legFar, (x, y) => y < 296 ? 1.6 : 0, 9, rnd);
       legNear = furrify(legNear, (x, y) => y < 296 ? 1.6 : 0, 9, rnd);
     } else if (rex){
-      torso = furrify(torso, () => 1.8, 7, rnd, 0);
+      /* Selkirk is a plush, cobby rex; the others lie close */
+      torso = furrify(torso, () => tex === 'selkirk' ? 2.8 : 1.8, 7, rnd, 0);
       tail = furrify(tail, (x, y) => Math.hypot(x - 280, y - 292) < 16 ? 0 : 1.6, 6, rnd, 0);
     } else if (!bald){
       torso = furrify(torso, (x, y) => x < 150 && y > 140 && y < 230 ? 2.2 : 1.1, 6, rnd);
@@ -703,6 +734,8 @@ const CatArt = (() => {
       P.mark = p.silver ? hex : mix(hex, '#8a3510', .3);
       P.ground = p.silver ? '#f6ede7' : mix(hex, '#f7d6b0', .45);
       P.under = p.silver ? '#fbf8f6' : mix(hex, '#fcefe0', .72);
+      /* a/a red: the tabby still shows, but as low-contrast ghost markings */
+      if (!p.agouti) P.mark = mix(P.mark, P.ground, .45);
     } else {
       const band = p.silver ? '#e2e5e8' : p.dilute ? '#dccbb2' : '#c89d62';
       P.mark = hex;
@@ -714,7 +747,7 @@ const CatArt = (() => {
     return P;
   }
   function paled(P, desc, bald){
-    const amt = { point:.1, mink:.36, sepia:.6, mocha:.55 }[desc.point], base = bald ? SKIN_PALE : IVORY;
+    const amt = { point:.1, mink:.36, sepia:.6, sepiaMocha:.5, mocha:.42 }[desc.point], base = bald ? SKIN_PALE : IVORY;
     return { ...P, ground:mix(base, P.ground, amt + .04), under:P.under && mix(base, P.under, amt), mark:mix(base, P.mark, amt*.9 + .05) };
   }
   /* hairless: the skin carries the pigment the coat would have had. Dark pigment stays dark,
@@ -734,7 +767,7 @@ const CatArt = (() => {
     const seed = hashStr(seedStr), rnd = mulberry32(seed);
     const tex = desc.coat.texture, bald = desc.coat.hairless;
     const long = desc.coat.length === 'long' && !bald;
-    const rex = ['devon','cornish','rexoid'].includes(tex);
+    const rex = REX.includes(tex);
     const geo = geometry(long, tex, desc.coat.ears);
     const parts = geo.parts, idx = {}; parts.forEach(([n], i) => idx[n] = i);
     const partD = n => parts[idx[n]][1];
@@ -849,7 +882,7 @@ const CatArt = (() => {
         /* bare skin runs cool almost everywhere, so hairless points shade the whole body: a warm greige
            underside (belly, throat, inner thigh, armpits), dark outer surfaces (spine, outer thigh,
            forelegs), and near-black points. Sepia and mink flatten the gradient. */
-        const K = { point:[.62, .12], mink:[.54, .26], sepia:[.46, .36], mocha:[.46, .34] }[desc.point];
+        const K = { point:[.62, .12], mink:[.54, .26], sepia:[.46, .36], sepiaMocha:[.52, .42], mocha:[.58, .48] }[desc.point];
         const tone = (P, t) => { const pts = P.pheo ? mix(P.ground, '#7a3a20', .2) : mix(P.hex, '#0c060d', .4), g = mix(pts, GREIGE, t);
           return { ...P, ground:g, mark:P.tabby ? mix(g, '#000', .2) : g }; };
         defs.push(`<linearGradient id="kColdLeg" gradientUnits="userSpaceOnUse" x1="0" y1="214" x2="0" y2="258"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>`);
@@ -1020,7 +1053,7 @@ const CatArt = (() => {
     const E = EYES;
     if (desc.special === 'albino') eyeL = eyeR = E.albino;
     else if (desc.special === 'dominantWhite') { eyeL = E.blue; eyeR = seed % 2 ? E.copper : E.blue; }
-    else if (pointed) eyeL = eyeR = desc.point === 'point' ? E.blue : desc.point === 'mink' ? E.aqua : E.chartreuse;
+    else if (pointed) eyeL = eyeR = desc.point === 'point' ? E.blue : desc.point === 'sepia' ? E.chartreuse : E.aqua;
     else if (desc.shading === 'shaded') eyeL = eyeR = E.emerald;
     else if (desc.shading === 'golden') eyeL = eyeR = E.green;
     else if (PA.silver) eyeL = eyeR = E.green;
@@ -1046,7 +1079,8 @@ const CatArt = (() => {
     s += oneEye(eyeD, lid, 'kIrisL', 117, 121, 112, tilt) + oneEye(mirX(eyeD), mirX(lid), 'kIrisR', 163, 167, 158, -tilt);
     /* nose, mouth */
     const whiteNose = gr >= 4 || desc.special;
-    const nose = whiteNose ? '#e6a2a0' : PA.nose;
+    /* mocha cats have pink nose leather (Yu, Grahn & Lyons 2019) */
+    const nose = whiteNose ? '#e6a2a0' : desc.point === 'mocha' ? '#dc9d96' : PA.nose;
     s += `<path d="M131,134 C134,131 146,131 149,134 C150,137 145,141 140,144 C135,141 130,137 131,134 Z" fill="${nose}" style="stroke:${LINE}" stroke-width="1.2" stroke-opacity=".7"/>`;
     s += `<path d="M137,134 C139,133 142,133 144,134" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="1.2" stroke-linecap="round"/>`;
     s += `<path d="M140,144 L140,149 M140,149 C137,154 131,155 127,152 M140,149 C143,154 149,155 153,152" fill="none" style="stroke:${LINE}" stroke-width="2" stroke-linecap="round"/>`;
@@ -1114,8 +1148,10 @@ function buildControls(){
         <span class="seg" role="radiogroup" aria-label="Sex">
           <label><input type="radio" name="sex" value="XX"><span>♀ XX</span></label>
           <label><input type="radio" name="sex" value="XY" checked><span>♂ XY</span></label>
+          <label><input type="radio" name="sex" value="XXY"><span>♂ XXY</span></label>
+          <label><input type="radio" name="sex" value="XY/XY"><span>♂ chimera</span></label>
         </span>
-        <details class="info"><summary>about</summary><p>Sex matters for one locus: Orange sits on the X chromosome, so females carry two O-alleles and males only one.</p></details>`;
+        <details class="info"><summary>about</summary><p>Sex matters for one locus: Orange sits on the X chromosome, so females carry two O-alleles and males only one. The rare male tortoiseshell has two: either XXY (Klinefelter, usually sterile), or an XY/XY chimera — two fused embryos, one orange and one not, often fertile. A chimera’s gametes carry one line’s genotype, so his daughters get either his O or his o.</p></details>`;
       grid.appendChild(sexDiv);
     }
     for (const l of LOCI.filter(x=>x.group===gid)){
@@ -1139,9 +1175,10 @@ function buildControls(){
 
   root.addEventListener('change', e=>{
     const t=e.target;
-    if (t.name==='sex'){ state.sex=t.value; rebuildOSelect();
-      const l=state.loci.O; state.loci.O = state.sex==='XY' ? [l.includes('O')?'O':'o','Y'] : [l[0]==='Y'?'o':l[0], l[1]==='Y'?'o':l[1]];
-      if (state.sex==='XX' && l[0]==='O' && l[1]==='Y') state.loci.O=['O','o'];
+    if (t.name==='sex'){ const was=state.sex, l=state.loci.O; state.sex=t.value;
+      /* keep the colour across the switch: a red tom becomes a red queen, not a tortie */
+      if (state.sex==='XY') state.loci.O=[l.includes('O')?'O':'o','Y'];
+      else if (was==='XY') state.loci.O=[l[0],l[0]];
       syncControls(); update(); return; }
     if (t.dataset.locus){ state.loci[t.dataset.locus]=t.value.split('|'); update(); return; }
     if (t.id==='white-slider'){ state.whiteGrade=+t.value; update(); }
@@ -1208,10 +1245,11 @@ function update(){
 
   /* dim pattern group when masked */
   const patFs=$('group-pattern');
-  const masked = !desc.special && !desc.patches.some(p=>p.tabbyVisible);
-  patFs.classList.toggle('dimmed', masked);
-  patFs.querySelector('.group-hint').textContent = masked
-    ? 'Masked right now — a solid (a/a) cat with no red hides its tabby pattern. The genotype is still real and heritable.'
+  const masked = desc.special || !desc.patches.some(p=>p.tabbyVisible);
+  patFs.classList.toggle('dimmed', !!masked);
+  patFs.querySelector('.group-hint').textContent = desc.special
+    ? 'Masked right now — a white cat hides its tabby pattern along with every colour gene. The genotype is still real and heritable.'
+    : masked ? 'Masked right now — a solid (a/a) cat with no red hides its tabby pattern. The genotype is still real and heritable.'
     : GROUPS.find(g=>g[0]==='pattern')[2];
 
   renderCat(desc);
@@ -1236,9 +1274,42 @@ if (matchMedia('(max-width:919px)').matches && 'IntersectionObserver' in window)
    self-tests (silent when passing)
    ================================================================ */
 (function(){
-  const G=(over,sex='XY',wg=null)=>({sex, whiteGrade:wg, loci:{...structuredClone(WILD), ...(sex==='XX'?{O:['o','o']}:{}), ...over}});
+  const G=(over,sex='XY',wg=null)=>({sex, whiteGrade:wg, loci:{...structuredClone(WILD), ...(sex!=='XY'?{O:['o','o']}:{}), ...over}});
   const N=g=>describe(computePhenotype(g)).name;
+  const C=g=>computePhenotype(g).carried.join(', ');
   const t=(got,want)=>console.assert(got.includes(want), `expected "${want}" in "${got}"`);
+  const no=(got,bad)=>console.assert(!got.includes(bad), `did not expect "${bad}" in "${got}"`);
+  /* red names follow A, not "tabby shows" */
+  t(N(G({O:['O','Y'],A:['a','a']})),'Red'); no(N(G({O:['O','Y'],A:['a','a']})),'Tabby');
+  t(N(G({O:['O','Y']})),'Red Mackerel Tabby');
+  t(N(G({O:['O','Y'],A:['a','a'],C:['cs','cs']})),'Red Point'); no(N(G({O:['O','Y'],A:['a','a'],C:['cs','cs']})),'Lynx');
+  t(N(G({O:['O','Y'],C:['cs','cs']})),'Red Lynx Point');
+  t(N(G({O:['O','Y'],A:['a','a'],I:['I','i']})),'Red Smoke');
+  t(N(G({O:['O','Y'],A:['a','a'],I:['I','i'],Wb:['Wb','wb']})),'Red Smoke');
+  no(N(G({O:['O','Y'],Wb:['Wb','wb']})),'Cameo');
+  /* tortie / calico keep their smoke, shading and base colour */
+  t(N(G({O:['O','o'],A:['a','a'],I:['I','i']},'XX')),'Smoke Tortoiseshell');
+  t(N(G({O:['O','o'],I:['I','i'],Wb:['Wb','wb']},'XX')),'Silver Shaded Tortoiseshell');
+  t(N(G({O:['O','o'],Wb:['Wb','wb']},'XX')),'Golden Shaded Tortoiseshell');
+  t(N(G({O:['O','o'],A:['a','a'],C:['cs','cs'],I:['I','i']},'XX')),'Seal Smoke Tortie Point');
+  t(N(G({O:['O','o'],A:['a','a'],B:['b','b'],W:['Ws','w']},'XX',4)),'Chocolate Calico');
+  t(N(G({O:['O','o'],A:['a','a'],B:['b','b'],D:['d','d'],W:['Ws','w']},'XX',4)),'Lilac Calico');
+  /* mocha: co-dominant with cb, dominant over cs */
+  t(N(G({A:['a','a'],C:['cb','cm']})),'Seal Sepia-Mocha');
+  t(N(G({A:['a','a'],C:['cs','cm']})),'Seal Mocha');
+  /* carriers, including under dominant white and albinism */
+  t(C(G({C:['cs','cm']})),'colourpoint');
+  t(C(G({Mc:['Mc','mc']})),'classic tabby');
+  t(C(G({W:['Ws','wg']})),'gloving');
+  t(C(G({W:['Wd','w'],D:['D','d']})),'dilute');
+  t(C(G({W:['Wd','wg']})),'gloving');
+  t(describe(computePhenotype(G({W:['Wd','Ws']}))).sub,'& White');
+  t(C(G({C:['c','c'],L:['L','l']})),'longhair');
+  /* XXY toms can be tortie; Selkirk is a dominant KRT71 allele */
+  t(N(G({O:['O','o'],A:['a','a']},'XXY')),'Tortoiseshell');
+  t(N(G({O:['O','o'],A:['a','a']},'XY/XY')),'Tortoiseshell');
+  console.assert(computePhenotype(G({K:['Se','k']})).coat.texture==='selkirk','Se/k = Selkirk');
+  t(C(G({K:['Se','re']})),'Devon rex');
   t(N(G({})),'Black Mackerel Tabby');
   t(N(G({A:['a','a'],C:['cs','cs']})),'Seal Point');
   t(N(G({A:['a','a'],B:['b','b'],C:['cb','cs'],W:['Ws','w']},'XX')),'Chocolate Mink & White (tuxedo)');
