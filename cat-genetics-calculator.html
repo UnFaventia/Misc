@@ -22,6 +22,7 @@
     --chip:#332e3d; --focus:#e8bc6d;
   }
   *{box-sizing:border-box}
+  [hidden]{display:none !important}
   body{
     background:var(--bg); color:var(--text);
     font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -103,6 +104,82 @@
   .slider-row{display:flex; flex-direction:column; gap:2px}
   .slider-row output{font-size:.8rem; color:var(--muted)}
   footer{margin-top:36px; color:var(--muted); font-size:.85rem; max-width:70ch}
+
+  /* ---------- mode tabs ---------- */
+  .modes{display:inline-flex; margin-top:16px; border:1px solid var(--border-strong); border-radius:10px; overflow:hidden}
+  .modes button{font:inherit; font-size:.9rem; font-weight:600; padding:8px 16px; border:0; cursor:pointer;
+    background:var(--surface2); color:var(--muted)}
+  .modes button[aria-selected="true"]{background:var(--accent); color:#fff}
+
+  /* ---------- litter ---------- */
+  #litter-view{display:flex; flex-direction:column; gap:14px}
+  .parents{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:14px}
+  .parent{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px; min-width:0}
+  .parent header{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:10px}
+  .parent h3{margin:0 auto 0 0; font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif; font-size:1.1rem}
+  .parent header select, .parent header button, .p-sex select{font:inherit; font-size:.8rem; color:var(--text);
+    background:var(--surface2); border:1px solid var(--border-strong); border-radius:8px; padding:5px 8px; cursor:pointer; max-width:100%}
+  .p-top{display:flex; gap:12px; align-items:center}
+  .p-top svg{width:84px; height:89px; flex:none; background:var(--stage); border-radius:10px}
+  .p-name{margin:0; font-weight:700; line-height:1.25}
+  .p-coat{margin:2px 0 0; font-size:.82rem; color:var(--muted)}
+  .p-sex{display:flex; flex-wrap:wrap; gap:8px 14px; margin:10px 0 0; font-size:.82rem}
+  .p-sex label{display:flex; align-items:center; gap:6px}
+  .parent details{margin-top:10px}
+  .parent details summary{cursor:pointer; font-size:.85rem; font-weight:600; color:var(--accent)}
+  .p-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:6px 10px; margin-top:8px}
+  .p-grid label{display:flex; flex-direction:column; gap:2px; font-size:.72rem; color:var(--muted); min-width:0}
+  .p-grid label b{color:var(--accent-strong); font-family:"JetBrains Mono",monospace; font-weight:600}
+  .p-grid select{font:inherit; font-size:.8rem; color:var(--text); background:var(--surface2);
+    border:1px solid var(--border-strong); border-radius:7px; padding:4px 5px; width:100%}
+  .litter-head{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:8px}
+  .litter-head h2{margin:0; font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif; font-size:1.3rem}
+  .litter-head h2 span{font-size:.85rem; font-weight:500; color:var(--muted)}
+  .group-by{font-size:.85rem; color:var(--muted); display:flex; align-items:center; gap:6px}
+  .group-by select{font:inherit; font-size:.85rem; color:var(--text); background:var(--surface2); border:1px solid var(--border-strong); border-radius:8px; padding:5px 8px}
+  .litter-error{margin:0; padding:10px 12px; border-radius:10px; background:var(--warn-bg); border:1px solid var(--warn)}
+  .mating-check:empty{display:none}
+  .kitten-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:10px}
+  .kitten{font:inherit; color:var(--text); text-align:left; cursor:pointer; background:var(--surface);
+    border:1px solid var(--border); border-radius:12px; padding:8px; display:flex; flex-direction:column; gap:3px; min-width:0}
+  .kitten:hover{border-color:var(--accent)}
+  .kitten[aria-pressed="true"]{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent)}
+  .kitten svg{width:100%; height:auto; aspect-ratio:320/340; background:var(--stage); border-radius:8px}
+  .k-p{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif; font-weight:800; font-size:1.15rem; line-height:1.1}
+  .k-p small{font-family:"JetBrains Mono",monospace; font-weight:600; font-size:.72rem; color:var(--muted); margin-left:6px}
+  .k-name{font-weight:600; font-size:.86rem; line-height:1.25}
+  .k-coat{font-size:.76rem; color:var(--muted)}
+  .k-sex{font-size:.74rem; color:var(--muted)}
+  .k-warn{font-size:.74rem; color:var(--warn); font-weight:600}
+  .more-btn{align-self:center; font:inherit; font-size:.85rem; color:var(--text); background:var(--surface);
+    border:1px solid var(--border-strong); border-radius:999px; padding:6px 16px; cursor:pointer}
+  .kitten-detail{background:var(--surface); border:1px solid var(--accent); border-radius:14px; padding:16px; min-width:0}
+  .kd-top{display:flex; flex-wrap:wrap; gap:16px; align-items:flex-start}
+  .kd-top svg{width:170px; height:auto; aspect-ratio:320/340; flex:none; background:var(--stage); border-radius:12px}
+  .kd-head{flex:1; min-width:220px}
+  .kd-head h3{margin:0; font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif; font-size:1.3rem; line-height:1.15}
+  .kd-head p{margin:4px 0 0; font-size:.88rem}
+  .kd-head .muted, .kitten-detail .muted{color:var(--muted)}
+  .kitten-detail h4{margin:18px 0 6px; font-size:.95rem}
+  .kd-carry{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+  .chip{display:inline-flex; gap:5px; align-items:baseline; background:var(--chip); border:1px solid var(--border);
+    border-radius:999px; padding:2px 10px; font-size:.8rem}
+  .chip code{font-family:"JetBrains Mono",monospace; font-size:.74rem}
+  .chip.warnchip{background:var(--warn-bg); border-color:var(--warn)}
+  .kd-table-wrap{overflow-x:auto; border:1px solid var(--border); border-radius:10px}
+  .kd-table{border-collapse:collapse; width:100%; font-size:.8rem}
+  .kd-table th, .kd-table td{padding:6px 9px; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; white-space:nowrap}
+  .kd-table th{background:var(--surface2); font-weight:600; position:sticky; top:0}
+  .kd-table tr:last-child td{border-bottom:0}
+  .kd-table td.gts{white-space:normal}
+  .kd-table code{font-family:"JetBrains Mono",monospace; font-size:.76rem}
+  .kd-table .tag{font-size:.7rem; color:var(--muted); margin-left:6px}
+  .kd-table .tag.hid{color:var(--warn)}
+  .kd-table button{font:inherit; font-size:.74rem; color:var(--accent-strong); background:none; border:1px solid var(--border-strong); border-radius:6px; padding:2px 8px; cursor:pointer}
+  .kd-fixed{margin-top:8px; font-size:.8rem; color:var(--muted)}
+  .kd-fixed code{font-family:"JetBrains Mono",monospace; font-size:.74rem}
+  .litter-foot{margin:0; font-size:.8rem; color:var(--muted); max-width:80ch}
+  [data-mode="litter"] #minibar{display:none !important}
   :is(button,select,summary,input):focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:6px}
   /* mobile mini preview */
   #minibar{display:none}
@@ -119,13 +196,38 @@
 <div class="wrap">
 <header class="masthead">
   <h1>Cat Coat Genetics Calculator<span class="paw"> ᨐ</span></h1>
-  <p>Set the genotype at every coat locus — colour, pattern, white, fur and ears — and see the cat it makes:
-  the breeder-style phenotype name, what it carries, and a live portrait.</p>
+  <p>Set the genotype at every coat locus — colour, pattern, white, fur and ears — and see the cat it makes,
+  or pair a queen and a tom and see every kitten they can produce, with exact odds and the genotypes behind each one.</p>
+  <div class="modes" role="tablist" aria-label="Calculator mode">
+    <button type="button" role="tab" id="tab-one" aria-selected="true" aria-controls="one-view">One cat</button>
+    <button type="button" role="tab" id="tab-litter" aria-selected="false" aria-controls="litter-view">Litter · queen × tom</button>
+  </div>
 </header>
 
 <div id="minibar" aria-hidden="true"><svg viewBox="22 8 320 340"><use href="#catRoot"></use></svg><span id="mini-name"></span></div>
 
-<main>
+<section id="litter-view" role="tabpanel" aria-labelledby="tab-litter" hidden>
+  <div class="parents">
+    <div class="parent" id="parent-dam"></div>
+    <div class="parent" id="parent-sire"></div>
+  </div>
+  <div class="litter-head">
+    <h2>Kittens <span id="litter-count"></span></h2>
+    <label class="group-by">Group by
+      <select id="litter-group"><option value="full">full look (colour + coat)</option><option value="colour">colour only</option></select>
+    </label>
+  </div>
+  <p class="litter-error" id="litter-error" hidden></p>
+  <ul class="notes mating-check" id="mating-check"></ul>
+  <div class="kitten-grid" id="kitten-grid"></div>
+  <button type="button" class="more-btn" id="kitten-more" hidden></button>
+  <div class="kitten-detail" id="kitten-detail" hidden></div>
+  <p class="litter-foot">Every gene is treated as segregating independently. Dilute-Modifier, Silver, Spotted and Wide Band
+  are uncloned and can’t be DNA-tested, so odds that depend on them follow the single-gene model rather than a test result.
+  How much white a spotted kitten shows is polygenic, so white spotting is named as the genotype’s range.</p>
+</section>
+
+<main id="one-view" role="tabpanel" aria-labelledby="tab-one">
   <aside class="result" id="result">
     <div class="stage"><svg id="cat" viewBox="22 8 320 340" role="img" aria-labelledby="pheno-name"><g id="catRoot"></g></svg></div>
 
@@ -145,9 +247,9 @@
 </main>
 
 <footer>
-  <p>An educational toy, not a breeding tool: real cats add polygenic modifiers, rufousing, and a few
-  loci science hasn’t cloned yet (Dilute-Modifier, Inhibitor, Spotted, Wide Band). A two-parent offspring
-  calculator is the planned next step — the genetics engine here is already pure and Punnett-ready.</p>
+  <p>Exact Mendelian odds for the genes that can be DNA-tested; model estimates for the rest. Real cats add
+  polygenic modifiers, rufousing, and a few loci science hasn’t cloned yet (Dilute-Modifier, Inhibitor, Spotted,
+  Wide Band) — treat anything that depends on those as a prediction, not a test result.</p>
 </footer>
 </div>
 
@@ -366,6 +468,7 @@ function computePhenotype(g){
     desc.white.band = hom('W','Ws') ? [5,6] : [2,3,4];
     const def = hom('W','Ws') ? 5 : 3;
     desc.white.grade = (g.whiteGrade!=null && desc.white.band.includes(g.whiteGrade)) ? g.whiteGrade : def;
+    if (g.whiteGrade==='range') desc.white.range = desc.white.band;
   } else if (hom('W','wg')) desc.white.grade = 1;
 
   /* carried recessives */
@@ -444,7 +547,10 @@ function describe(desc){
   const agouti = desc.agouti;
   const shaded = desc.shading!=='none';
   const grade = desc.white.grade;
-  const gradeName = WHITE_GRADES[grade];
+  /* in a litter the amount of white is polygenic: name the genotype's whole range, not one grade */
+  const band = desc.white.range;
+  const gradeName = band ? WHITE_GRADES[band[0]]+' to '+WHITE_GRADES[band[band.length-1]] : WHITE_GRADES[grade];
+  const calico = band ? band.every(x=>x>=3) : grade>=3;
   let name;
 
   if (tortie && !pointed){
@@ -452,7 +558,7 @@ function describe(desc){
     const base = TORTIE_NAME[euKey] || `${FURNAME[euKey]} Tortoiseshell`;
     const torbie = agouti && !shaded;
     const lead = shaded ? (silver ? 'Silver Shaded ' : 'Golden Shaded ') : silver ? (agouti ? 'Silver ' : 'Smoke ') : '';
-    if (grade>=3){
+    if (calico){
       const tint = { black:'', blue:'Dilute ' }[euKey] ?? FURNAME[euKey]+' ';
       name = lead + tint + (torbie ? 'Caliby' : 'Calico') + ` (${gradeName} white)`;
     } else {
@@ -497,6 +603,217 @@ function genotypeString(g){
     parts.push(p.map(symOf).join('/'));
   }
   return parts.join(' · ');
+}
+
+/* ================================================================
+   3b. LITTER — exact offspring odds for two fully genotyped parents
+   ================================================================ */
+/* Every gene segregates independently (linkage isn't modelled), so each kitten genotype is a product
+   of per-locus probabilities. Those are all k/2^n fractions, which a double holds exactly. To keep the
+   enumeration small, genotypes at a locus are grouped into classes that always name the same
+   (D/D and D/d are both "dense"); the kitten detail expands the classes back into genotypes. */
+const COLOUR_LOCI = ['O','W','C','A','E','B','D','Dm','I','Mc','Sp','Ta','Wb'];
+const COAT_LOCI = ['L','K','R','Hp','Cu'];
+const pairKey = p => p.join('/');
+const gtKey = gt => (gt.sex ? gt.sex+' ' : '') + pairKey(gt.pair);
+
+/* canonical allele order = the order the genotype menus list them */
+const CANON = {};
+for (const l of LOCI){
+  const opts = l.xLinked ? [...l.optionsBySex.XX, ...l.optionsBySex.XY] : l.options;
+  CANON[l.id] = Object.fromEntries(opts.map(o => [[o[0],o[1]].sort().join('|'), [o[0],o[1]]]));
+}
+const canon = (id, a, b) => CANON[id][[a,b].sort().join('|')];
+
+const nOf = (p, a) => p.filter(x=>x===a).length;
+const C_ORDER = ['cb','cs','cm','c'];
+/* the phenotype class of a genotype at one locus: swapping genotypes within a class never changes the name */
+const PCLASS = {
+  O:  p => pairKey(p),
+  W:  p => p.includes('Wd') ? 'Wd' : nOf(p,'Ws')===2 ? 'WsWs' : p.includes('Ws') ? 'Ws' : nOf(p,'wg')===2 ? 'wg' : 'w',
+  C:  p => p.includes('C') ? 'C' : nOf(p,'c')===2 ? 'albino' : C_TABLE[p.slice().sort((a,b)=>C_ORDER.indexOf(a)-C_ORDER.indexOf(b)).join('/')],
+  A:  p => p.includes('A') ? 'A' : 'a',
+  E:  p => p.includes('E') ? 'E' : p[0],
+  B:  p => p.includes('B') ? 'B' : p.includes('b') ? 'b' : 'bl',
+  D:  p => nOf(p,'d')===2 ? 'd' : 'D',
+  Dm: p => p.includes('Dm') ? 'Dm' : 'dm',
+  I:  p => p.includes('I') ? 'I' : 'i',
+  Mc: p => p.includes('Mc') ? 'Mc' : 'mc',
+  Sp: p => String(nOf(p,'Sp')),
+  Ta: p => p.includes('Ta') ? 'Ta' : 'ta',
+  Wb: p => p.includes('Wb') ? 'Wb' : 'wb',
+  L:  p => nOf(p,'l')===2 ? 'l' : 'L',
+  K:  p => { const k = p.slice().sort().join('/'); return p.includes('Se') ? 'Se' : ['hr/hr','hr/re','re/re'].includes(k) ? k : 'k'; },
+  R:  p => nOf(p,'r')===2 ? 'r' : 'R',
+  Hp: p => p.includes('Hp') ? 'Hp' : 'hp',
+  Cu: p => String(nOf(p,'Cu')),
+};
+
+function crossProblem(dam, sire){
+  if (dam.sex!=='XX') return 'The queen must be XX.';
+  if (sire.sex==='XXY') return 'XXY toms are usually sterile, so they aren’t crossed here — use an XY tom, or an XY/XY chimera.';
+  if (sire.sex!=='XY' && sire.sex!=='XY/XY') return 'The tom must be XY or an XY/XY chimera.';
+  return null;
+}
+
+/* offspring genotypes at one locus: [{sex, pair, p}] (sex is set only for the X-linked O locus) */
+function locusOffspring(id, dam, sire){
+  const out = new Map();
+  const add = (sex, pair, p) => { const gt = {sex, pair, p}, k = gtKey(gt), o = out.get(k); if (o) o.p += p; else out.set(k, gt); };
+  if (id==='O'){
+    /* the tom passes his X (daughters) or his Y (sons); a chimera's X comes from the line that makes his sperm */
+    const [s1, s2] = sire.loci.O, line = sire.germline;
+    const sx = sire.sex!=='XY/XY' ? [[s1,1]] : (s1!==s2 && (line===s1 || line===s2)) ? [[line,1]] : [[s1,.5],[s2,.5]];
+    for (const a of dam.loci.O){
+      for (const [x,px] of sx) add('XX', canon('O',a,x), .25*px);
+      add('XY', canon('O',a,'Y'), .25);
+    }
+  } else for (const a of dam.loci[id]) for (const b of sire.loci[id]) add(null, canon(id,a,b), .25);
+  return [...out.values()];
+}
+
+/* enumerate every class combination of a block of loci and group the combinations by keyOf(describe) */
+function enumerateBlock(ids, dist, keyOf){
+  const loci = ids.map(id => {
+    const m = new Map();
+    for (const gt of dist[id]){
+      const k = (gt.sex||'') + PCLASS[id](gt.pair);
+      let c = m.get(k); if (!c) m.set(k, c = {key:k, p:0, gts:[]});
+      c.p += gt.p; c.gts.push(gt);
+    }
+    const classes = [...m.values()];
+    for (const c of classes){ c.gts.sort((a,b)=>b.p-a.p); c.rep = c.gts[0]; }
+    return {id, classes};
+  });
+  const groups = new Map(), digits = new Uint8Array(loci.length);
+  for (;;){
+    let p = 1; const g = {sex:'XY', whiteGrade:'range', loci:{...WILD}};
+    loci.forEach((l,i) => { const c = l.classes[digits[i]]; p *= c.p; g.loci[l.id] = c.rep.pair; if (c.rep.sex) g.sex = c.rep.sex; });
+    const out = describe(computePhenotype(g)), key = keyOf(out);
+    let grp = groups.get(key);
+    if (!grp) groups.set(key, grp = {key, p:0, bySex:{XX:0, XY:0}, combos:[], comboP:[], hidden:new Map(), rep:null, repP:-1});
+    grp.p += p; grp.bySex[g.sex] += p;
+    grp.combos.push(digits.slice()); grp.comboP.push(p);
+    if (out.sub.startsWith('masking: ')) grp.hidden.set(out.sub.slice(9), (grp.hidden.get(out.sub.slice(9))||0) + p);
+    if (p > grp.repP){ grp.rep = g; grp.repP = p; }
+    let i = 0;
+    while (i < loci.length && ++digits[i] === loci[i].classes.length) digits[i++] = 0;
+    if (i === loci.length) break;
+  }
+  return { loci, groups:[...groups.values()].sort((a,b)=>b.p-a.p || a.key.localeCompare(b.key)) };
+}
+
+/* what one genotype at one locus carries or warns about, read off a wild-type background */
+const EFFECT_MEMO = new Map();
+function locusEffects(id, gt){
+  const k = id+':'+gtKey(gt);
+  if (!EFFECT_MEMO.has(k)){
+    const g = {sex: gt.sex || 'XY', whiteGrade:null, loci:{...WILD, ...(gt.sex==='XX' ? {O:['o','o']} : {}), [id]:gt.pair}};
+    const d = computePhenotype(g);
+    EFFECT_MEMO.set(k, {carried:d.carried, warnings:d.warnings});
+  }
+  return EFFECT_MEMO.get(k);
+}
+
+function cross(dam, sire){
+  const problem = crossProblem(dam, sire);
+  if (problem) return {error:problem};
+  const dist = {};
+  for (const l of LOCI) dist[l.id] = locusOffspring(l.id, dam, sire);
+  const colour = enumerateBlock(COLOUR_LOCI, dist, out=>out.name);
+  const coat = enumerateBlock(COAT_LOCI, dist, out=>out.coatLine);
+  /* mating check: health warnings across the whole litter */
+  const warnings = new Map();
+  for (const l of LOCI) for (const gt of dist[l.id])
+    for (const w of locusEffects(l.id, gt).warnings) warnings.set(w, (warnings.get(w)||0) + gt.p);
+  return { dist, colour, coat, warnings:[...warnings].map(([text,p])=>({text,p})) };
+}
+
+/* kittens = colour groups × coat groups ('full'), or colour groups alone ('colour') */
+function litterKittens(r, mode){
+  const out = [];
+  for (const cg of r.colour.groups){
+    if (mode==='colour') out.push({colour:cg, coat:null, p:cg.p, bySex:{...cg.bySex}});
+    else for (const kg of r.coat.groups)
+      out.push({colour:cg, coat:kg, p:cg.p*kg.p, bySex:{XX:cg.bySex.XX*kg.p, XY:cg.bySex.XY*kg.p}});
+  }
+  return out.sort((a,b)=>b.p-a.p || (a.colour.key+(a.coat?a.coat.key:'')).localeCompare(b.colour.key+(b.coat?b.coat.key:'')));
+}
+function kittenGenotype(r, k){
+  const cg = k.colour.rep, kg = (k.coat || r.coat.groups[0]).rep;
+  return { sex:cg.sex, whiteGrade:'range', loci:{...cg.loci, ...Object.fromEntries(COAT_LOCI.map(id=>[id, kg.loci[id]]))} };
+}
+
+/* per-locus genotype masses inside one group (unnormalised: divide by grp.p) */
+function groupMasses(blk, grp){
+  const m = Object.fromEntries(blk.loci.map(l=>[l.id, new Map()]));
+  grp.combos.forEach((cmb, j) => {
+    const p = grp.comboP[j];
+    blk.loci.forEach((l, i) => {
+      const c = l.classes[cmb[i]], rest = p / c.p;   /* exact: p is the product of the class masses */
+      for (const gt of c.gts){ const k = gtKey(gt), o = m[l.id].get(k), v = rest*gt.p;
+        if (o) o.p += v; else m[l.id].set(k, {sex:gt.sex, pair:gt.pair, p:v}); }
+    });
+  });
+  return m;
+}
+
+/* the kitten's detail: per-locus odds given its look, what it carries, and its health warnings */
+function kittenDetail(r, k){
+  const loci = [], carried = new Map(), warnings = new Map();
+  for (const [blk, grp] of [[r.colour, k.colour], [r.coat, k.coat]]){
+    const masses = grp ? groupMasses(blk, grp) : null, den = grp ? grp.p : 1;
+    for (const l of blk.loci){
+      const un = r.dist[l.id];
+      const gts = (masses ? [...masses[l.id].values()] : un.map(g=>({...g}))).sort((a,b)=>b.p-a.p);
+      const segregating = un.length > 1;
+      const hidden = segregating && grp && gts.length===un.length && gts.every(g => Math.abs(g.p/den - un.find(u=>gtKey(u)===gtKey(g)).p) < 1e-12);
+      loci.push({ id:l.id, gts, den, segregating, hidden, revealed: segregating && gts.length===1 });
+      /* keep mass and total apart so frac() can print exact odds like 2/3 */
+      const tally = (map, label, p) => { const o = map.get(label); if (o) o.p += p; else map.set(label, {label, p, den}); };
+      for (const gt of gts){
+        const e = locusEffects(l.id, gt);
+        for (const c of e.carried) tally(carried, c, gt.p);
+        for (const w of e.warnings) tally(warnings, w, gt.p);
+      }
+    }
+  }
+  return { loci, carried:[...carried.values()], warnings:[...warnings.values()] };
+}
+
+/* every genotype combination (over the segregating loci) that gives this kitten; null when there are > cap */
+function kittenRows(r, k, cap = 4000){
+  const blockRows = (blk, grp) => {
+    if (!grp) return [{gts:{}, p:1}];
+    const seg = blk.loci.map((l,i)=>[l,i]).filter(([l]) => r.dist[l.id].length > 1);
+    let n = 0;
+    for (const cmb of grp.combos) n += seg.reduce((a,[l,i]) => a*l.classes[cmb[i]].gts.length, 1);
+    if (n > cap) return n;
+    const rows = [];
+    for (const cmb of grp.combos){
+      let part = [{gts:{}, p:1}];
+      for (const [l,i] of seg){
+        const next = [];
+        for (const row of part) for (const gt of l.classes[cmb[i]].gts) next.push({gts:{...row.gts, [l.id]:gt}, p:row.p*gt.p});
+        part = next;
+      }
+      rows.push(...part);
+    }
+    return rows;
+  };
+  const a = blockRows(r.colour, k.colour), b = blockRows(r.coat, k.coat);
+  const total = (typeof a==='number' ? a : a.length) * (typeof b==='number' ? b : b.length);
+  if (total > cap) return {count:total, rows:null};
+  const rows = [];
+  for (const x of a) for (const y of b) rows.push({gts:{...x.gts, ...y.gts}, p:x.p*y.p});
+  return {count:rows.length, rows:rows.sort((x,y)=>y.p-x.p)};
+}
+
+/* exact fraction num/den for dyadic probabilities (and ratios of them), e.g. [2,3] */
+function frac(num, den = 1){
+  const S = 2**44; let a = Math.round(num*S), b = Math.round(den*S);
+  let x = a, y = b; while (y){ [x, y] = [y, x % y]; }
+  return [a/(x||1), b/(x||1)];
 }
 
 /* ================================================================
@@ -1121,6 +1438,11 @@ const PRESETS = {
 };
 
 function optionValue(p){ return p[0]+'|'+p[1]; }
+/* moving a cat between one-X and two-X sexes keeps its colour: a red tom becomes a red queen, not a tortie */
+function convertO(pair, from, to){
+  if (to==='XY') return from==='XY' ? pair.slice() : [pair.includes('O')?'O':'o','Y'];
+  return from==='XY' ? [pair[0],pair[0]] : pair.slice();
+}
 function buildControls(){
   const root=$('controls');
   const presetBar=document.createElement('div'); presetBar.className='presets';
@@ -1175,10 +1497,7 @@ function buildControls(){
 
   root.addEventListener('change', e=>{
     const t=e.target;
-    if (t.name==='sex'){ const was=state.sex, l=state.loci.O; state.sex=t.value;
-      /* keep the colour across the switch: a red tom becomes a red queen, not a tortie */
-      if (state.sex==='XY') state.loci.O=[l.includes('O')?'O':'o','Y'];
-      else if (was==='XY') state.loci.O=[l[0],l[0]];
+    if (t.name==='sex'){ state.loci.O=convertO(state.loci.O, state.sex, t.value); state.sex=t.value;
       syncControls(); update(); return; }
     if (t.dataset.locus){ state.loci[t.dataset.locus]=t.value.split('|'); update(); return; }
     if (t.id==='white-slider'){ state.whiteGrade=+t.value; update(); }
@@ -1271,6 +1590,204 @@ if (matchMedia('(max-width:919px)').matches && 'IntersectionObserver' in window)
 }
 
 /* ================================================================
+   6. LITTER UI — queen × tom
+   ================================================================ */
+const litter = {
+  dam:  { sex:'XX', whiteGrade:null, loci:{...structuredClone(WILD), O:['O','o'], A:['a','a'], C:['C','cs'], D:['D','d'], Mc:['Mc','mc']} },
+  sire: { sex:'XY', germline:'mixed', whiteGrade:null, loci:{...structuredClone(WILD), A:['A','a'], C:['C','cs'], D:['D','d']} },
+  group:'full', kittens:[], result:null, selected:null, shown:24, rows:null, rowsShown:40,
+};
+const SIRE_SEXES = [['XY','XY'],['XY/XY','XY/XY chimera'],['XXY','XXY']];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtFrac = (n, d = 1) => { const [a, b] = frac(n, d); return b===1 ? (a ? 'all' : 'none') : `${a}/${b}`; };
+const fmtPct = (n, d = 1) => { const x = n/d*100; return +x.toFixed(x>=10 || Number.isInteger(x) ? 1 : 2) + '%'; };
+const gtText = gt => (gt.sex ? (gt.sex==='XX' ? '♀ ' : '♂ ') : '') + gt.pair.map(symOf).join('/');
+const LOCUS_BY_ID = Object.fromEntries(LOCI.map(l=>[l.id, l]));
+
+function buildParent(role){
+  const root = $('parent-'+role);
+  root.innerHTML = `<header><h3>${role==='dam' ? '♀ Queen' : '♂ Tom'}</h3>
+      <select data-act="preset" aria-label="Load a preset"><option value="">Preset…</option>${Object.keys(PRESETS).map(n=>`<option>${esc(n)}</option>`).join('')}</select>
+      <button type="button" data-act="import">Copy from One-cat view</button></header>
+    <div class="p-top"><svg viewBox="22 8 320 340" aria-hidden="true"><g></g></svg>
+      <div><p class="p-name"></p><p class="p-coat"></p><p class="p-coat p-carry"></p></div></div>
+    ${role==='sire' ? `<div class="p-sex"><label>Sex <select data-act="sex">${SIRE_SEXES.map(([v,t])=>`<option value="${v}">${t}</option>`).join('')}</select></label>
+      <label class="p-germ" hidden>Germline <select data-act="germline"></select></label></div>` : ''}
+    <details open><summary>Genotype</summary><div class="p-grid">${LOCI.map(l =>
+      `<label><span><b>${esc(l.sym)}</b> ${esc(l.label)}</span><select data-locus="${l.id}"></select></label>`).join('')}</div></details>`;
+  root.addEventListener('change', e => onParentChange(role, e.target));
+  root.addEventListener('click', e => { if (e.target.dataset.act==='import') onParentChange(role, e.target); });
+  syncParent(role);
+}
+function syncParent(role){
+  const P = litter[role], root = $('parent-'+role);
+  for (const sel of root.querySelectorAll('select[data-locus]')){
+    const l = LOCUS_BY_ID[sel.dataset.locus];
+    const opts = l.xLinked ? l.optionsBySex[P.sex==='XY' ? 'XY' : 'XX'] : l.options;
+    sel.innerHTML = opts.map(o=>`<option value="${optionValue(o)}">${symOf(o[0])}/${symOf(o[1])} — ${esc(o[2])}</option>`).join('');
+    const v = P.loci[l.id], want = optionValue(v);
+    sel.value = opts.some(o=>optionValue(o)===want) ? want : v[1]+'|'+v[0];
+  }
+  if (role==='sire'){
+    root.querySelector('[data-act=sex]').value = P.sex;
+    const [a, b] = P.loci.O, germ = root.querySelector('.p-germ'), gs = germ.querySelector('select');
+    germ.hidden = !(P.sex==='XY/XY' && a!==b);
+    gs.innerHTML = [['mixed','both lines (50:50)'],[a, `${symOf(a)} line only`],[b, `${symOf(b)} line only`]].map(([v,t])=>`<option value="${v}">${t}</option>`).join('');
+    gs.value = (P.germline===a || P.germline===b) ? P.germline : 'mixed';
+  }
+  const desc = computePhenotype(P), out = describe(desc);
+  root.querySelector('.p-name').textContent = out.name;
+  root.querySelector('.p-coat').textContent = out.coatLine;
+  root.querySelector('.p-carry').textContent = out.carried.length ? 'Carries: '+out.carried.join(', ') : 'Carries nothing recessive';
+  root.querySelector('.p-top g').innerHTML = CatArt.catSVG(desc, JSON.stringify(P.loci)+P.sex, role==='dam' ? 'q' : 't');
+}
+function onParentChange(role, t){
+  const P = litter[role], act = t.dataset.act;
+  if (t.dataset.locus) P.loci[t.dataset.locus] = t.value.split('|');
+  else if (act==='sex'){ P.loci.O = convertO(P.loci.O, P.sex, t.value); P.sex = t.value; }
+  else if (act==='germline') P.germline = t.value;
+  else if (act==='preset' && t.value){ const pr = PRESETS[t.value]; P.loci = structuredClone(pr.loci); P.loci.O = convertO(pr.loci.O, pr.sex, P.sex); t.value = ''; }
+  else if (act==='import'){ P.loci = structuredClone(state.loci); P.loci.O = convertO(state.loci.O, state.sex, P.sex); }
+  else return;
+  litter.selected = null; litter.shown = 24;
+  syncParent(role); updateLitter();
+}
+
+function updateLitter(){
+  const r = litter.result = cross(litter.dam, litter.sire);
+  $('litter-error').hidden = !r.error;
+  const mc = $('mating-check'); mc.innerHTML = '';
+  if (r.error){
+    $('litter-error').textContent = r.error;
+    litter.kittens = []; litter.selected = null; renderKittens(); return;
+  }
+  for (const w of r.warnings){
+    const li = document.createElement('li'); li.className = 'warn';
+    li.textContent = `${fmtFrac(w.p)} of kittens (${fmtPct(w.p)}): ${w.text}`; mc.appendChild(li);
+  }
+  if (litter.sire.sex==='XY/XY'){
+    const li = document.createElement('li');
+    li.textContent = 'Chimera tom: his daughters get the X of whichever cell line makes his sperm (set under Germline); his sons get his Y, so they inherit nothing from him at Orange.';
+    mc.appendChild(li);
+  }
+  litter.kittens = litterKittens(r, litter.group);
+  renderKittens();
+}
+
+function sexLine(k){
+  if (!k.bySex.XY) return '♀ queens only';
+  if (!k.bySex.XX) return '♂ toms only';
+  return `♀ ${fmtFrac(k.bySex.XX, k.p)} · ♂ ${fmtFrac(k.bySex.XY, k.p)}`;
+}
+function renderKittens(){
+  const ks = litter.kittens, grid = $('kitten-grid');
+  $('litter-count').textContent = ks.length ? `· ${ks.length} possible ${ks.length===1 ? 'look' : 'looks'}` : '';
+  grid.innerHTML = '';
+  ks.slice(0, litter.shown).forEach((k, i) => {
+    const g = kittenGenotype(litter.result, k), desc = computePhenotype(g);
+    const warn = kittenDetail(litter.result, k).warnings;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'kitten'; b.dataset.i = i; b.setAttribute('aria-pressed', litter.selected===i);
+    b.innerHTML = `<svg viewBox="22 8 320 340" aria-hidden="true"><g>${CatArt.catSVG(desc, JSON.stringify(g.loci), 'c'+i)}</g></svg>
+      <span class="k-p">${fmtPct(k.p)}<small>${fmtFrac(k.p)}</small></span>
+      <span class="k-name">${esc(k.colour.key)}</span>
+      ${k.coat ? `<span class="k-coat">${esc(k.coat.key)}</span>` : ''}
+      <span class="k-sex">${sexLine(k)}</span>
+      ${warn.length ? `<span class="k-warn">⚠ ${warn.map(w=>esc(w.label.split(' — ')[0])+' '+fmtFrac(w.p, w.den)).join(', ')}</span>` : ''}`;
+    grid.appendChild(b);
+  });
+  const left = ks.length - litter.shown, more = $('kitten-more');
+  more.hidden = left <= 0;
+  if (left > 0) more.textContent = `Show ${Math.min(24, left)} more (${left} rarer ${left===1 ? 'look' : 'looks'} left)`;
+  renderDetail();
+}
+
+function renderDetail(){
+  const box = $('kitten-detail'), i = litter.selected, k = litter.kittens[i];
+  if (i==null || !k){ box.hidden = true; box.innerHTML = ''; return; }
+  const r = litter.result, d = kittenDetail(r, k), rw = kittenRows(r, k);
+  const g = kittenGenotype(r, k), desc = computePhenotype(g), out = describe(desc);
+  litter.rows = rw.rows;
+  const hidden = [...k.colour.hidden].sort((a,b)=>b[1]-a[1]);
+  const seg = d.loci.filter(l => l.segregating);
+  const fixed = d.loci.filter(l => !l.segregating).map(l => `${l.id} ${gtText(l.gts[0])}`);
+  const tag = l => l.hidden ? '<span class="tag hid">this look tells you nothing new — same odds as any kitten; DNA-test to know</span>'
+    : l.revealed ? '<span class="tag">fixed by this look</span>'
+    : l.den===1 && litter.group==='colour' && COAT_LOCI.includes(l.id) ? '<span class="tag">varies independently of colour</span>'
+    : l.gts.length < r.dist[l.id].length ? '<span class="tag">narrowed by this look</span>' : '';
+  const cols = seg.filter(l => rw.rows && rw.rows.length && rw.rows[0].gts[l.id]).map(l => l.id);
+
+  let h = `<div class="kd-top"><svg viewBox="22 8 320 340" role="img" aria-label="${esc(k.colour.key)}"><g>${CatArt.catSVG(desc, JSON.stringify(g.loci), 'd')}</g></svg>
+    <div class="kd-head"><h3>${esc(k.colour.key)}</h3>
+      <p class="muted">${esc(k.coat ? k.coat.key : 'any coat — see the coat genes below')}${out.sub && !hidden.length ? ' · '+esc(out.sub) : ''}</p>
+      <p><b>${fmtPct(k.p)}</b> of kittens · <code>${fmtFrac(k.p)}</code> · ${sexLine(k)}</p>
+      ${hidden.length ? `<p class="muted">Colour hidden underneath:</p><div class="kd-carry">${hidden.map(([n,p]) =>
+        `<span class="chip">${esc(n)} <code>${fmtFrac(p, k.colour.p)}</code></span>`).join('')}</div>` : ''}
+      <p class="muted" style="margin-top:10px">Given this look, the kitten carries:</p>
+      <div class="kd-carry">${d.carried.length ? d.carried.map(c =>
+        `<span class="chip">${esc(c.label)} <code>${fmtFrac(c.p, c.den)}</code></span>`).join('') : '<span class="muted">nothing recessive</span>'}</div>
+      ${d.warnings.length ? `<div class="kd-carry">${d.warnings.map(w =>
+        `<span class="chip warnchip">⚠ ${esc(w.label)} <code>${fmtFrac(w.p, w.den)}</code></span>`).join('')}</div>` : ''}
+    </div></div>`;
+
+  h += `<h4>Gene by gene, given this look</h4>`;
+  if (seg.length) h += `<div class="kd-table-wrap"><table class="kd-table"><thead><tr><th>Gene</th><th>Genotypes and odds</th></tr></thead><tbody>${seg.map(l =>
+    `<tr><td>${esc(LOCUS_BY_ID[l.id].label)} <code>${esc(l.id)}</code></td><td class="gts">${l.gts.map(gt =>
+      `<code>${esc(gtText(gt))}</code> ${fmtFrac(gt.p, l.den)}`).join(' · ')}${tag(l)}</td></tr>`).join('')}</tbody></table></div>`;
+  else h += `<p class="muted">Nothing segregates — every kitten of this pair has the same genotype.</p>`;
+  if (fixed.length) h += `<p class="kd-fixed">Same in every kitten of this litter: <code>${esc(fixed.join(' · '))}</code></p>`;
+
+  h += `<h4>Every genotype that gives this kitten ${rw.rows ? `(${rw.count})` : ''}</h4>`;
+  if (!rw.rows) h += `<p class="muted">${rw.count.toLocaleString()} combinations — too many to list. The gene-by-gene table above gives the exact odds at every gene.</p>`;
+  else {
+    const shown = rw.rows.slice(0, litter.rowsShown);
+    h += `<div class="kd-table-wrap"><table class="kd-table"><thead><tr>${cols.map(id=>`<th>${esc(id)}</th>`).join('')}<th>Odds in this look</th><th>Of all kittens</th><th></th></tr></thead><tbody>${shown.map((row, j) =>
+      `<tr>${cols.map(id=>`<td><code>${esc(gtText(row.gts[id]))}</code></td>`).join('')}<td>${fmtFrac(row.p, k.p)}</td><td>${fmtPct(row.p)}</td>
+        <td><button type="button" data-open="${j}">Open</button></td></tr>`).join('')}</tbody></table></div>`;
+    if (rw.rows.length > shown.length) h += `<button type="button" class="more-btn" data-allrows style="margin-top:8px">Show all ${rw.rows.length}</button>`;
+    if (litter.group==='colour') h += `<p class="kd-fixed">Coat genes are left out here because they vary independently of colour — switch “Group by” to full look to include them.</p>`;
+  }
+  box.innerHTML = h; box.hidden = false;
+}
+
+/* load one exact kitten genotype into the One-cat view */
+function openKitten(row){
+  const r = litter.result, k = litter.kittens[litter.selected], base = kittenGenotype(r, k);
+  const loci = {...base.loci}; let sex = base.sex;
+  for (const l of LOCI) if (r.dist[l.id].length===1) loci[l.id] = r.dist[l.id][0].pair.slice();
+  for (const [id, gt] of Object.entries(row.gts)){ loci[id] = gt.pair.slice(); if (gt.sex) sex = gt.sex; }
+  state.sex = sex; state.loci = loci; state.whiteGrade = null;
+  syncControls(); update(); setMode('one'); window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function setMode(mode){
+  document.documentElement.dataset.mode = mode;
+  $('tab-one').setAttribute('aria-selected', mode==='one');
+  $('tab-litter').setAttribute('aria-selected', mode==='litter');
+  $('one-view').hidden = mode!=='one';
+  $('litter-view').hidden = mode!=='litter';
+  if (mode==='litter' && !litter.result) updateLitter();
+}
+
+buildParent('dam'); buildParent('sire');
+$('tab-one').addEventListener('click', () => setMode('one'));
+$('tab-litter').addEventListener('click', () => setMode('litter'));
+$('litter-group').addEventListener('change', e => { litter.group = e.target.value; litter.selected = null; litter.shown = 24; updateLitter(); });
+$('kitten-more').addEventListener('click', () => { litter.shown += 24; renderKittens(); });
+$('kitten-grid').addEventListener('click', e => {
+  const b = e.target.closest('.kitten'); if (!b) return;
+  const i = +b.dataset.i;
+  litter.selected = litter.selected===i ? null : i; litter.rowsShown = 40;
+  for (const x of $('kitten-grid').children) x.setAttribute('aria-pressed', +x.dataset.i===litter.selected);
+  renderDetail();
+  if (litter.selected!=null) $('kitten-detail').scrollIntoView({behavior:'smooth', block:'nearest'});
+});
+$('kitten-detail').addEventListener('click', e => {
+  if (e.target.dataset.open!=null) openKitten(litter.rows[+e.target.dataset.open]);
+  else if (e.target.hasAttribute('data-allrows')){ litter.rowsShown = Infinity; renderDetail(); }
+});
+
+/* ================================================================
    self-tests (silent when passing)
    ================================================================ */
 (function(){
@@ -1309,6 +1826,30 @@ if (matchMedia('(max-width:919px)').matches && 'IntersectionObserver' in window)
   t(N(G({O:['O','o'],A:['a','a']},'XXY')),'Tortoiseshell');
   t(N(G({O:['O','o'],A:['a','a']},'XY/XY')),'Tortoiseshell');
   console.assert(computePhenotype(G({K:['Se','k']})).coat.texture==='selkirk','Se/k = Selkirk');
+  /* litter: exact textbook ratios, carrier odds given the look, and X-linkage */
+  const Q=over=>({sex:'XX', loci:{...structuredClone(WILD), O:['o','o'], ...over}});
+  const T=(over,sex='XY',germline)=>({sex, germline, loci:{...structuredClone(WILD), ...over}});
+  const odds=(r,name)=>{ const k=litterKittens(r,'colour').find(x=>x.colour.key===name); return k ? frac(k.p).join('/') : '0'; };
+  const eq=(got,want,msg)=>console.assert(got===want, `${msg}: expected ${want}, got ${got}`);
+  let R=cross(Q({A:['a','a'],B:['B','b'],D:['D','d']}), T({A:['a','a'],B:['B','b'],D:['D','d']}));
+  eq(odds(R,'Black'),'9/16','9:3:3:1 black'); eq(odds(R,'Chocolate'),'3/16','9:3:3:1 chocolate');
+  eq(odds(R,'Blue'),'3/16','9:3:3:1 blue'); eq(odds(R,'Lilac'),'1/16','9:3:3:1 lilac');
+  const black=litterKittens(R,'colour').find(x=>x.colour.key==='Black'), dil=kittenDetail(R,black).carried.find(c=>c.label==='dilute');
+  eq(frac(dil.p,dil.den).join('/'),'2/3','a black kitten carries dilute 2/3');
+  R=cross(Q({O:['O','o'],A:['a','a']}), T({A:['a','a']}));
+  const tortie=litterKittens(R,'colour').find(x=>x.colour.key==='Tortoiseshell');
+  eq(frac(tortie.p).join('/'),'1/4','tortie queen × black tom: 1/4 tortie'); eq(tortie.bySex.XY,0,'no tortie toms');
+  R=cross(Q({A:['a','a'],C:['cb','cs']}), T({A:['a','a'],C:['cb','cs']}));
+  eq(odds(R,'Seal Mink'),'1/2','Tonkinese × Tonkinese: 1/2 mink'); eq(odds(R,'Seal Sepia'),'1/4','1/4 sepia');
+  R=cross(Q({O:['O','O'],B:['B','b']}), T({O:['O','Y'],B:['B','b']}));
+  console.assert(kittenDetail(R,litterKittens(R,'colour')[0]).loci.find(l=>l.id==='B').hidden,'B is hidden on red kittens');
+  R=cross(Q({A:['a','a']}), T({A:['a','a'],O:['O','o']},'XY/XY','O'));
+  eq(odds(R,'Tortoiseshell'),'1/2','chimera tom, O-line germline: every daughter tortie');
+  R=cross(Q({W:['Wd','w']}), T({W:['Wd','w']}));
+  eq(frac(R.warnings.find(w=>w.text.startsWith('Wd/Wd')).p).join('/'),'1/4','Wd × Wd: 1/4 Wd/Wd');
+  console.assert(cross(Q({}),T({},'XXY')).error,'XXY toms are refused');
+  R=cross(Q({B:['B','b'],D:['D','d'],L:['L','l']}), T({B:['B','b'],D:['D','d'],L:['L','l']}));
+  for (const k of litterKittens(R,'full')){ const s=kittenRows(R,k).rows.reduce((a,x)=>a+x.p,0); console.assert(Math.abs(s-k.p)<1e-12,'rows sum to the kitten'); }
   t(C(G({K:['Se','re']})),'Devon rex');
   t(N(G({})),'Black Mackerel Tabby');
   t(N(G({A:['a','a'],C:['cs','cs']})),'Seal Point');
