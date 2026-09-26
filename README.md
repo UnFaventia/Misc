@@ -16,6 +16,15 @@ Naming follows the A genotype rather than what merely shows: red fur always show
 is still a solid Red, a Red Point (not Lynx), and a Red Smoke (not Cameo). The Mocha allele follows Yu,
 Grahn & Lyons 2019: co-dominant with Burmese sepia (cb/cm) and dominant over Siamese (cs/cm).
 
+**Litter mode** crosses a fully genotyped queen and tom (XY, or an XY/XY chimera with a chosen germline
+line) and lists every kitten look they can produce with exact odds (as fractions and percentages), split by
+sex. Clicking a kitten opens the genotypes behind that look: gene-by-gene odds given the look (a black kitten
+from two dilute carriers is D/d 2/3), what it carries, health warnings, every full genotype combination that
+produces it, and an Open button that loads any one of them into the single-cat view. Pairing-level warnings
+(e.g. 1/4 Wd/Wd) sit above the kittens. `cross()` is pure and exact: genotypes at each locus are grouped
+into classes that always name the same, so even an every-gene-heterozygous cross enumerates in well under
+a second, and it matches brute-force enumeration exactly.
+
 The portrait (`CatArt.catSVG`) is also a pure function of the phenotype descriptor. It draws a
 three-quarter seated cat and places every marking anatomically: the forehead M, cheek lines,
 necklaces, leg bars, tail rings, and a flank pattern per tabby type (spots are literally broken
@@ -23,8 +32,8 @@ mackerel stripes). Tortoiseshell patches come from thresholded noise, larger on 
 spotting grows up from the paws and belly. Points follow the cool extremities, and long, rex and
 hairless coats each change the outline and texture.
 
-The genetics engine (`computePhenotype`) is a pure genotype-to-phenotype function with no DOM
-dependencies, so a future two-parent offspring (Punnett) calculator can reuse it directly.
+The genetics engine (`computePhenotype`) and the litter engine (`cross`) are pure functions with no DOM
+dependencies, and the in-page self-tests check textbook ratios (9:3:3:1, Tonkinese 1:2:1, tortie × black by sex).
 
 The file is authored as a claude.ai Artifact page: it intentionally has no `<html>`/`<head>`/`<body>`
 wrapper (the artifact host supplies that skeleton) and is theme-aware (light/dark). It also opens
