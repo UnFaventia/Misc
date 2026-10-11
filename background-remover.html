@@ -1,0 +1,1219 @@
+<title>Cutout Bench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Martian+Mono:wght@400;600&display=swap">
+<style>
+  /* Workbench: a cutting-mat stage with the tool rail beside it; the rail drops under the stage on phones. */
+  :root{
+    --paper:#edf0e9; --surface:#fbfcf8; --well:#e2e7dc; --ink:#1b2620; --muted:#56665d; --rule:#c6cfc1;
+    --mat:#2e5a47; --mat-line:rgba(236,242,230,.30); --mat-fine:rgba(236,242,230,.10);
+    --accent:#2e5a47; --accent-ink:#f3f7f0; --grid:#d9b93a; --focus:#b8901a; --danger:#a5442b;
+    --chk-a:#ffffff; --chk-b:#d5dad2;
+    --bd-white:#ffffff; --bd-black:#000000; --bd-pink:#ff2bd6;
+    --f-display:"Archivo","Helvetica Neue",Arial,system-ui,sans-serif;
+    --f-ui:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --f-mono:"Martian Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#111915; --surface:#18221d; --well:#202c26; --ink:#e4ebe3; --muted:#9aada2; --rule:#2d3b34;
+      --mat:#24493a; --mat-line:rgba(236,242,230,.24); --mat-fine:rgba(236,242,230,.08);
+      --accent:#86c9a6; --accent-ink:#0e1a13; --grid:#e2c74f; --focus:#e2c74f; --danger:#e0876b;
+      --chk-a:#3b4440; --chk-b:#2a312d;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#111915; --surface:#18221d; --well:#202c26; --ink:#e4ebe3; --muted:#9aada2; --rule:#2d3b34;
+    --mat:#24493a; --mat-line:rgba(236,242,230,.24); --mat-fine:rgba(236,242,230,.08);
+    --accent:#86c9a6; --accent-ink:#0e1a13; --grid:#e2c74f; --focus:#e2c74f; --danger:#e0876b;
+    --chk-a:#3b4440; --chk-b:#2a312d;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  body{background:var(--paper); color:var(--ink); font-family:var(--f-ui); font-size:15px; line-height:1.5; margin:0}
+  .wrap{max-width:1240px; margin:0 auto; padding-inline:16px; padding-block:20px 56px; display:flex; flex-direction:column; gap:16px}
+  @media (min-width:720px){ .wrap{padding-inline:24px} }
+  button,input,select{font:inherit; color:inherit}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+  .mono{font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+
+  /* ---------- masthead ---------- */
+  .masthead{display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:12px 24px}
+  .masthead h1{font-family:var(--f-display); font-stretch:125%; font-weight:800; font-size:clamp(1.7rem,4.2vw,2.6rem);
+    line-height:1.02; letter-spacing:-.015em; margin:0 0 6px; text-wrap:balance}
+  .masthead h1 span{color:var(--accent)}
+  .masthead p{margin:0; color:var(--muted); max-width:60ch}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:8px; padding:8px 14px;
+    border:1px solid var(--rule); background:var(--surface); cursor:pointer; font-size:.9rem; font-weight:600; line-height:1.2}
+  .btn:hover{border-color:var(--accent)}
+  .btn:disabled{opacity:.5; cursor:not-allowed}
+  .btn.primary{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.small{padding:6px 10px; font-size:.82rem}
+  .btn[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+
+  /* ---------- tray ---------- */
+  .tray{overflow-x:auto; padding-bottom:4px}
+  .thumbs{list-style:none; margin:0; padding:0; display:flex; gap:10px}
+  .thumbs li{position:relative; flex:none; width:84px}
+  .thumb{display:flex; flex-direction:column; gap:4px; width:100%; padding:0; border:0; background:none; cursor:pointer; text-align:left}
+  .thumb canvas{width:84px; height:84px; border-radius:8px; border:1px solid var(--rule); display:block;
+    background:repeating-conic-gradient(var(--chk-a) 0 25%, var(--chk-b) 0 50%) 0 0/12px 12px}
+  .thumb[aria-current="true"] canvas{border:2px solid var(--accent); box-shadow:0 0 0 2px var(--grid)}
+  .thumb .tname{font-size:.72rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .thumb .tag{position:absolute; left:4px; top:4px; font-family:var(--f-mono); font-size:.6rem; letter-spacing:.04em;
+    background:var(--grid); color:#1b2620; border-radius:4px; padding:1px 4px}
+  .tx{position:absolute; right:-6px; top:-6px; width:22px; height:22px; border-radius:50%; border:1px solid var(--rule);
+    background:var(--surface); cursor:pointer; font-size:.8rem; line-height:1; padding:0; color:var(--muted)}
+  .tx:hover{color:var(--danger); border-color:var(--danger)}
+  .tray-add{flex:none; width:84px; height:84px; border:1.5px dashed var(--rule); border-radius:8px; background:none;
+    cursor:pointer; color:var(--muted); font-size:.78rem; font-weight:600; display:grid; place-items:center; text-align:center; padding:6px}
+  .tray-add:hover{border-color:var(--accent); color:var(--accent)}
+
+  /* ---------- bench ---------- */
+  .bench{display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:18px; align-items:start}
+  @media (max-width:900px){ .bench{grid-template-columns:minmax(0,1fr)} }
+  .stage-col{display:flex; flex-direction:column; gap:10px; min-width:0}
+  @media (min-width:901px){ .stage-col{position:sticky; top:calc(env(safe-area-inset-top, 0px) + 12px)} }
+  /* On phones the preview pins to the top so the sliders below it can be dragged while watching the result. */
+  @media (max-width:900px) and (min-height:600px){
+    .stage-col{position:sticky; top:env(safe-area-inset-top, 0px); z-index:5; background:var(--paper); padding-block:8px 6px;
+      margin-inline:-16px; padding-inline:16px; box-shadow:0 6px 10px -8px rgba(0,0,0,.35)}
+    .stage{min-height:180px; max-height:44vh}
+    .stage[data-zoom="fit"] canvas{max-height:calc(44vh - 30px)}
+  }
+  .stagebar{display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center}
+  .stagebar .spacer{flex:1}
+  .seg{position:relative; display:inline-flex; border:1px solid var(--rule); border-radius:8px; overflow:hidden; background:var(--surface)}
+  .seg input{position:absolute; left:0; top:0; opacity:0; width:1px; height:1px; pointer-events:none}
+  .seg label{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; font-size:.8rem; font-weight:600;
+    cursor:pointer; border-left:1px solid var(--rule); color:var(--muted); white-space:nowrap}
+  .seg label:first-of-type{border-left:0}
+  .seg input:checked + label{background:var(--accent); color:var(--accent-ink)}
+  .seg input:focus-visible + label{outline:2px solid var(--focus); outline-offset:-3px}
+  .seg.wide{display:flex}
+  .seg.wide label{flex:1; justify-content:center}
+  .sw{width:12px; height:12px; border-radius:3px; border:1px solid var(--rule); flex:none}
+  .sw.checker{background:repeating-conic-gradient(var(--chk-a) 0 25%, var(--chk-b) 0 50%) 0 0/6px 6px}
+  .sw.mat{background:var(--mat)}
+  .sw.white{background:var(--bd-white)} .sw.black{background:var(--bd-black)} .sw.pink{background:var(--bd-pink)}
+
+  .stage{position:relative; display:flex; overflow:auto; border-radius:10px; border:1px solid var(--rule);
+    min-height:260px; max-height:min(74vh,920px); padding:14px}
+  .stage canvas{display:block; margin:auto; image-rendering:auto}
+  .stage[data-zoom="fit"] canvas{max-width:100%; max-height:calc(min(74vh,920px) - 30px); width:auto; height:auto}
+  .stage[data-zoom="1"] canvas, .stage[data-zoom="2"] canvas{max-width:none; max-height:none}
+  .stage[data-zoom="2"] canvas{image-rendering:pixelated}
+  .stage[data-backdrop="checker"]{background:repeating-conic-gradient(var(--chk-a) 0 25%, var(--chk-b) 0 50%) 0 0/20px 20px}
+  .stage[data-backdrop="mat"]{background-color:var(--mat);
+    background-image:linear-gradient(var(--mat-line) 1px, transparent 1px), linear-gradient(90deg, var(--mat-line) 1px, transparent 1px),
+      linear-gradient(var(--mat-fine) 1px, transparent 1px), linear-gradient(90deg, var(--mat-fine) 1px, transparent 1px);
+    background-size:60px 60px, 60px 60px, 12px 12px, 12px 12px}
+  .stage[data-backdrop="white"]{background:var(--bd-white)}
+  .stage[data-backdrop="black"]{background:var(--bd-black)}
+  .stage[data-backdrop="pink"]{background:var(--bd-pink)}
+  .stage.tool-brush canvas{cursor:none; touch-action:none}
+  .stage.tool-region canvas{cursor:pointer}
+  .stage.tool-pick canvas{cursor:crosshair}
+  .stage.dragging::after{content:"Drop images to add them"; position:absolute; inset:8px; border:2px dashed var(--grid);
+    border-radius:8px; display:grid; place-items:center; background:rgba(17,25,21,.55); color:#fff; font-weight:700; font-size:1.1rem}
+  .readout{margin:0; font-size:.72rem; color:var(--muted); display:flex; flex-wrap:wrap; gap:4px 14px}
+  .readout b{color:var(--ink); font-weight:600}
+  .cursor{position:fixed; pointer-events:none; border-radius:50%; border:1.5px solid #fff; box-shadow:0 0 0 1.5px #000;
+    transform:translate(-50%,-50%); z-index:20}
+
+  /* ---------- rail ---------- */
+  .rail{background:var(--surface); border:1px solid var(--rule); border-radius:12px; display:flex; flex-direction:column; min-width:0}
+  .panel{padding:14px 16px 16px; display:flex; flex-direction:column; gap:10px; border-top:1px solid var(--rule); min-width:0}
+  .panel:first-child{border-top:0}
+  .panel h2{margin:0; font-family:var(--f-display); font-stretch:125%; font-weight:700; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.1em; color:var(--muted)}
+  .hint{margin:0; font-size:.8rem; color:var(--muted); line-height:1.45}
+  .field{display:flex; flex-direction:column; gap:4px}
+  .stack{display:flex; flex-direction:column; gap:10px}
+  .field-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:.86rem; font-weight:600}
+  .field-top output{font-family:var(--f-mono); font-size:.72rem; font-weight:400; color:var(--muted)}
+  input[type=range]{width:100%; accent-color:var(--accent); margin:2px 0}
+  .check{display:flex; gap:8px; align-items:flex-start; font-size:.86rem; font-weight:600; cursor:pointer}
+  .check input{accent-color:var(--accent); margin:3px 0 0; width:16px; height:16px; flex:none}
+  .check small{display:block; font-weight:400; color:var(--muted); font-size:.78rem}
+  .bgrow{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+  .bgrow input[type=color]{width:38px; height:32px; padding:0 2px; border:1px solid var(--rule); border-radius:6px; background:var(--surface); cursor:pointer}
+  .bgrow .hex{font-family:var(--f-mono); font-size:.76rem; min-width:7ch}
+  .row{display:flex; flex-wrap:wrap; gap:8px}
+  .row .btn{flex:1}
+
+  .foot{color:var(--muted); font-size:.8rem; max-width:72ch}
+  .foot p{margin:0 0 4px}
+  .foot .fail{color:var(--danger)}
+  .toast{position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom, 0px)); transform:translate(-50%,20px); opacity:0;
+    background:var(--ink); color:var(--paper); padding:8px 14px; border-radius:8px; font-size:.86rem; pointer-events:none;
+    transition:opacity .18s, transform .18s; max-width:calc(100vw - 32px); z-index:30}
+  .toast.show{opacity:1; transform:translate(-50%,0)}
+  @media (prefers-reduced-motion: reduce){ .toast{transition:none} }
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div>
+      <h1>Cutout <span>Bench</span></h1>
+      <p>Drop in an illustration and the background comes off as a transparent PNG. It all runs in this browser, so your images never leave the device.</p>
+    </div>
+    <button type="button" class="btn primary" id="addBtn">Add images</button>
+    <input type="file" id="file" accept="image/*" multiple class="sr-only" tabindex="-1" aria-hidden="true">
+  </header>
+
+  <section class="tray" aria-label="Images">
+    <ul class="thumbs" id="thumbs"></ul>
+  </section>
+
+  <main class="bench">
+    <section class="stage-col" aria-label="Preview">
+      <div class="stagebar">
+        <div class="seg" role="radiogroup" aria-label="Backdrop">
+          <input type="radio" name="backdrop" id="bd-checker" value="checker" checked><label for="bd-checker"><i class="sw checker"></i>Checker</label>
+          <input type="radio" name="backdrop" id="bd-mat" value="mat"><label for="bd-mat"><i class="sw mat"></i>Mat</label>
+          <input type="radio" name="backdrop" id="bd-white" value="white"><label for="bd-white"><i class="sw white"></i>White</label>
+          <input type="radio" name="backdrop" id="bd-black" value="black"><label for="bd-black"><i class="sw black"></i>Black</label>
+          <input type="radio" name="backdrop" id="bd-pink" value="pink"><label for="bd-pink"><i class="sw pink"></i>Pink</label>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Zoom">
+          <input type="radio" name="zoom" id="zm-fit" value="fit" checked><label for="zm-fit">Fit</label>
+          <input type="radio" name="zoom" id="zm-1" value="1"><label for="zm-1">1:1</label>
+          <input type="radio" name="zoom" id="zm-2" value="2"><label for="zm-2">2×</label>
+        </div>
+        <span class="spacer"></span>
+        <button type="button" class="btn small" id="compare" aria-pressed="false">Show original</button>
+      </div>
+      <div class="stage tool-region" id="stage" data-backdrop="checker" data-zoom="fit">
+        <canvas id="view" width="8" height="8" aria-label="Cutout preview"></canvas>
+      </div>
+      <p class="readout mono" id="readout" aria-live="polite"></p>
+    </section>
+
+    <aside class="rail" aria-label="Settings">
+      <section class="panel">
+        <h2>Background</h2>
+        <div class="seg wide" role="radiogroup" aria-label="Method">
+          <input type="radio" name="mode" id="mode-flat" value="flat"><label for="mode-flat">Flat background</label>
+          <input type="radio" name="mode" id="mode-outline" value="outline"><label for="mode-outline">Outline matches it</label>
+        </div>
+        <p class="hint" id="modeHint"></p>
+        <div class="bgrow">
+          <input type="color" id="bgColor" aria-label="Background colour">
+          <span class="hex" id="bgHex"></span>
+          <button type="button" class="btn small" id="pickBg" aria-pressed="false">Pick from image</button>
+          <button type="button" class="btn small" id="autoBg">Auto</button>
+        </div>
+        <div class="field">
+          <div class="field-top"><label for="tol">Tolerance</label><output id="tolOut" for="tol"></output></div>
+          <input type="range" id="tol" min="0" max="160" step="1">
+          <p class="hint">How far a colour can drift from the background and still count as background.</p>
+        </div>
+      </section>
+
+      <section class="panel" id="outlinePanel">
+        <h2>Outline</h2>
+        <div class="field">
+          <div class="field-top"><label for="outline">Outline width</label><output id="outlineOut" for="outline"></output></div>
+          <input type="range" id="outline" min="0" max="30" step="1">
+          <p class="hint">The ink outline is the same colour as the background, so it can't be seen as an edge. The shape is traced from the fill and grown by this much. Match it to the thickness of the drawing's outer line.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Cleanup</h2>
+        <div class="stack" id="flatPanel">
+          <label class="check"><input type="checkbox" id="gaps"><span>Remove enclosed gaps<small>Background showing through holes inside the subject, like the space inside a loop or between an arm and a body.</small></span></label>
+          <div class="field">
+            <div class="field-top"><label for="minGap">Smallest gap</label><output id="minGapOut" for="minGap"></output></div>
+            <input type="range" id="minGap" min="0" max="100" step="1">
+          </div>
+          <p class="hint" id="gapHint"></p>
+        </div>
+        <div class="field">
+          <div class="field-top"><label for="stray">Stray bits</label><output id="strayOut" for="stray"></output></div>
+          <input type="range" id="stray" min="0" max="100" step="1">
+          <p class="hint">Drops loose specks and fragments smaller than this, like JPEG crumbs or pieces of a faint background pattern.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Edges</h2>
+        <label class="check" id="defringeRow"><input type="checkbox" id="defringe"><span>Clean the halo<small>Separates the background colour out of anti-aliased edge pixels.</small></span></label>
+        <div class="field">
+          <div class="field-top"><label for="soften">Softness</label><output id="softenOut" for="soften"></output></div>
+          <input type="range" id="soften" min="0" max="4" step="1">
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Touch up</h2>
+        <div class="seg wide" role="radiogroup" aria-label="Touch-up tool">
+          <input type="radio" name="tool" id="tool-region" value="region" checked><label for="tool-region">Tap region</label>
+          <input type="radio" name="tool" id="tool-erase" value="erase"><label for="tool-erase">Erase</label>
+          <input type="radio" name="tool" id="tool-restore" value="restore"><label for="tool-restore">Restore</label>
+        </div>
+        <p class="hint" id="toolHint"></p>
+        <div class="field" id="brushField">
+          <div class="field-top"><label for="brush">Brush size</label><output id="brushOut" for="brush"></output></div>
+          <input type="range" id="brush" min="6" max="140" step="2" value="34">
+        </div>
+        <div class="row">
+          <button type="button" class="btn small" id="undo">Undo</button>
+          <button type="button" class="btn small" id="clearOps">Clear touch-ups</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Save</h2>
+        <label class="check"><input type="checkbox" id="trim"><span>Trim to subject<small>Crops the empty transparent border away.</small></span></label>
+        <div class="row">
+          <button type="button" class="btn primary" id="savePng">Save PNG</button>
+          <button type="button" class="btn" id="saveAll">Save all (.zip)</button>
+        </div>
+        <button type="button" class="btn small" id="applyAll">Use these settings on every image</button>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="foot" id="foot">
+    <p>Works best on illustrations with a flat background: one colour behind the subject, even if it's JPEG-noisy. Photos with busy backgrounds need an AI matting tool instead.</p>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="cursor" id="cursor" hidden></div>
+
+<script>
+/* ==CUTOUT CORE== Pure functions on {data: RGBA Uint8ClampedArray, width, height}. No DOM. */
+const Cutout = (() => {
+  const INF = 1e20;
+
+  /* ----- background colour ----- */
+  function detectBackground(img) {
+    const {data, width: w, height: h} = img;
+    const ring = [];
+    for (let x = 0; x < w; x++) { ring.push(x); if (h > 1) ring.push((h - 1) * w + x); }
+    for (let y = 1; y < h - 1; y++) { ring.push(y * w); if (w > 1) ring.push(y * w + w - 1); }
+    const counts = new Map(), opaque = [];
+    let clear = 0;
+    for (const p of ring) {
+      const i = p * 4;
+      if (data[i + 3] < 128) { clear++; continue; }
+      opaque.push(i);
+      const key = (data[i] >> 4) << 8 | (data[i + 1] >> 4) << 4 | (data[i + 2] >> 4);
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+    if (!opaque.length) return {color: [255, 255, 255], noise: 0, share: 0, clearShare: 1};
+    let best = -1, key = 0;
+    for (const [k, c] of counts) if (c > best) { best = c; key = k; }
+    let c = [((key >> 8) & 15) * 16 + 8, ((key >> 4) & 15) * 16 + 8, (key & 15) * 16 + 8];
+    let members = [];
+    for (let pass = 0; pass < 3; pass++) {
+      const next = [];
+      let sr = 0, sg = 0, sb = 0;
+      for (const i of opaque) {
+        const dr = data[i] - c[0], dg = data[i + 1] - c[1], db = data[i + 2] - c[2];
+        if (dr * dr + dg * dg + db * db <= 576) { next.push(i); sr += data[i]; sg += data[i + 1]; sb += data[i + 2]; }
+      }
+      if (!next.length) break;
+      members = next;
+      c = [sr / next.length, sg / next.length, sb / next.length];
+    }
+    const ds = members.map(i => Math.hypot(data[i] - c[0], data[i + 1] - c[1], data[i + 2] - c[2])).sort((a, b) => a - b);
+    return {
+      color: c.map(Math.round),
+      noise: ds.length ? ds[Math.floor((ds.length - 1) * 0.95)] : 0,
+      share: members.length / ring.length,
+      clearShare: clear / ring.length,
+    };
+  }
+
+  // White or black backgrounds: subjects often contain that exact colour (eye-whites, ink), so enclosed gaps default to kept.
+  function isNeutralExtreme([r, g, b]) {
+    const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return Math.max(r, g, b) - Math.min(r, g, b) < 12 && (lum > 238 || lum < 20);
+  }
+  const autoTolerance = noise => Math.round(Math.min(64, Math.max(26, noise * 2.5 + 26)));
+  const speckSize = n => Math.max(6, Math.round(n * 0.00002));
+
+  function distanceMap(img, bg) {
+    const {data} = img, n = img.width * img.height, out = new Float32Array(n);
+    for (let p = 0, i = 0; p < n; p++, i += 4) {
+      const dr = data[i] - bg[0], dg = data[i + 1] - bg[1], db = data[i + 2] - bg[2];
+      out[p] = Math.sqrt(dr * dr + dg * dg + db * db);
+    }
+    return out;
+  }
+
+  // Pixels that count as background: close to the bg colour, or already transparent.
+  function candidates(img, s, cache) {
+    const key = s.bg.join(',');
+    let dist = cache && cache.key === key ? cache.dist : null;
+    if (!dist) { dist = distanceMap(img, s.bg); if (cache) { cache.key = key; cache.dist = dist; } }
+    const n = dist.length, cand = new Uint8Array(n), d = img.data, t = s.tol;
+    for (let p = 0; p < n; p++) cand[p] = dist[p] <= t || d[p * 4 + 3] < 16 ? 1 : 0;
+    return cand;
+  }
+
+  /* ----- binary mask toolkit ----- */
+  function invert(m) { const o = new Uint8Array(m.length); for (let i = 0; i < m.length; i++) o[i] = m[i] ? 0 : 1; return o; }
+
+  function floodFromBorder(mask, w, h) {
+    const n = w * h, out = new Uint8Array(n), stack = new Int32Array(n);
+    let sp = 0;
+    const seed = p => { if (mask[p] && !out[p]) { out[p] = 1; stack[sp++] = p; } };
+    for (let x = 0; x < w; x++) { seed(x); seed((h - 1) * w + x); }
+    for (let y = 0; y < h; y++) { seed(y * w); seed(y * w + w - 1); }
+    while (sp) {
+      const p = stack[--sp], x = p % w;
+      if (x > 0 && mask[p - 1] && !out[p - 1]) { out[p - 1] = 1; stack[sp++] = p - 1; }
+      if (x < w - 1 && mask[p + 1] && !out[p + 1]) { out[p + 1] = 1; stack[sp++] = p + 1; }
+      if (p >= w && mask[p - w] && !out[p - w]) { out[p - w] = 1; stack[sp++] = p - w; }
+      if (p < n - w && mask[p + w] && !out[p + w]) { out[p + w] = 1; stack[sp++] = p + w; }
+    }
+    return out;
+  }
+
+  function label(mask, w, h) {
+    const n = w * h, lab = new Int32Array(n), stack = new Int32Array(n), sizes = [0];
+    let count = 0;
+    for (let s = 0; s < n; s++) {
+      if (!mask[s] || lab[s]) continue;
+      count++;
+      let sp = 0, size = 0;
+      lab[s] = count; stack[sp++] = s;
+      while (sp) {
+        const p = stack[--sp], x = p % w;
+        size++;
+        if (x > 0 && mask[p - 1] && !lab[p - 1]) { lab[p - 1] = count; stack[sp++] = p - 1; }
+        if (x < w - 1 && mask[p + 1] && !lab[p + 1]) { lab[p + 1] = count; stack[sp++] = p + 1; }
+        if (p >= w && mask[p - w] && !lab[p - w]) { lab[p - w] = count; stack[sp++] = p - w; }
+        if (p < n - w && mask[p + w] && !lab[p + w]) { lab[p + w] = count; stack[sp++] = p + w; }
+      }
+      sizes.push(size);
+    }
+    return {lab, sizes, count};
+  }
+
+  function componentAt(mask, w, h, seed) {
+    if (!mask[seed]) return new Int32Array(0);
+    const n = w * h, seen = new Uint8Array(n), q = new Int32Array(n);
+    let head = 0, tail = 0;
+    seen[seed] = 1; q[tail++] = seed;
+    while (head < tail) {
+      const p = q[head++], x = p % w;
+      if (x > 0 && mask[p - 1] && !seen[p - 1]) { seen[p - 1] = 1; q[tail++] = p - 1; }
+      if (x < w - 1 && mask[p + 1] && !seen[p + 1]) { seen[p + 1] = 1; q[tail++] = p + 1; }
+      if (p >= w && mask[p - w] && !seen[p - w]) { seen[p - w] = 1; q[tail++] = p - w; }
+      if (p < n - w && mask[p + w] && !seen[p + w]) { seen[p + w] = 1; q[tail++] = p + w; }
+    }
+    return q.subarray(0, tail);
+  }
+
+  function removeSmall(mask, w, h, min) {
+    const L = label(mask, w, h), out = new Uint8Array(mask.length);
+    for (let p = 0; p < mask.length; p++) { const k = L.lab[p]; out[p] = k && L.sizes[k] >= min ? 1 : 0; }
+    return out;
+  }
+
+  // Exact squared Euclidean distance transform (Felzenszwalb & Huttenlocher), O(n) for any radius.
+  function edt1d(f, n, d, v, z) {
+    let k = 0;
+    v[0] = 0; z[0] = -INF; z[1] = INF;
+    for (let q = 1; q < n; q++) {
+      let s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]);
+      while (s <= z[k]) { k--; s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]); }
+      k++; v[k] = q; z[k] = s; z[k + 1] = INF;
+    }
+    k = 0;
+    for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; const dq = q - v[k]; d[q] = dq * dq + f[v[k]]; }
+  }
+  // Squared distance from every pixel to the nearest pixel where mask === target.
+  function sqDist(mask, w, h, target) {
+    const n = w * h, g = new Float32Array(n);
+    for (let p = 0; p < n; p++) g[p] = mask[p] === target ? 0 : INF;
+    const m = Math.max(w, h), f = new Float64Array(m), d = new Float64Array(m), v = new Int32Array(m), z = new Float64Array(m + 1);
+    for (let x = 0; x < w; x++) {
+      for (let y = 0; y < h; y++) f[y] = g[y * w + x];
+      edt1d(f, h, d, v, z);
+      for (let y = 0; y < h; y++) g[y * w + x] = d[y];
+    }
+    for (let y = 0, o = 0; y < h; y++, o += w) {
+      for (let x = 0; x < w; x++) f[x] = g[o + x];
+      edt1d(f, w, d, v, z);
+      for (let x = 0; x < w; x++) g[o + x] = d[x];
+    }
+    return g;
+  }
+  function dilate(mask, w, h, r) {
+    if (r <= 0) return mask.slice();
+    const d = sqDist(mask, w, h, 1), lim = r * r + r, out = new Uint8Array(mask.length);
+    for (let p = 0; p < out.length; p++) out[p] = d[p] <= lim ? 1 : 0;
+    return out;
+  }
+  function erode(mask, w, h, r) {
+    if (r <= 0) return mask.slice();
+    const d = sqDist(mask, w, h, 0), lim = r * r + r, out = new Uint8Array(mask.length);
+    for (let p = 0; p < out.length; p++) out[p] = mask[p] && d[p] > lim ? 1 : 0;
+    return out;
+  }
+  function fillHoles(mask, w, h) {
+    const reach = floodFromBorder(invert(mask), w, h);
+    return invert(reach);
+  }
+
+  /* ----- brush geometry ----- */
+  // Calls span(y, x0, x1) for each row of a disc centred on (cx, cy) in pixel units.
+  function disc(w, h, cx, cy, r, span) {
+    const y0 = Math.max(0, Math.ceil(cy - r - 0.5)), y1 = Math.min(h - 1, Math.floor(cy + r - 0.5));
+    for (let y = y0; y <= y1; y++) {
+      const dy = y + 0.5 - cy, half = Math.sqrt(Math.max(0, r * r - dy * dy));
+      const x0 = Math.max(0, Math.ceil(cx - half - 0.5)), x1 = Math.min(w - 1, Math.floor(cx + half - 0.5));
+      if (x1 >= x0) span(y, x0, x1);
+    }
+  }
+  // Calls fn(x, y) at points spaced along a polyline [x0, y0, x1, y1, ...].
+  function walk(pts, r, fn) {
+    fn(pts[0], pts[1]);
+    const step = Math.max(0.5, r / 3);
+    for (let k = 2; k + 1 < pts.length; k += 2) {
+      const ax = pts[k - 2], ay = pts[k - 1], bx = pts[k], by = pts[k + 1];
+      const m = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / step));
+      for (let j = 1; j <= m; j++) fn(ax + (bx - ax) * j / m, ay + (by - ay) * j / m);
+    }
+  }
+  function stamp(mask, w, h, pts, r, v) {
+    walk(pts, r, (cx, cy) => disc(w, h, cx, cy, r, (y, x0, x1) => mask.fill(v, y * w + x0, y * w + x1 + 1)));
+  }
+
+  /* ----- touch-ups ----- */
+  // A tap selects the connected region of its own kind: background-coloured or subject-coloured.
+  // In outline mode the outline band is excluded so interior ink doesn't join up with the outside.
+  function regionAt(p, ctx) {
+    const {w, h, cand, silhouette} = ctx, n = w * h, inner = silhouette && ctx.inner();
+    let within;
+    if (!cand[p]) within = invert(cand);
+    else if (!silhouette) within = cand;
+    else if (inner[p]) { within = new Uint8Array(n); for (let q = 0; q < n; q++) within[q] = cand[q] & inner[q]; }
+    else if (!silhouette[p]) { within = new Uint8Array(n); for (let q = 0; q < n; q++) within[q] = cand[q] & (silhouette[q] ^ 1); }
+    else return null;
+    return componentAt(within, w, h, p);
+  }
+  function applyOp(mask, op, ctx) {
+    const {w, h} = ctx;
+    if (op.kind === 'stroke') { stamp(mask, w, h, op.pts, op.r, op.keep ? 1 : 0); return; }
+    if (op.x < 0 || op.y < 0 || op.x >= w || op.y >= h) return;
+    const p = op.y * w + op.x, sel = regionAt(p, ctx);
+    if (!sel) return;
+    const v = mask[p] ? 0 : 1;
+    for (let k = 0; k < sel.length; k++) mask[sel[k]] = v;
+  }
+
+  /* ----- settings ----- */
+  // Outline-on-matching-background art leaks: background-coloured pixels deep inside the silhouette
+  // connect to the image edge through the outline. Sealed holes (a donut's middle) don't count.
+  function guessMode(img, s, cache) {
+    const w = img.width, h = img.height, n = w * h;
+    const cand = candidates(img, s, cache);
+    const outside = floodFromBorder(cand, w, h);
+    const fg0 = removeSmall(invert(cand), w, h, speckSize(n));
+    const core = erode(fillHoles(dilate(fg0, w, h, 2), w, h), w, h, 3);
+    let area = 0, inside = 0;
+    for (let p = 0; p < n; p++) if (core[p]) { area++; if (outside[p]) inside++; }
+    const ratio = area ? inside / area : 0;
+    return {mode: ratio > 0.012 ? 'outline' : 'flat', ratio};
+  }
+  function defaults(img, cache) {
+    const info = detectBackground(img), n = img.width * img.height;
+    const s = {
+      mode: 'flat', modeAuto: true,
+      bg: info.color, bgAuto: true,
+      tol: autoTolerance(info.noise),
+      removeGaps: !isNeutralExtreme(info.color),
+      minGap: Math.max(24, Math.round(n * 0.0001)),
+      stray: Math.max(8, Math.round(n * 0.0001)),
+      outline: Math.max(2, Math.min(12, Math.round(Math.min(img.width, img.height) * 0.006))),
+      defringe: true, soften: 0, trim: false,
+    };
+    const g = guessMode(img, s, cache);
+    s.mode = g.mode;
+    return {s, info, ratio: g.ratio};
+  }
+
+  /* ----- the pipeline ----- */
+  function run(img, s, ops = [], cache = null) {
+    const w = img.width, h = img.height, n = w * h, src = img.data;
+    const cand = candidates(img, s, cache);
+    const speck = Math.max(speckSize(n), s.stray || 0);
+    let mask, silhouette = null, d2fg = null, gaps = 0;
+
+    if (s.mode === 'outline') {
+      // Trace the fill, grow it by the outline width, then keep everything the grown shape encloses.
+      const fg0 = removeSmall(invert(cand), w, h, speck);
+      const r = Math.max(0, s.outline), lim = (r + 0.5) * (r + 0.5);
+      d2fg = sqDist(fg0, w, h, 1);
+      const grown = new Uint8Array(n);
+      for (let p = 0; p < n; p++) grown[p] = d2fg[p] < lim ? 1 : 0;
+      mask = fillHoles(grown, w, h);
+      silhouette = mask.slice();
+    } else {
+      // Flood the background in from the image edges; optionally drop enclosed background pockets too.
+      const outside = floodFromBorder(cand, w, h), pocket = new Uint8Array(n);
+      mask = new Uint8Array(n);
+      for (let p = 0; p < n; p++) { mask[p] = outside[p] ? 0 : 1; pocket[p] = cand[p] && !outside[p] ? 1 : 0; }
+      const L = label(pocket, w, h), big = new Uint8Array(L.count + 1);
+      for (let k = 1; k <= L.count; k++) if (L.sizes[k] >= s.minGap) { big[k] = 1; gaps++; }
+      if (s.removeGaps && gaps) for (let p = 0; p < n; p++) if (big[L.lab[p]]) mask[p] = 0;
+      mask = removeSmall(mask, w, h, speck);
+    }
+
+    let innerMask = null;
+    const ctx = {w, h, cand, silhouette, inner: () => innerMask || (innerMask = erode(silhouette, w, h, Math.max(0, s.outline) + 1))};
+    for (const op of ops) applyOp(mask, op, ctx);
+
+    const d2out = sqDist(mask, w, h, 0);
+    const alpha = new Float32Array(n);
+    for (let p = 0; p < n; p++) alpha[p] = mask[p];
+    const out = new Uint8ClampedArray(src);
+
+    if (s.mode === 'outline') {
+      // Anti-alias the grown contour from the distance field.
+      const r = Math.max(0, s.outline);
+      for (let p = 0; p < n; p++) {
+        if (!mask[p] || d2out[p] > 2) continue;
+        const d = Math.sqrt(d2fg[p]);
+        if (d > r - 0.5 && d <= r + 0.5) alpha[p] = Math.min(1, Math.max(0, r + 0.5 - d));
+      }
+    } else if (s.defringe) {
+      // Edge pixels are a blend of subject colour F and background B: C = aF + (1-a)B.
+      // F comes from the nearest solid interior pixels; a is the projection of C-B onto F-B.
+      const band = 2, band2 = band * band, B = s.bg;
+      for (let p = 0; p < n; p++) {
+        if (!mask[p] || d2out[p] > band2) continue;
+        const x = p % w, y = (p - x) / w;
+        let fr = 0, fg = 0, fb = 0, cnt = 0;
+        for (let rr = 1; rr <= band + 1 && !cnt; rr++) {
+          for (let dy = -rr; dy <= rr; dy++) {
+            const yy = y + dy;
+            if (yy < 0 || yy >= h) continue;
+            const step = dy === -rr || dy === rr ? 1 : 2 * rr;
+            for (let dx = -rr; dx <= rr; dx += step) {
+              const xx = x + dx;
+              if (xx < 0 || xx >= w) continue;
+              const q = yy * w + xx;
+              if (mask[q] && d2out[q] > band2) { const j = q * 4; fr += src[j]; fg += src[j + 1]; fb += src[j + 2]; cnt++; }
+            }
+          }
+        }
+        if (cnt) { fr /= cnt; fg /= cnt; fb /= cnt; }
+        else {
+          // Thin feature with no solid interior: use its strongest nearby pixel.
+          let best = -1;
+          for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+            const xx = x + dx, yy = y + dy;
+            if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+            const q = yy * w + xx;
+            if (!mask[q]) continue;
+            const j = q * 4, e = (src[j] - B[0]) ** 2 + (src[j + 1] - B[1]) ** 2 + (src[j + 2] - B[2]) ** 2;
+            if (e > best) { best = e; fr = src[j]; fg = src[j + 1]; fb = src[j + 2]; }
+          }
+        }
+        const vx = fr - B[0], vy = fg - B[1], vz = fb - B[2], vv = vx * vx + vy * vy + vz * vz;
+        if (vv < 900) continue;
+        const i = p * 4, ux = src[i] - B[0], uy = src[i + 1] - B[1], uz = src[i + 2] - B[2];
+        let a = (ux * vx + uy * vy + uz * vz) / vv;
+        if (a >= 0.98) continue;
+        a = Math.max(0, a);
+        alpha[p] = a;
+        if (a < 0.15) { out[i] = fr; out[i + 1] = fg; out[i + 2] = fb; }
+        else {
+          out[i] = (src[i] - (1 - a) * B[0]) / a;
+          out[i + 1] = (src[i + 1] - (1 - a) * B[1]) / a;
+          out[i + 2] = (src[i + 2] - (1 - a) * B[2]) / a;
+        }
+      }
+    }
+
+    if (s.soften > 0) {
+      const f = s.soften + 1;
+      for (let p = 0; p < n; p++) if (mask[p]) { const d = Math.sqrt(d2out[p]); if (d < f) alpha[p] *= d / f; }
+    }
+
+    let kept = 0;
+    for (let p = 0, i = 0; p < n; p++, i += 4) {
+      const a = Math.round(alpha[p] * src[i + 3]);
+      out[i + 3] = a;
+      if (a === 0) out[i] = out[i + 1] = out[i + 2] = 0; else kept++;
+    }
+    return {rgba: out, stats: {kept: kept / n, gaps, mode: s.mode}};
+  }
+
+  /* ----- self-tests on synthetic images ----- */
+  function synth(w, h, bg, paint) {
+    const data = new Uint8ClampedArray(w * h * 4);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const c = paint(x, y) || bg, i = (y * w + x) * 4;
+      data[i] = c[0]; data[i + 1] = c[1]; data[i + 2] = c[2]; data[i + 3] = 255;
+    }
+    return {data, width: w, height: h};
+  }
+  function selfTest() {
+    const res = [];
+    const t = (name, fn) => { let ok = false; try { ok = !!fn(); } catch (e) { ok = false; } res.push({name, ok}); };
+    const A = (r, w, x, y) => r.rgba[(y * w + x) * 4 + 3];
+    t('Disc on a flat background', () => {
+      const img = synth(64, 64, [200, 210, 230], (x, y) => Math.hypot(x - 31.5, y - 31.5) < 16 ? [120, 60, 40] : null);
+      const {s} = defaults(img), r = run(img, s);
+      return s.mode === 'flat' && A(r, 64, 2, 2) === 0 && A(r, 64, 32, 32) === 255;
+    });
+    t('Enclosed gap follows its toggle', () => {
+      const img = synth(64, 64, [200, 210, 230], (x, y) => { const d = Math.hypot(x - 31.5, y - 31.5); return d < 22 && d > 9 ? [90, 40, 30] : null; });
+      const {s} = defaults(img);
+      s.minGap = 20;
+      return A(run(img, {...s, removeGaps: true}), 64, 32, 32) === 0 && A(run(img, {...s, removeGaps: false}), 64, 32, 32) === 255;
+    });
+    t('Outline mode keeps ink inside the silhouette', () => {
+      const img = synth(80, 80, [0, 0, 0], (x, y) => {
+        if (Math.hypot(x - 39.5, y - 39.5) >= 16) return null;
+        if (Math.hypot(x - 39.5, y - 35.5) < 5 || Math.abs(y - 46) < 1.5) return [0, 0, 0];
+        return [150, 150, 150];
+      });
+      const {s} = defaults(img);
+      s.outline = 4;
+      const r = run(img, s);
+      return s.mode === 'outline' && A(r, 80, 40, 36) === 255 && A(r, 80, 40, 46) === 255 && A(r, 80, 40, 58) === 255 && A(r, 80, 40, 62) === 0;
+    });
+    t('Tapping interior ink in outline mode drops only that shape', () => {
+      const img = synth(80, 80, [0, 0, 0], (x, y) => {
+        if (Math.hypot(x - 39.5, y - 39.5) >= 16) return null;
+        if (Math.hypot(x - 39.5, y - 35.5) < 5 || Math.abs(y - 46) < 1.5) return [0, 0, 0];
+        return [150, 150, 150];
+      });
+      const {s} = defaults(img);
+      s.outline = 4;
+      const r = run(img, s, [{kind: 'region', x: 40, y: 36}]);
+      return A(r, 80, 40, 36) === 0 && A(r, 80, 40, 46) === 255 && A(r, 80, 40, 58) === 255;
+    });
+    t('Edge unmixing recovers the subject colour', () => {
+      const B = [220, 224, 236], F = [180, 40, 40];
+      const img = synth(40, 40, B, (x, y) => y < 5 || y >= 35 ? null : x >= 10 && x < 30 ? F : x === 9 ? B.map((b, k) => Math.round((b + F[k]) / 2)) : null);
+      const {s} = defaults(img);
+      s.mode = 'flat';
+      const r = run(img, s), i = (20 * 40 + 9) * 4;
+      return Math.abs(r.rgba[i + 3] - 128) <= 12 && Math.hypot(r.rgba[i] - F[0], r.rgba[i + 1] - F[1], r.rgba[i + 2] - F[2]) < 16;
+    });
+    t('Erase stroke clears alpha', () => {
+      const img = synth(32, 32, [255, 255, 255], (x, y) => x > 4 && x < 28 && y > 4 && y < 28 ? [30, 30, 30] : null);
+      const {s} = defaults(img), r = run(img, s, [{kind: 'stroke', keep: false, r: 3, pts: [16, 16, 16, 16]}]);
+      return A(r, 32, 16, 16) === 0 && A(r, 32, 8, 8) === 255;
+    });
+    t('Tapping a kept gap drops it', () => {
+      const img = synth(64, 64, [255, 255, 255], (x, y) => { const d = Math.hypot(x - 31.5, y - 31.5); return d < 22 && d > 9 ? [40, 40, 40] : null; });
+      const {s} = defaults(img);
+      return !s.removeGaps && A(run(img, s), 64, 32, 32) === 255 && A(run(img, s, [{kind: 'region', x: 32, y: 32}]), 64, 32, 32) === 0;
+    });
+    return res;
+  }
+
+  return {detectBackground, isNeutralExtreme, defaults, run, walk, disc, selfTest};
+})();
+/* ==END CUTOUT CORE== */
+
+(() => {
+  const $ = sel => document.querySelector(sel);
+  const MAX_SIDE = 3072;
+  const state = {items: [], cur: -1, tool: 'region', picking: false, showOriginal: false};
+  const cur = () => state.items[state.cur] || null;
+  let uid = 0;
+
+  const view = $('#view'), vctx = view.getContext('2d'), stage = $('#stage');
+
+  /* ----- saving: the viewer's downloads capability, or a plain link when the file is opened directly ----- */
+  let dl = null;
+  const dlReady = window.claude && typeof window.claude.use === 'function'
+    ? window.claude.use('downloads').then(ns => (dl = ns), () => null)
+    : Promise.resolve(null);
+  async function saveBlob(name, blob) {
+    await dlReady;
+    if (dl) {
+      try { await dl.save({filename: name, data: blob}); toast(`Saved ${name}`); }
+      catch (e) {
+        const c = e && e.code;
+        toast(c === 'declined' ? 'Save cancelled.' : c === 'rate_limited' ? 'A save prompt is already open.'
+          : c === 'too_large' ? 'That file is too large to save here.' : 'Saving isn’t available in this view.');
+      }
+      return;
+    }
+    const url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  /* ----- stored ZIP (PNGs are already compressed) ----- */
+  const CRC = (() => {
+    const t = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+    return t;
+  })();
+  function crc32(u8) { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC[(c ^ u8[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+  function zipStore(files) {
+    const enc = new TextEncoder(), parts = [], central = [], now = new Date();
+    const time = now.getHours() << 11 | now.getMinutes() << 5 | now.getSeconds() >> 1;
+    const date = (now.getFullYear() - 1980) << 9 | (now.getMonth() + 1) << 5 | now.getDate();
+    let offset = 0;
+    for (const f of files) {
+      const name = enc.encode(f.name), crc = crc32(f.bytes), size = f.bytes.length;
+      const lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+      lh.setUint16(10, time, true); lh.setUint16(12, date, true); lh.setUint32(14, crc, true);
+      lh.setUint32(18, size, true); lh.setUint32(22, size, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+      parts.push(lh.buffer, name, f.bytes);
+      const ch = new DataView(new ArrayBuffer(46));
+      ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true);
+      ch.setUint16(10, 0, true); ch.setUint16(12, time, true); ch.setUint16(14, date, true); ch.setUint32(16, crc, true);
+      ch.setUint32(20, size, true); ch.setUint32(24, size, true); ch.setUint16(28, name.length, true);
+      ch.setUint32(42, offset, true);
+      central.push(ch.buffer, name);
+      offset += 30 + name.length + size;
+    }
+    const cdSize = central.reduce((s, b) => s + b.byteLength, 0), end = new DataView(new ArrayBuffer(22));
+    end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+    end.setUint32(12, cdSize, true); end.setUint32(16, offset, true);
+    return new Blob([...parts, ...central, end.buffer], {type: 'application/zip'});
+  }
+
+  /* ----- images ----- */
+  async function decode(file) {
+    const url = URL.createObjectURL(file);
+    try {
+      const im = new Image();
+      im.src = url;
+      await im.decode();
+      const w0 = im.naturalWidth, h0 = im.naturalHeight, k = Math.min(1, MAX_SIDE / Math.max(w0, h0));
+      const w = Math.max(1, Math.round(w0 * k)), h = Math.max(1, Math.round(h0 * k));
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const g = c.getContext('2d', {willReadFrequently: true});
+      g.drawImage(im, 0, 0, w, h);
+      return {img: imgFrom(g.getImageData(0, 0, w, h)), scaled: k < 1, orig: [w0, h0]};
+    } finally { URL.revokeObjectURL(url); }
+  }
+  const imgFrom = id => ({data: id.data, width: id.width, height: id.height});
+
+  function exampleImage() {
+    const w = 900, h = 720, c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    const g = c.getContext('2d');
+    const ink = '#1c191b';
+    g.fillStyle = '#d5daea'; g.fillRect(0, 0, w, h);
+    g.lineJoin = 'round'; g.lineCap = 'round';
+    const rr = (x, y, ww, hh, r) => {
+      g.beginPath(); g.moveTo(x + r, y);
+      g.arcTo(x + ww, y, x + ww, y + hh, r); g.arcTo(x + ww, y + hh, x, y + hh, r);
+      g.arcTo(x, y + hh, x, y, r); g.arcTo(x, y, x + ww, y, r); g.closePath();
+    };
+    // lid ring: the hole through it is an enclosed gap
+    g.beginPath(); g.arc(450, 128, 50, 0, Math.PI * 2); g.lineWidth = 34; g.strokeStyle = ink; g.stroke();
+    g.lineWidth = 18; g.strokeStyle = '#b48d48'; g.stroke();
+    // lid
+    rr(318, 168, 264, 70, 16); g.fillStyle = '#b48d48'; g.fill(); g.lineWidth = 9; g.strokeStyle = ink; g.stroke();
+    g.beginPath(); for (let x = 346; x < 570; x += 26) { g.moveTo(x, 182); g.lineTo(x, 224); } g.lineWidth = 4; g.stroke();
+    // jar
+    rr(292, 232, 316, 430, 46); g.fillStyle = '#a8c3b2'; g.fill();
+    g.save(); g.clip();
+    g.fillStyle = '#c3cc6c'; g.fillRect(292, 360, 316, 310);
+    g.beginPath(); g.moveTo(292, 360);
+    for (let x = 292; x <= 608; x += 8) g.lineTo(x, 360 + Math.sin(x / 22) * 6);
+    g.lineWidth = 5; g.strokeStyle = ink; g.stroke();
+    g.restore();
+    rr(292, 232, 316, 430, 46); g.lineWidth = 10; g.strokeStyle = ink; g.stroke();
+    // eyeball
+    g.beginPath(); g.arc(450, 455, 66, 0, Math.PI * 2); g.fillStyle = '#f4efe2'; g.fill(); g.lineWidth = 7; g.strokeStyle = ink; g.stroke();
+    g.beginPath(); g.arc(472, 446, 28, 0, Math.PI * 2); g.fillStyle = '#3d7d97'; g.fill(); g.stroke();
+    g.beginPath(); g.arc(476, 444, 12, 0, Math.PI * 2); g.fillStyle = ink; g.fill();
+    g.beginPath(); g.moveTo(386, 470); g.bezierCurveTo(360, 520, 380, 560, 350, 610); g.lineWidth = 6; g.strokeStyle = '#a0362e'; g.stroke();
+    // bubbles
+    g.strokeStyle = ink; g.lineWidth = 4;
+    for (const [x, y, r] of [[350, 330, 9], [372, 300, 6], [548, 400, 12], [530, 352, 7], [560, 300, 5]]) { g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.stroke(); }
+    // glass highlight
+    g.beginPath(); g.moveTo(322, 290); g.lineTo(322, 600); g.lineWidth = 10; g.strokeStyle = 'rgba(255,255,255,.55)'; g.stroke();
+    // label
+    rr(372, 560, 156, 64, 6); g.fillStyle = '#efe4c6'; g.fill(); g.lineWidth = 5; g.strokeStyle = ink; g.stroke();
+    g.fillStyle = ink; g.font = '700 30px Georgia, "Times New Roman", serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('No. 7', 450, 593);
+    return imgFrom(g.getImageData(0, 0, w, h));
+  }
+
+  function makeItem(name, decoded, example = false) {
+    const cache = {}, {s} = Cutout.defaults(decoded.img, cache);
+    const it = {id: ++uid, name, img: decoded.img, s, ops: [], cache, result: null, stats: null, ms: 0,
+      scaled: !!decoded.scaled, orig: decoded.orig || [decoded.img.width, decoded.img.height], example, thumb: null};
+    processItem(it);
+    return it;
+  }
+  function processItem(it) {
+    const t0 = performance.now(), r = Cutout.run(it.img, it.s, it.ops, it.cache);
+    it.result = r.rgba; it.stats = r.stats; it.ms = performance.now() - t0;
+  }
+
+  async function addFiles(files) {
+    const list = [...files].filter(f => /^image\//.test(f.type) || /\.(png|jpe?g|webp|gif|bmp|avif)$/i.test(f.name));
+    if (!list.length) { toast('Those files aren’t images. Use PNG, JPG, WebP or GIF.'); return; }
+    if (state.items.length && state.items.every(i => i.example)) { state.items = []; state.cur = -1; }
+    let first = -1;
+    for (const f of list) {
+      try {
+        const it = makeItem(f.name, await decode(f));
+        state.items.push(it);
+        if (first < 0) first = state.items.length - 1;
+        renderThumbs();
+        await new Promise(r => setTimeout(r, 0));
+      } catch (e) { toast(`Couldn’t read ${f.name}. Try PNG, JPG or WebP.`); }
+    }
+    if (first >= 0) select(first);
+  }
+
+  /* ----- rendering ----- */
+  function select(i) {
+    state.cur = i; state.showOriginal = false; state.picking = false;
+    syncControls(); render(); renderThumbs();
+  }
+  function render() {
+    const it = cur();
+    if (!it) { view.width = view.height = 8; vctx.clearRect(0, 0, 8, 8); $('#readout').textContent = 'Add an image to start.'; return; }
+    const {width: w, height: h} = it.img;
+    if (view.width !== w || view.height !== h) { view.width = w; view.height = h; }
+    vctx.putImageData(new ImageData(state.showOriginal ? it.img.data : it.result, w, h), 0, 0);
+    applyZoom();
+    readout();
+  }
+  function applyZoom() {
+    const it = cur(), z = stage.dataset.zoom;
+    view.style.width = it && z !== 'fit' ? `${it.img.width * Number(z) / (z === '1' ? devicePixelRatio || 1 : 1)}px` : '';
+  }
+  function readout() {
+    const it = cur();
+    if (!it) return;
+    const {width: w, height: h} = it.img, st = it.stats;
+    const bits = [
+      `<span><b>${w} × ${h}</b> px${it.scaled ? ` (scaled from ${it.orig[0]} × ${it.orig[1]})` : ''}</span>`,
+      `<span><b>${Math.round(st.kept * 100)}%</b> kept</span>`,
+      `<span>bg <b>${hex(it.s.bg)}</b> ± ${it.s.tol}</span>`,
+      it.ops.length ? `<span><b>${it.ops.length}</b> touch-up${it.ops.length === 1 ? '' : 's'}</span>` : '',
+      `<span>${Math.round(it.ms)} ms</span>`,
+    ];
+    $('#readout').innerHTML = bits.filter(Boolean).join(' ');
+  }
+  function drawThumb(it, canvas) {
+    const g = canvas.getContext('2d'), size = canvas.width;
+    const {width: w, height: h} = it.img, k = Math.min(size / w, size / h);
+    const tmp = document.createElement('canvas');
+    tmp.width = w; tmp.height = h;
+    tmp.getContext('2d').putImageData(new ImageData(it.result, w, h), 0, 0);
+    g.clearRect(0, 0, size, size);
+    g.imageSmoothingQuality = 'high';
+    g.drawImage(tmp, (size - w * k) / 2, (size - h * k) / 2, w * k, h * k);
+  }
+  function renderThumbs() {
+    const ul = $('#thumbs');
+    ul.textContent = '';
+    state.items.forEach((it, i) => {
+      const li = document.createElement('li'), b = document.createElement('button'), c = document.createElement('canvas');
+      b.type = 'button'; b.className = 'thumb'; b.setAttribute('aria-current', i === state.cur ? 'true' : 'false');
+      b.setAttribute('aria-label', `Show ${it.name}`);
+      c.width = c.height = 168;
+      drawThumb(it, c);
+      const nm = document.createElement('span');
+      nm.className = 'tname'; nm.textContent = it.name;
+      b.append(c, nm);
+      if (it.example) { const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = 'EXAMPLE'; b.append(tag); }
+      b.addEventListener('click', () => select(i));
+      const x = document.createElement('button');
+      x.type = 'button'; x.className = 'tx'; x.textContent = '×'; x.setAttribute('aria-label', `Remove ${it.name}`);
+      x.addEventListener('click', () => {
+        state.items.splice(i, 1);
+        state.cur = Math.min(state.cur >= i ? state.cur - 1 : state.cur, state.items.length - 1);
+        if (state.cur < 0 && state.items.length) state.cur = 0;
+        select(state.cur);
+      });
+      li.append(b, x);
+      ul.append(li);
+    });
+    const li = document.createElement('li'), add = document.createElement('button');
+    add.type = 'button'; add.className = 'tray-add'; add.textContent = '+ Add images';
+    add.addEventListener('click', () => $('#file').click());
+    li.append(add);
+    ul.append(li);
+  }
+  function refreshThumb() {
+    const it = cur(), b = document.querySelectorAll('#thumbs .thumb')[state.cur];
+    if (it && b) drawThumb(it, b.querySelector('canvas'));
+  }
+
+  let timer = 0;
+  function recompute(delay = 0) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      const it = cur();
+      if (!it) return;
+      processItem(it); render(); refreshThumb(); syncHints();
+    }, delay);
+  }
+
+  /* ----- controls ----- */
+  const hex = c => '#' + c.map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+  const fromHex = s => [1, 3, 5].map(i => parseInt(s.slice(i, i + 2), 16));
+  const gapToSlider = px => Math.round(100 * Math.log(Math.max(8, px) / 8) / Math.log(1000));
+  const sliderToGap = v => Math.round(8 * Math.pow(1000, v / 100));
+
+  function syncControls() {
+    const it = cur(), dis = !it;
+    document.querySelectorAll('.rail input, .rail button').forEach(el => { el.disabled = dis; });
+    $('#compare').disabled = dis;
+    if (!it) return;
+    const s = it.s;
+    $(`#mode-${s.mode}`).checked = true;
+    $('#bgColor').value = hex(s.bg);
+    $('#tol').value = s.tol;
+    $('#gaps').checked = s.removeGaps;
+    $('#minGap').value = gapToSlider(s.minGap);
+    $('#stray').value = gapToSlider(s.stray);
+    $('#outline').value = s.outline;
+    $('#defringe').checked = s.defringe;
+    $('#soften').value = s.soften;
+    $('#trim').checked = s.trim;
+    $('#compare').setAttribute('aria-pressed', String(state.showOriginal));
+    $('#compare').textContent = state.showOriginal ? 'Show cutout' : 'Show original';
+    syncHints();
+  }
+  function syncHints() {
+    const it = cur();
+    if (!it) return;
+    const s = it.s, outline = s.mode === 'outline';
+    $('#bgHex').textContent = hex(s.bg) + (s.bgAuto ? ' auto' : '');
+    $('#tolOut').textContent = `± ${s.tol}`;
+    $('#minGapOut').textContent = `${s.minGap.toLocaleString()} px`;
+    $('#strayOut').textContent = `${s.stray.toLocaleString()} px`;
+    $('#outlineOut').textContent = `${s.outline} px`;
+    $('#softenOut').textContent = s.soften ? `${s.soften} px` : 'off';
+    $('#brushOut').textContent = `${$('#brush').value} px`;
+    $('#flatPanel').hidden = outline;
+    $('#outlinePanel').hidden = !outline;
+    $('#defringeRow').hidden = outline;
+    $('#modeHint').textContent = (s.modeAuto ? 'Picked for this image. ' : '') + (outline
+      ? 'The drawing’s outline is the same colour as the background, so the shape is traced from the fill instead.'
+      : 'The background is one flat colour and the subject’s edge stands out from it.');
+    const g = it.stats.gaps;
+    let gh = g ? `${g} enclosed gap${g === 1 ? '' : 's'} found, ${s.removeGaps ? 'removed' : 'kept'}.` : 'No enclosed gaps at this size.';
+    if (g && !s.removeGaps && Cutout.isNeutralExtreme(s.bg)) gh += ' Off by default on white and black backgrounds, because eye-whites and highlights often match them. Tap a single gap to drop just that one.';
+    $('#gapHint').textContent = gh;
+    $('#toolHint').textContent = state.tool === 'region'
+      ? 'Tap a gap or a stray bit to drop it. Tap again to bring it back.'
+      : state.tool === 'erase' ? 'Paint over anything the automatic pass kept that you don’t want.' : 'Paint back anything that was removed by mistake.';
+    $('#brushField').hidden = state.tool === 'region';
+    $('#undo').disabled = !it.ops.length;
+    $('#clearOps').disabled = !it.ops.length;
+    $('#pickBg').setAttribute('aria-pressed', String(state.picking));
+    stage.classList.toggle('tool-pick', state.picking);
+    stage.classList.toggle('tool-region', !state.picking && state.tool === 'region');
+    stage.classList.toggle('tool-brush', !state.picking && state.tool !== 'region');
+  }
+
+  const setting = (key, val, delay = 60) => { const it = cur(); if (!it) return; it.s[key] = val; recompute(delay); };
+  document.querySelectorAll('input[name=mode]').forEach(r => r.addEventListener('change', () => {
+    const it = cur(); if (!it) return;
+    it.s.mode = r.value; it.s.modeAuto = false; recompute(); syncHints();
+  }));
+  $('#bgColor').addEventListener('input', e => { const it = cur(); if (!it) return; it.s.bg = fromHex(e.target.value); it.s.bgAuto = false; recompute(60); });
+  $('#autoBg').addEventListener('click', () => {
+    const it = cur(); if (!it) return;
+    it.s.bg = Cutout.detectBackground(it.img).color; it.s.bgAuto = true;
+    $('#bgColor').value = hex(it.s.bg); recompute();
+  });
+  $('#pickBg').addEventListener('click', () => { state.picking = !state.picking; syncHints(); if (state.picking) toast('Tap the background in the preview.'); });
+  $('#tol').addEventListener('input', e => setting('tol', Number(e.target.value)));
+  $('#gaps').addEventListener('change', e => setting('removeGaps', e.target.checked, 0));
+  $('#minGap').addEventListener('input', e => setting('minGap', sliderToGap(Number(e.target.value))));
+  $('#stray').addEventListener('input', e => setting('stray', sliderToGap(Number(e.target.value))));
+  $('#outline').addEventListener('input', e => setting('outline', Number(e.target.value)));
+  $('#defringe').addEventListener('change', e => setting('defringe', e.target.checked, 0));
+  $('#soften').addEventListener('input', e => setting('soften', Number(e.target.value)));
+  $('#trim').addEventListener('change', e => { const it = cur(); if (it) it.s.trim = e.target.checked; });
+  $('#brush').addEventListener('input', () => syncHints());
+  document.querySelectorAll('input[name=tool]').forEach(r => r.addEventListener('change', () => { state.tool = r.value; state.picking = false; syncHints(); }));
+  document.querySelectorAll('input[name=backdrop]').forEach(r => r.addEventListener('change', () => { stage.dataset.backdrop = r.value; }));
+  document.querySelectorAll('input[name=zoom]').forEach(r => r.addEventListener('change', () => { stage.dataset.zoom = r.value; applyZoom(); }));
+  $('#compare').addEventListener('click', () => { state.showOriginal = !state.showOriginal; syncControls(); render(); });
+  function undo() { const it = cur(); if (!it || !it.ops.length) return; it.ops.pop(); recompute(); }
+  $('#undo').addEventListener('click', undo);
+  $('#clearOps').addEventListener('click', () => { const it = cur(); if (!it) return; it.ops = []; recompute(); });
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z' && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) { e.preventDefault(); undo(); }
+  });
+  $('#applyAll').addEventListener('click', () => {
+    const it = cur(); if (!it) return;
+    const keys = ['mode', 'tol', 'removeGaps', 'minGap', 'stray', 'outline', 'defringe', 'soften', 'trim'];
+    for (const o of state.items) {
+      if (o === it) continue;
+      for (const k of keys) o.s[k] = it.s[k];
+      o.s.modeAuto = false;
+      if (!it.s.bgAuto) { o.s.bg = it.s.bg.slice(); o.s.bgAuto = false; }
+      processItem(o);
+    }
+    renderThumbs();
+    toast(`Settings copied to ${state.items.length - 1} other image${state.items.length === 2 ? '' : 's'}.`);
+  });
+
+  /* ----- pointer: pick, tap region, brush ----- */
+  function toImage(e) {
+    const r = view.getBoundingClientRect();
+    return {x: (e.clientX - r.left) * view.width / r.width, y: (e.clientY - r.top) * view.height / r.height, scale: view.width / r.width};
+  }
+  view.addEventListener('click', e => {
+    const it = cur();
+    if (!it || state.showOriginal) return;
+    const p = toImage(e), x = Math.floor(p.x), y = Math.floor(p.y), {width: w, height: h, data} = it.img;
+    if (x < 0 || y < 0 || x >= w || y >= h) return;
+    if (state.picking) {
+      const sum = [0, 0, 0];
+      let n = 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const xx = x + dx, yy = y + dy;
+        if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+        const i = (yy * w + xx) * 4;
+        sum[0] += data[i]; sum[1] += data[i + 1]; sum[2] += data[i + 2]; n++;
+      }
+      it.s.bg = sum.map(v => Math.round(v / n)); it.s.bgAuto = false; state.picking = false;
+      $('#bgColor').value = hex(it.s.bg); recompute();
+      return;
+    }
+    if (state.tool !== 'region') return;
+    it.ops.push({kind: 'region', x, y});
+    recompute();
+  });
+
+  let stroke = null, live = null;
+  const cursorEl = $('#cursor');
+  function liveStamp(it, pts) {
+    const {width: w, height: h, data: src} = it.img, keep = stroke.keep;
+    let x0 = w, y0 = h, x1 = -1, y1 = -1;
+    Cutout.walk(pts, stroke.r, (cx, cy) => Cutout.disc(w, h, cx, cy, stroke.r, (y, a, b) => {
+      for (let p = y * w + a, e = y * w + b; p <= e; p++) {
+        const i = p * 4;
+        if (keep) { live[i] = src[i]; live[i + 1] = src[i + 1]; live[i + 2] = src[i + 2]; live[i + 3] = src[i + 3]; }
+        else live[i + 3] = 0;
+      }
+      if (a < x0) x0 = a; if (b > x1) x1 = b; if (y < y0) y0 = y; if (y > y1) y1 = y;
+    }));
+    if (x1 >= x0) vctx.putImageData(new ImageData(live, w, h), 0, 0, x0, y0, x1 - x0 + 1, y1 - y0 + 1);
+  }
+  view.addEventListener('pointerdown', e => {
+    const it = cur();
+    if (!it || state.showOriginal || state.picking || state.tool === 'region') return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const p = toImage(e);
+    stroke = {kind: 'stroke', keep: state.tool === 'restore', r: Math.max(1, Number($('#brush').value) / 2 * p.scale), pts: [p.x, p.y]};
+    live = new Uint8ClampedArray(it.result);
+    view.setPointerCapture(e.pointerId);
+    liveStamp(it, stroke.pts);
+    e.preventDefault();
+  });
+  view.addEventListener('pointermove', e => {
+    const brush = !state.picking && state.tool !== 'region' && !state.showOriginal && cur();
+    cursorEl.hidden = !brush || e.pointerType === 'touch';
+    if (brush) {
+      const d = Number($('#brush').value);
+      Object.assign(cursorEl.style, {left: `${e.clientX}px`, top: `${e.clientY}px`, width: `${d}px`, height: `${d}px`});
+    }
+    if (!stroke) return;
+    const p = toImage(e), n = stroke.pts.length;
+    stroke.pts.push(p.x, p.y);
+    liveStamp(cur(), [stroke.pts[n - 2], stroke.pts[n - 1], p.x, p.y]);
+  });
+  const endStroke = () => {
+    if (!stroke) return;
+    const it = cur();
+    if (it) it.ops.push(stroke);
+    stroke = null; live = null;
+    recompute();
+  };
+  view.addEventListener('pointerup', endStroke);
+  view.addEventListener('pointercancel', endStroke);
+  view.addEventListener('pointerleave', () => { cursorEl.hidden = true; });
+
+  /* ----- files in: picker, drag and drop, paste ----- */
+  $('#addBtn').addEventListener('click', () => $('#file').click());
+  $('#file').addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
+  let dragDepth = 0;
+  document.addEventListener('dragenter', e => { if ([...(e.dataTransfer?.types || [])].includes('Files')) { dragDepth++; stage.classList.add('dragging'); } });
+  document.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; stage.classList.remove('dragging'); } });
+  document.addEventListener('dragover', e => e.preventDefault());
+  document.addEventListener('drop', e => {
+    e.preventDefault(); dragDepth = 0; stage.classList.remove('dragging');
+    if (e.dataTransfer?.files?.length) addFiles(e.dataTransfer.files);
+  });
+  document.addEventListener('paste', e => {
+    const files = [...(e.clipboardData?.items || [])].filter(i => i.kind === 'file').map(i => i.getAsFile()).filter(Boolean);
+    if (files.length) addFiles(files);
+  });
+
+  /* ----- save ----- */
+  const outName = (name, used) => {
+    let base = name.replace(/\.[^.]+$/, '') + '-transparent', out = base + '.png', k = 2;
+    while (used && used.has(out)) out = `${base}-${k++}.png`;
+    used && used.add(out);
+    return out;
+  };
+  function pngBlob(it) {
+    const {width: w, height: h} = it.img, rgba = it.result;
+    let x0 = 0, y0 = 0, x1 = w - 1, y1 = h - 1;
+    if (it.s.trim) {
+      x0 = w; y0 = h; x1 = -1; y1 = -1;
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (rgba[(y * w + x) * 4 + 3]) {
+        if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+      }
+      if (x1 < 0) { x0 = y0 = 0; x1 = w - 1; y1 = h - 1; }
+      x0 = Math.max(0, x0 - 2); y0 = Math.max(0, y0 - 2); x1 = Math.min(w - 1, x1 + 2); y1 = Math.min(h - 1, y1 + 2);
+    }
+    const c = document.createElement('canvas');
+    c.width = x1 - x0 + 1; c.height = y1 - y0 + 1;
+    c.getContext('2d').putImageData(new ImageData(rgba, w, h), -x0, -y0);
+    return new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error('encode')), 'image/png'));
+  }
+  $('#savePng').addEventListener('click', async () => {
+    const it = cur(); if (!it) return;
+    await saveBlob(outName(it.name), await pngBlob(it));
+  });
+  $('#saveAll').addEventListener('click', async () => {
+    if (!state.items.length) return;
+    const used = new Set(), files = [];
+    for (const it of state.items) files.push({name: outName(it.name, used), bytes: new Uint8Array(await (await pngBlob(it)).arrayBuffer())});
+    await saveBlob('cutouts.zip', zipStore(files));
+  });
+
+  let toastTimer = 0;
+  function toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  /* ----- start ----- */
+  const tests = Cutout.selfTest(), failed = tests.filter(t => !t.ok);
+  if (failed.length) {
+    const p = document.createElement('p');
+    p.className = 'fail mono';
+    p.textContent = `Self-test failed: ${failed.map(t => t.name).join('; ')}`;
+    $('#foot').append(p);
+  }
+  state.items.push(makeItem('specimen-jar.png', {img: exampleImage()}, true));
+  select(0);
+  window.CutoutBench = {state, addFiles, Cutout};
+})();
+</script>
