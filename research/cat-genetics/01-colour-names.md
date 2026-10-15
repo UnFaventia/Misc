@@ -2,6 +2,7 @@
 
 > **Sources:** messybeast.com colour & pattern guide (Sarah Hartwell), user screenshots — Self/Solid Colours (+ note), Ticked/Agouti Colours, Tabby Colours, Equivalent Names Table; the plain-English colour glossary supplied with the brief; a few rows from the Breed-Specific Tabby/Spotted Terms and Future Colour Possibilities tables are cited in "Name collisions" only.  
 > **Calculator status:** The base colour set (O, B/b/bl, D/d, Dm, E-series amber/russet, I, Wb, Ta, C-series) is fully modelled; roughly half the names in these tables are synonyms or breed/registry dialect names the engine never emits.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [colour-guide-01-self-solid-colours.png](img/colour-guide-01-self-solid-colours.png) · [colour-guide-02-tabby-patterns-ticked-colours.png](img/colour-guide-02-tabby-patterns-ticked-colours.png) · [colour-guide-03-ticked-torties-silver-ticked-tabby-colours.png](img/colour-guide-03-ticked-torties-silver-ticked-tabby-colours.png) · [colour-guide-09-van-mitted-equivalent-names-future.png](img/colour-guide-09-van-mitted-equivalent-names-future.png)  
 > **Related:** [README](README.md) · [Coverage map](00-coverage-map.md) · [Tabby patterns](02-tabby-patterns.md) · [Silver, golden & shading](03-silver-golden-shading.md) · [Tortie, white & van](04-tortie-white-van.md) · [Colourpoint, mink, sepia & mocha](05-colourpoint-mink-sepia-mocha.md) · [Rare & future colours](10-rare-and-future.md)
 
 ## At a glance
@@ -161,6 +162,7 @@ Names that mean different things in different breeds, registries or tables of th
 | Apricot | Pink-brown or hot cream: cream + dilute modifier | Amber/Light Amber Tabby kittens have an "apricot background at birth" (E series, no modifier) | Amber self = "bright apricot to cinnamon" | Self; Tabby |
 | Tawny | Abyssinian/Somali: black/brown (= Usual, Ruddy, Brown) | Ticked sandy/golden colour of some wild/domestic hybrid breeds | — | Ticked |
 | Yellow | Old term for a poor-quality red | "True yellow (as in palomino horse)"; historically sandy-coloured red (FCP) | — | Self; FCP |
+| Mocha | Self table: Thai colour "visually similar to cinnamon, with an orangey tint, and with darker points" | The `cm` TYR allele, which Doug Schar calls **Bangkok-Mocha**, after the first three cats found on a Bangkok dock | Compound names: **Siamese-Mocha** (cs/cm), **Burmese-Mocha** (cb/cm); the diagram has Siamocha / Burmocha; the calculator says "Mocha" / "Sepia-Mocha" | Self; [05](05-colourpoint-mink-sepia-mocha.md#bangkok-mocha-schar--hartwell-2023) |
 | Bronze | Egyptian Mau "Bronze Spotted" = Chocolate Spotted Tabby (BS) | Ocicat "Cinnamon-Golden (Bronze) Spotted" = dark Cinnamon on Gold/Honey/Ivory (BS) | California Spangled "Bronze", no colour given (BS) | BS |
 
 ## Modelling notes

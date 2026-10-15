@@ -1,6 +1,6 @@
 # Eye colour & eye shape
 
-> **Sources:** messybeast.com *Eye Colours* and *Bicolours and Eye Colours* (Sarah Hartwell, 2017) · Frances Simpson, *The Book of the Cat* (1903) · Todd NB (1961) "A pink-eyed dilution in the cat", *Journal of Heredity* 52:202 · user diagrams: *Common range of eye colours*, *Siamese/Tonkinese/Burmese*, *Albinism*, *Unusual or breed-specific colours*, *Odd eyes*, *Eye shapes* · photos of Pangur, an albino Oriental Longhair (Greer Stothers, 2013).
+> **Sources:** messybeast.com *Eye Colours* and *Bicolours and Eye Colours* (Sarah Hartwell, 2017) · Schar & Hartwell, *Mocha Genetics* (messybeast, 2023) · Yu, Grahn & Lyons 2019 (*Anim Genet*, mocha TYR variant) · Frances Simpson, *The Book of the Cat* (1903) · Todd NB (1961) "A pink-eyed dilution in the cat", *Journal of Heredity* 52:202 · user diagrams: *Common range of eye colours*, *Siamese/Tonkinese/Burmese*, *Albinism*, *Unusual or breed-specific colours*, *Odd eyes*, *Eye shapes* · photos of Pangur, an albino Oriental Longhair (Greer Stothers, 2013).  
 > **Calculator status:** 🟡 **portrait only.** `CatArt.catSVG` picks eye colour by rule:
 > - albino → albino palette
 > - Dominant White → blue + (copper or blue, by seed)
@@ -8,7 +8,8 @@
 > - shaded silver → emerald; golden or silver → green
 > - red → copper; everything else → gold
 >
-> There's no genetic eye model, no odd eyes outside Wd, no DBE, and no eye-shape input beyond the foreign/normal outline.
+> There's no genetic eye model, no odd eyes outside Wd, no DBE, and no eye-shape input beyond the foreign/normal outline.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [eye-colours.jpg](img/eye-colours.jpg) · [eye-shapes.jpg](img/eye-shapes.jpg) · [pangur-albino-oriental-longhair.jpg](img/pangur-albino-oriental-longhair.jpg)  
 > **Related:** [Dominant Blue Eye](07-dominant-blue-eye.md) · [colourpoint/mink/sepia](05-colourpoint-mink-sepia-mocha.md) · [white spotting](04-tortie-white-van.md) · [silver & golden](03-silver-golden-shading.md) · [health](11-health-and-welfare.md)
 
 ## At a glance
@@ -58,6 +59,12 @@
 
   She also records the self conventions of her day: blue eyes for whites, orange for blacks and blues. **Pewter** (orange-eyed shaded silver) was the *original* eye colour of the breed, until it fell out of favour in the 1890s (see [03](03-silver-golden-shading.md)).
 
+### "Diamond eye" (Bangkok-Mocha)
+
+- Every cat carrying `cm` (cm/cm, Siamese-Mocha cs/cm, Burmese-Mocha cb/cm) has **luminescent eyes**. The Thai name is "diamond eye": the eyes sparkle and appear backlit, and others call it "liquid mercury".
+- It's present in all of them but doesn't come out in every photo. Doug Schar: "it always makes the eye color pop". (Schar & Hartwell 2023; see [05](05-colourpoint-mink-sepia-mocha.md#eyes-nose--paw-pads).)
+- Doug also suggests the early Burmese standard asked for **blue** eyes before changing to yellow, and that `cm` may have been in the early imports.
+
 ## Odd eyes (heterochromia iridium)
 
 - **Causes:** genetic, congenital (a developmental defect), or acquired (illness, injury, medication). In the cat fancy, "odd-eyed" means **one blue + one other colour**.
@@ -90,8 +97,10 @@
 - **Blue vs pink eyes:** true albinos lack melanin entirely, and the iris is pale pinkish-white. Blue refraction usually gives a bluish hue, so most are **blue-eyed albinos**. Very rarely the transparent structures are colourless, giving a **pink-eyed albino**.
   - Pink eyes in cats were once thought impossible, but several pink-eyed albinos have been reported recently.
   - Albinism has been recorded in the **Bengal** and its wild parent, the **Asian Leopard Cat**.
-- **Calculator:** `c/c` is modelled as one albino allele, and the note says "pale pink-blue eyes". The mocha diagram writes the albino allele as **`ca`**.
-  - *Lead to verify:* cat genetics often lists two albino alleles, blue-eyed `ca` and pink-eyed `c`. If both are real, blue-eyed vs pink-eyed albino could be genotype-driven rather than a single outcome.
+- **Two albino alleles (now sourced).**
+  - Schar & Hartwell 2023 list **`ca/ca` = blue-eyed albino** and **`c/c` = pink-eyed albino**. The mocha diagram writes `ca` too.
+  - Yu, Grahn & Lyons 2019 note "two complete albino variants (c, c2) are also known in TYR for cats". Whether those map one-to-one onto `ca`/`c` isn't stated.
+- **Calculator:** has one albino allele `c`, with the note "pale pink-blue eyes". Splitting it would make blue-eyed vs pink-eyed albino a genotype result instead of a single outcome (see [05](05-colourpoint-mink-sepia-mocha.md#bangkok-mocha-schar--hartwell-2023)).
 
 ## Pink-eyed dilution
 
@@ -134,7 +143,7 @@
   | `cs` point | blue |
   | `cb/cs` mink | blue · aqua · blue-green |
   | `cb/cb` sepia | pedigree chartreuse → amber; native yellow · orange · green · greenish-blue |
-  | `cm` mocha | follow the calculator's current aqua until sourced |
+  | `cm` mocha (cm/cm, cs/cm, cb/cm) | aqua for cm/cm (Yu 2019); variable in sable cb/cm (Schar). All three carry the luminescent **"diamond eye"** |
   | `Wd` | blue · odd · non-blue |
   | `Ws` at high grade with facial white | rising chance of blue or odd |
   | DBE | blue · odd · particoloured · latent |
@@ -153,6 +162,6 @@
 
 - The source says "hazel (the normal colour of temperate climate **white** cats)". The earlier paragraph says temperate **wild** cats have hazel eyes, so "white" is probably a typo for "wild".
 - **Pink-eyed dilution coat:** the diagram says "bluish-beige", the prose says "bluish-tan/fawn", and the Donskoy entry says "pale tan". These are probably the same phenotype described three ways.
-- **Albino allele:** the mocha diagram's `ca` vs the calculator's `c`. Are these one allele or two?
+- **Albino allele:** answered. There are two (`ca` blue-eyed, `c` pink-eyed: Schar & Hartwell 2023). Still open: how they correspond to Yu 2019's `c`/`c2`.
 - **Chinchilla Turquoise:** is it the same colour as the "black-rimmed sea-green" chinchilla eye, or a distinct one?
-- **Mocha eye colour** isn't covered in these notes. The calculator's "aqua" for mocha needs a source.
+- **Mocha eye colour:** answered. Yu 2019 says aqua, matching the calculator. Schar adds that sable Burmese-Mocha eye colour is very diverse, and that every mocha genotype has the luminescent "diamond eye".

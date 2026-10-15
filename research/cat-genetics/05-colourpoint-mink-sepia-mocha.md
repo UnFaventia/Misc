@@ -1,7 +1,8 @@
 # Colourpoint, mink, sepia & mocha (the C locus)
 
-> **Sources:** messybeast.com colour & pattern guide (Sarah Hartwell), user screenshots — Colourpoints (header, point types, point colours, lynx / tortie / tabby tortie / silver tabby points), Mink Colours (Tonkinese), the Equivalent Names Table (Sepia, Mink and Pointed columns only), plus a Mocha / Siamese / Tonkinese / Burmese colour-restriction diagram (its origin is not shown in the screenshot).  
+> **Sources:** messybeast.com colour & pattern guide (Sarah Hartwell), user screenshots — Colourpoints (header, point types, point colours, lynx / tortie / tabby tortie / silver tabby points), Mink Colours (Tonkinese), the Equivalent Names Table (Sepia, Mink and Pointed columns only), plus the Mocha / Siamese / Tonkinese / Burmese colour-restriction diagram, almost certainly from Schar & Hartwell 2023 · Doug Schar & Sarah Hartwell, *Mocha Genetics — Interaction with Siamese and Burmese Colour Restriction* (messybeast.com, 2023) · Yu Y, Grahn RA, Lyons LA, *Mocha tyrosinase variant: a new flavour of cat coat coloration*, Anim Genet 2019;50(2):172–175, doi:10.1111/age.12765, PMC6590430 (checked against the full text).  
 > **Calculator status:** C series is modelled (C > cb > cs > c, plus cm "mocha"); every colour × point-pattern row is reproducible, and the gaps are registry naming dialects, point/body change with age and temperature, and a distinct Siamocha phenotype.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [colour-guide-06-silver-formulas-golden-colourpoints.png](img/colour-guide-06-silver-formulas-golden-colourpoints.png) · [colour-guide-07-colourpoints-tortie-points-mink.png](img/colour-guide-07-colourpoints-tortie-points-mink.png) · [colour-guide-08-tortie-lynx-points-mink-van-mitted.png](img/colour-guide-08-tortie-lynx-points-mink-van-mitted.png) · [colour-guide-09-van-mitted-equivalent-names-future.png](img/colour-guide-09-van-mitted-equivalent-names-future.png) · [mocha-colour-restriction-triangle.jpg](img/mocha-colour-restriction-triangle.jpg)  
 > **Related:** [README](README.md) · [Coverage map](00-coverage-map.md) · [Colour names](01-colour-names.md) · [Tabby patterns](02-tabby-patterns.md) · [Silver, golden & shading](03-silver-golden-shading.md) · [Tortie, white & van](04-tortie-white-van.md) · [Eye colour & shape](06-eye-colour-and-shape.md) · [Dominant blue eye](07-dominant-blue-eye.md) · [Rare & future](10-rare-and-future.md)
 
 ## At a glance
@@ -9,7 +10,7 @@
 - The C (tyrosinase) locus is fully modelled: `C`, `cb` (sepia), `cs` (point), `cm` (mocha), `c` (albino). Generated names are colour word + optional modifier + point word, e.g. "Seal Point", "Seal Lynx Point", "Blue Tortie Point", "Seal Torbie Point", "Seal Mink", "Seal Sepia", "Seal Mocha", "Seal Sepia-Mocha".
 - Nearly every "colour × point pattern" row in the source (solid, lynx, tortie, tabby tortie, silver tabby) is ✅ because the engine composes the name from the colour genes, the A locus and the tortie state. The ✅ rows differ from the source only in wording (e.g. "Lynx" vs "Tabby", "Torbie" vs "Tabby Tortoiseshell").
 - The real gaps are naming dialects (Frost, Flame, Champagne, Honey, Natural, Platinum, Sable, Oyster, Pastel, Snow Tiger), tipped/shaded/chinchilla depth on points, and anything environmental or age-related (paler kitten points, darker adult bodies, temperature, fever, bandaging).
-- The mocha diagram calls cm "co-dominant" with Siamese colour restriction; the calculator makes cm dominant over cs, so a separate Siamocha (cs/cm) phenotype cannot appear. See Source quirks.
+- ⚠️ **Mocha × Siamese: the calculator is out of step with the breeder evidence.** Schar & Hartwell 2023 say Mocha is "incompletely co-dominant" to both `cs` and `cb`, and that a `BB cmcs DD` cat "looks like an off-colored Siamese". The calculator makes `cm` dominant over `cs`, so `cs/cm` comes out as plain mocha. That rests on Yu 2019's "likely dominant to the Siamese allele", but Yu's own summary calls the cb/cs interactions "unclear". See [Bangkok-Mocha](#bangkok-mocha-schar--hartwell-2023).
 - Eye colour by C genotype is a calculator convention; the sources here say mink cats can have blue, aqua or blue-green eyes.
 
 *Genotype shorthand for every table below: unless a row says otherwise, assume non-red (`o`), `E/E`, `i/i`, `dm/dm`, `wb/wb`, `w/w`. `a/a` = solid points, `A/-` = agouti (tabby shows), `-` = any allele. A trailing "?" marks my best guess.*
@@ -138,7 +139,7 @@ A diagram arranging the three classic colour restrictions (Siamese, Tonkinese, B
 | Siamese colour restriction | _(blank in source; label and genes only)_ | `cs/cs` or `cs/c` (the diagram writes "cs/cs or cs/ca") | ✅ "Seal Point" |
 | Tonkinese (Mink) colour restriction | _(blank in source; label and genes only)_ | `cb/cs` | ✅ "Seal Mink" |
 | Burmese colour restriction | _(blank in source; label and genes only)_ | `cb/cb` | ✅ "Seal Sepia" |
-| Siamocha | _(blank in source; label and genes only)_ | `cs/cm` | 🟡 genotype is accepted but shown as plain "Seal Mocha" (calculator makes cm dominant over cs, same contrast as cm/cm); no separate Siamocha / Sia-Mocha phenotype or name |
+| Siamocha | _(blank in source; label and genes only)_ | `cs/cm` | ⚠️ genotype is accepted but shown as plain "Seal Mocha" (calculator makes cm dominant over cs, same contrast as cm/cm). Schar & Hartwell 2023 describe it as an intermediate that "looks like an off-colored Siamese" |
 | Burmocha | _(blank in source; label and genes only)_ | `cb/cm` | ✅ "Seal Sepia-Mocha" ("Burmocha" / "Bur-Mocha" not produced) |
 | Mocha | _(blank in source; label and genes only)_ | `cm/cm` | ✅ "Seal Mocha" |
 
@@ -151,6 +152,62 @@ Text in the diagram (close to verbatim):
 > cm/cm cat may have pink noses (the first cats studied had pink noses, but later imports did not).
 >
 > Note: The names Sia-Mocha & Bur-Mocha are informal. The gene symbol cm is also informal.
+
+## Bangkok-Mocha (Schar & Hartwell 2023)
+
+> **Source:** Doug Schar & Sarah Hartwell, *Mocha Genetics — Interaction with Siamese and Burmese Colour Restriction* (messybeast.com, 2023).
+> - **Who:** Doug Schar runs the *Bangkok Mocha Cats* website. He has imported, tested and worked with over 60 cats from Thailand over 15 years, and is collecting photos of mocha cats at various ages.
+> - **Cross-checked against:** Yu, Grahn & Lyons 2019, the paper that identified the variant: a 111-bp in-frame TYR deletion, `c.820_936delinsAATCTC`, segregating in a 12-cat Burmese pedigree.
+
+### Naming
+- **"Bangkok-Mocha":** Doug's preferred name, which Hartwell's article adopts. The first three cats were found **on a dock in Bangkok**, and he wants that origin reflected in the gene's name. The labs competed in secrecy to be first to identify the gene and develop a test.
+- **The article's colour synonyms:**
+  - genetic black = **Sable** (Burmese, USA) / **Brown** (Burmese, UK & Europe) / **Seal** (Siamese)
+  - chocolate = **champagne**
+  - lilac = **platinum**
+
+### Genotypes, in the article's symbols
+
+| Genotype | Article name | Calculator today |
+|---|---|---|
+| `C/` | Full colour | ✅ |
+| `cb/cb`, `cb/ca` | Burmese colour restriction | ✅ "… Sepia" (the calculator writes `c` for `ca`) |
+| `cb/cm` | Burmese-Mocha | ✅ "… Sepia-Mocha" |
+| `cb/cs` | Tonkinese colour restriction | ✅ "… Mink" |
+| `cm/cm` | Mocha colour restriction | ✅ "… Mocha" |
+| `cs/cm` | **Siamese-Mocha** | ⚠️ named "… Mocha"; the calculator treats `cm` as dominant over `cs` |
+| `cs/cs`, `cs/ca`, `cs/c` | Siamese colour restriction | ✅ "… Point" |
+| `ca/ca` | **Blue-eyed albino** | 🟡 the calculator has a single albino allele `c` |
+| `c/c` | **Pink-eyed albino** | 🟡 same |
+
+### Dominance: what each source actually says
+- **Schar & Hartwell 2023:** "Mocha is on the same locus as cs and cb. It is **incompletely co-dominant to each of those**. The diagram below shows the co-dominance but the actual intermediate mocha colours are variable."
+- **Doug's breeding results** (cs/cm in sable, blue, chocolate/champagne and platinum/lilac; cb/cm in all four; cm/cm "soon" in all four):
+  - "a BB cmcb dd is indistinguishable from a BB cbcb dd": blue Burmese-Mocha looks like blue Burmese.
+  - "a BB cmcs DD looks like an **off-colored Siamese**."
+  - Apart from the sable/brown cm/cm (`BB cmcm DD`), the gene only slightly modifies the colour, sometimes imperceptibly "even when you know that cat has Bangkok-Mocha". That's why it went undetected for so long.
+  - The sable Burmese-Mocha is highly variable and "could easily pass as a light sable (Brown) Burmese".
+- **Yu, Grahn & Lyons 2019** (full text):
+  - Mocha is **recessive to C**.
+  - Mocha is "likely co-dominant to the Burmese allele and temperature sensitive".
+  - It is "**also likely dominant to the Siamese (cs) allele**": inferred cm/cs cats "displayed the mocha coloration instead of the otherwise expected Siamese coloration".
+  - **But** the summary says "interactions with the cb and cs alleles are unclear due to the temperature-sensitivity of the alleles", and "not all allelic combinations have been observed".
+  - The paper writes the series as `C > cb = cs > c, c2`.
+- **Verdict:** the calculator took Yu's hedged "likely dominant" as settled. The breeder with the most cs/cm cats says intermediate, leaning Siamese. Both messybeast sources agree with him.
+
+### Eyes, nose & paw pads
+- **"Diamond eye":** the one constant across cm/cm, cs/cm and cb/cm is **luminescent eyes**. The Thai term is "diamond eye": they sparkle and look backlit, and others describe them as "liquid mercury". The effect is present in all the cats but doesn't always show in photos. Doug: "it always makes the eye color pop".
+- **Eye colour itself varies.** The sable Burmese-Mocha shows "great diversity in eye colour". Yu 2019: "Mocha cats have aqua eye coloration and pink nose leather and paw pads."
+- **Nose:** in cm/cm, **the pink nose and pink paw pads are strictly a kitten thing**. The nose darkens to brown with age and the pads turn brownish. "The oddly brown nose is a characteristic feature of the adult cats", whatever their tone of mocha, from reddish to blondish.
+
+### Breeding & history
+- **Rarity:** cm/cm is rare in Thailand, and a dilute cm/cm "even greater unlikelihood". Doug suspects he may be making the first dilute Bangkok-Mochas that have ever existed.
+- **Caution:**
+  - No physical abnormalities have been detected in cm/cm so far, "but I have my eyes wide open".
+  - From his parrot-breeding days: "never breed a mutation bird to mutation bird". He admits it's "a huge leap" to cats.
+  - He suggests producing cm/cm through **`cb/cm × cs/cm`** or **`C/cm × cb/cm`** rather than cm/cm × cm/cm ("all theoretical"). *My arithmetic:* both crosses give ¼ cm/cm. The first also gives ¼ each cb/cs, cb/cm and cs/cm; the second ¼ each C/cb, C/cm and cb/cm. Litter mode already computes this.
+- **Early Burmese:** Doug writes, "When I read the early books on the breed, in the Harrison Weir time frame, it seems initially the Burmese standard was for blue eyes and then it was changed to yellow eyes. I have a feeling the cm gene was floating around in the early imports."
+- **Colour breeding and closed gene pools** (the Korat story, CFA's import rules): see [11](11-health-and-welfare.md#colour-breeding--closed-gene-pools).
 
 ## Glossary
 
@@ -174,15 +231,21 @@ Text in the diagram (close to verbatim):
 - **Bicolour Point and Ragdoll patterns.** "Bicolour Point" (this file) and the later Mitted & Ragdoll table are white-spotting questions and live in [04-tortie-white-van.md](04-tortie-white-van.md). The nearest thing the calculator has is `Ws` or `wg/wg` on a `cs/cs` cat, which names as "Seal Point & White (…)".
 - **Eye colour.** The calculator paints pointed cats blue, sepia chartreuse and mink / sepia-mocha / mocha aqua, keyed off the C genotype. The sources here say pointed cats have blue eyes and mink cats have blue, aqua or blue-green eyes, so mink's single "aqua" is a simplification, and nothing in these screenshots gives sepia or mocha eye colour. See [06-eye-colour-and-shape.md](06-eye-colour-and-shape.md); blue eyes from white / dominant-white are a separate mechanism ([07-dominant-blue-eye.md](07-dominant-blue-eye.md)).
 - **Mocha crosses.** Mocha × Mink (`cm/cm` × `cb/cs`) gives `cb/cm` and `cs/cm`, which the engine names "Seal Sepia-Mocha" and "Seal Mocha". The diagram expects Bur-Mocha and Sia-Mocha, so the cb/cm half matches and the cs/cm half does not (see quirks).
+- **Proposed correction (my suggestion, based on Schar & Hartwell 2023):**
+  - Give `cs/cm` its own C class, **Siamese-Mocha**. Its contrast should sit between point (1) and mocha (.3), leaning Siamese, since it "looks like an off-colored Siamese". Name it "Seal Siamese-Mocha" in parallel with "Seal Sepia-Mocha".
+  - Replace the "cm is dominant over cs" note with one citing both readings.
+  - **Also:** the cm/cm portrait nose should be brown in adults (pink in kittens), and all three mocha classes could carry a "diamond eye" note.
+  - **Possible second step:** split the albino allele into `ca` (blue-eyed) and `c` (pink-eyed). Yu 2019 also lists two albino variants, which it calls `c` and `c2`.
 - **My reading of the diagram's illustrations.** Siamocha is drawn palest (cream with light tan points), Mocha light tan, Burmocha mid-brown, Burmese dark brown. The calculator's body-paling order (mocha .42, sepia-mocha .5, sepia .6) fits Mocha, Burmocha and Burmese, but cs/cm is forced to the Mocha value, so Siamocha cannot be drawn.
 - **Not modelled.** Pink noses on cm/cm cats (❌; the portrait derives nose colour from coat pigment). Albino `c` appears in the calculator as a carrier allele (`cs/c`, `cb/c`) or as `c/c` masking everything; the diagram mentions albino only in "cs/ca".
 
 ## Source quirks & open questions
 
-- **Mocha dominance discrepancy (not resolved here).** The diagram says Mocha "is therefore co-dominant with Burmese and Siamese colour restriction", which would make `cs/cm` an intermediate Siamocha. The calculator follows Yu, Grahn & Lyons 2019: `cm` is co-dominant with `cb` but dominant over `cs`, so `cs/cm` shows mocha, not Siamese points (its note reads "cm is dominant over cs — cs/cm kittens show mocha, not Siamese points"). Both sources use the same cs/cm genotype but predict different phenotypes.
-- **Albino symbol.** The diagram writes "ca" for albino ("cs/cs or cs/ca"); the calculator writes `c`.
-- **Informal names.** The diagram labels use one word ("Siamocha", "Burmocha"), while its text uses "Sia-Mocha" and "Bur-Mocha"; the diagram itself says these names and the symbol `cm` are informal. The diagram's origin is not shown in the screenshot.
-- **Pink noses.** The claim that cm/cm cats "may have pink noses" (first cats studied did, later imports did not) is worth verifying before treating it as a mocha trait.
+- **Mocha dominance: now weighed (see [Bangkok-Mocha](#bangkok-mocha-schar--hartwell-2023)).** The diagram and Schar & Hartwell 2023 both say `cm` is (incompletely) co-dominant with `cs`, so `cs/cm` is an intermediate Siamese-Mocha. The calculator says `cm` is dominant over `cs`, citing Yu 2019. Yu's discussion does say "likely dominant to the Siamese (cs) allele", but its summary says the interactions are "unclear". **Two sources plus a breeder's direct results against one hedged inference.** I'd treat the calculator as the one to change.
+- **Albino symbols.** The diagram and the 2023 article write `ca` (blue-eyed albino) and `c` (pink-eyed albino). Yu 2019 lists two albino variants as `c` and `c2`. The calculator has one `c`. Whether the article's `ca`/`c` are Yu's `c`/`c2` isn't stated.
+- **Informal names.** The diagram labels use one word ("Siamocha", "Burmocha"), while its text uses "Sia-Mocha" and "Bur-Mocha". The 2023 article uses **Siamese-Mocha / Burmese-Mocha / Bangkok-Mocha**. The diagram itself says these names and the symbol `cm` are informal.
+- **Pink noses: resolved.** "The first cats studied had pink noses, but later imports did not" was an **age effect**. Per Schar & Hartwell 2023, pink noses and paw pads are kitten-only in cm/cm, and adults have a characteristic brown nose. Yu 2019's "pink nose leather and paw pads" is consistent with that if it describes young cats.
+- **"Blue" or lilac?** The 2023 article says "a (bb cmcm dd) cat would be an even greater unlikelihood. In other words, I may be making the first **blue** Bangkok Mochas". But `bb dd` is lilac/platinum; blue is `B- dd`. Either the genotype has a typo for `BB`, or "blue" is used loosely.
 - **Blank descriptions (7).** Caramel and Cinnamon in the Lynx table; Caramel, Cinnamon and Lilac (Frost) in the Tabby Tortoiseshell table; Cinnamon Mink and Cream Mink.
 - **Typos and awkward wording.** "Torrtie" in the Cinnamon tortie lynx row was corrected silently. Red Lynx reads "points deep red bars red" and Lilac Lynx "points frosty grey with pinkish points" as in the source; the intended meaning is not certain.
 - **Same genotype, several rows.** Lilac (Frost) Point, Lavender Point and Oyster Point are all lilac points (the Equivalent Names Table lists "Lilac/Lavender/Frost"), and Snow Tiger is Lynx Point. Honey Mink and Cinnamon Mink are the same colour (the Equivalent Names Table gives "Cinnamon/Honey Mink"), and the Mink table gives Natural, Champagne and Platinum names but has no plain "Seal", "Chocolate" or "Lilac" Mink rows.

@@ -23,6 +23,7 @@ These started as a pile of screenshots, diagrams and pasted articles. They're no
 | 10 | [Rare & future colours](10-rare-and-future.md) | The future-colours table, scattered rarities, chimeras and mosaics |
 | 11 | [Health & welfare index](11-health-and-welfare.md) | Every health-linked trait in one table, with candidate litter-mode warnings |
 | — | [Inbox](inbox.md) | Where new research lands before it's sorted |
+| — | [img/](img/README.md) | Every source screenshot, diagram and photo (all from messybeast.com), with per-image credits and Messybeast's usage terms |
 
 ## How each topic file is laid out
 
@@ -58,8 +59,11 @@ Status marks: ✅ modelled · 🏷️ naming gap · 🟡 partial · ❌ not mode
 
 **Main source:** Sarah Hartwell, messybeast.com. Plain-English colour & pattern guide; *Eye Colours*; *Bicolours and Eye Colours* (2017); blue-eyed breeds and Altai pages; *Small Rounded Ears Mutation* (2016–2023); *Plain English Guide to Conformation*. The white-spotting, eye-colour, eye-shape, body-type, Russian Topaz and mocha diagrams are from the same site.
 
+**Also on messybeast:** Doug Schar & Sarah Hartwell (2023), *Mocha Genetics — Interaction with Siamese and Burmese Colour Restriction*.
+
 **Papers and books:**
 - Abitbol M et al. (2024) *Animals* 14(13):1845, doi:10.3390/ani14131845. DBE.
+- Yu Y, Grahn RA, Lyons LA (2019) *Anim Genet* 50(2):172–175, doi:10.1111/age.12765. The mocha TYR variant.
 - Keating MK et al. (2016) *J Vet Intern Med* 30(2):617–626. Toyger neurological syndrome.
 - Yu Y et al. (2020) *Genes* 11:672. GDF7.
 - Todd NB (1961) *J Hered* 52:202. Pink-eyed dilution.
@@ -67,4 +71,4 @@ Status marks: ✅ modelled · 🏷️ naming gap · 🟡 partial · ❌ not mode
 
 **Photos:** Greer Stothers (2013), Pangur the albino Oriental Longhair.
 
-The screenshots and photos themselves aren't committed. Everything in them is transcribed into the tables.
+The screenshots, diagrams and photos themselves are in [`img/`](img/README.md). Its README credits each one and quotes Messybeast's usage terms: keep the copyright intact, never hot-link, ask before adapting.

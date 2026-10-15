@@ -1,6 +1,6 @@
 # Coverage map & roadmap seeds
 
-> **What this is:** every topic in the research set, held up against what `cat-genetics-calculator.html` actually does today, then grouped by *kind* of work. It's the raw material for the expansion roadmap, not the roadmap itself. More research is still coming, and the tiering at the bottom is a first draft.
+> **What this is:** every topic in the research set, held up against what `cat-genetics-calculator.html` actually does today, then grouped by *kind* of work. It's the raw material for the expansion roadmap, not the roadmap itself. More research is still coming, and the tiering at the bottom is a first draft.  
 > **Related:** [README](README.md) · [inbox](inbox.md)
 
 ## Legend
@@ -29,7 +29,7 @@ The four layer columns are the calculator's own: **engine** (`computePhenotype`)
 | White spotting grades | 🟡 7 steps vs the diagram's 10; no grade-10 Ws white | 🏷️ Seychellois, Cap & saddle, Magpie | ✅ | ✅ (range naming) | KIT cloned; amount polygenic. ⚠️ the diagram suggests a **separate locket/belly-spot gene** | [04](04-tortie-white-van.md) |
 | Mitted / Ragdoll / Snowshoe white, laces | 🟡 only Birman `wg` | ❌ | 🟡 | 🟡 | Uncharacterised in the notes | [04](04-tortie-white-van.md) |
 | Roan / tweed | ❌ | ❌ | ❌ | ❌ | Descriptive | [04](04-tortie-white-van.md), [10](10-rare-and-future.md) |
-| C locus: point, mink, sepia, mocha, albino | ✅ | 🏷️ Natural, Champagne, Platinum, Honey, Frost, Flame, Oyster, Pastel, Snow Tiger | ✅ (fixed contrast) | ✅ | TYR cloned. ⚠️ **Mocha dominance**: the diagram says co-dominant with cs; the calculator follows Yu, Grahn & Lyons 2019 (dominant over cs) | [05](05-colourpoint-mink-sepia-mocha.md) |
+| C locus: point, mink, sepia, mocha, albino | ✅ | 🏷️ Natural, Champagne, Platinum, Honey, Frost, Flame, Oyster, Pastel, Snow Tiger | ✅ (fixed contrast) | ✅ | TYR cloned. ⚠️ **Mocha × Siamese**: the diagram and Schar & Hartwell 2023 say cs/cm is an intermediate Siamese-Mocha ("an off-colored Siamese"). The calculator shows it as plain mocha, reading Yu 2019's hedged "likely dominant to cs" as settled. **The calculator should change.** Also: two albino alleles (`ca` blue-eyed, `c` pink-eyed) | [05](05-colourpoint-mink-sepia-mocha.md) |
 | Age & temperature effects (points darken, kittens born blue/dark) | ❌ | ❌ | ❌ | — | Well described, environmental | [05](05-colourpoint-mink-sepia-mocha.md), [06](06-eye-colour-and-shape.md) |
 | Eye colour | ❌ | ❌ | 🟡 rule-based heuristic | ❌ | Unstudied genetically, except blue | [06](06-eye-colour-and-shape.md) |
 | Odd eyes / dichroic | 🟡 Wd only (portrait) | ❌ | 🟡 | ❌ | Mechanism described | [06](06-eye-colour-and-shape.md) |
@@ -75,7 +75,7 @@ The biggest gap by row count, and the cheapest to close. Every 🏷️ in files 
 | **GDF7** rounded-ear deletion | Recessive, tested, visible marker, hard welfare warning | Portrait: small rounded ears + domed head ([09](09-ears-skull-and-brain.md#modelling-notes)) |
 | *Lead:* **APb** (Asian leopard cat agouti, Bengal charcoal) | Would be the first wild-derived pattern gene with a Mendelian handle | Verify before building ([02](02-tabby-patterns.md#source-quirks--open-questions)) |
 | *Lead:* **ALX1** Burmese head defect | Two-tier het/hom phenotype | Inheritance not in the notes ([09](09-ears-skull-and-brain.md)) |
-| *Lead:* a second albino allele (`ca` blue-eyed vs `c` pink-eyed) | Would make blue- vs pink-eyed albino genotype-driven | The mocha diagram writes `ca` ([06](06-eye-colour-and-shape.md#albinism)) |
+| A second albino allele (`ca` blue-eyed vs `c` pink-eyed) | Would make blue- vs pink-eyed albino genotype-driven | **Now sourced:** Schar & Hartwell 2023; Yu 2019 also lists two albino variants (`c`, `c2`) ([06](06-eye-colour-and-shape.md#albinism)) |
 
 ### C. Refinements to loci the calculator already has
 - **White spotting:**
@@ -83,7 +83,7 @@ The biggest gap by row count, and the cheapest to close. Every 🏷️ in files 
   - add a **grade-10 Ws/Ws "white from spotting"** with a hearing note (kitten smudge → usually hearing)
   - add a warning that grade 2–3 lockets/belly spots **may be a different gene** and won't breed up
 - **Tipping depth:** shell → shaded as a polygenic *range*, the way white grade already works, rather than new alleles.
-- **Mocha:** decide on the cs/cm question. Keep Yu 2019 (the calculator's current choice) and note the alternative, or allow a distinct Siamocha.
+- **Mocha (correctness fix):** give `cs/cm` its own **Siamese-Mocha** class, leaning Siamese, and keep Yu 2019's "likely dominant" reading as a note. Adults get a brown cm/cm nose; all `cm` classes get a "diamond eye" note. Details in [05 → Modelling notes](05-colourpoint-mink-sepia-mocha.md#modelling-notes).
 - **Peterbald** brush/flock/velour grades of `Hp/hp` (naming plus portrait texture).
 
 ### D. Phenotype layers (not genes)
@@ -106,7 +106,7 @@ All consolidated in [11](11-health-and-welfare.md), with a candidate list of new
 
 | Tier | Work | Why here |
 |---|---|---|
-| **1 — cheap, visible** | Naming dialect layer (A) · ticked/torbie naming fixes · white-grade mapping + Ws hearing note (C) | No new genetics, touches the most rows, and makes every later feature read correctly |
+| **1 — cheap, visible** | **Siamese-Mocha correction** (C) · Naming dialect layer (A) · ticked/torbie naming fixes · white-grade mapping + Ws hearing note (C) | The mocha fix corrects a wrong answer the calculator gives today. The rest needs no new genetics, touches the most rows, and makes every later feature read correctly |
 | **2 — the headline gene** | Eye-colour model (D) → **DBE** (B) | DBE is the most interesting gap in the notes, and it can't be built without eyes |
 | **3 — welfare genes** | **GDF7**, then ALX1 once verified (B, E) | Small engine changes, high information value, reuse the warning machinery |
 | **4 — portrait depth** | Age/temperature (D) · tipping-depth range (C) · XX/XX chimera (F) | Visual payoff, moderate effort |
@@ -117,7 +117,7 @@ All consolidated in [11](11-health-and-welfare.md), with a candidate list of new
 
 1. **Which registries' dialects?** CFA, TICA, GCCF, FIFe or WCF. The notes mix American and British terms freely.
 2. **Calico threshold:** keep "Calico from tuxedo up", or follow the sources ("any tortie-and-white")?
-3. **Mocha cs/cm:** stick with Yu 2019 (dominant over cs), or model the diagram's co-dominant Siamocha?
+3. ~~**Mocha cs/cm:** stick with Yu 2019, or model the co-dominant Siamocha?~~ **Answered** with Schar & Hartwell 2023: model it as co-dominant (Siamese-Mocha). Now a Tier 1 fix.
 4. **Hypotheticals sandbox:** yes or no?
 5. **Scope creep:** do skeletal and shape traits (fold, Manx, munchkin, radial hypoplasia) belong in a *coat* calculator?
 
@@ -129,7 +129,7 @@ All of these are marked in their files as *lead / verify*. None was used to fill
 |---|---|
 | APb Asian-leopard-cat agouti allele as the cause of Bengal charcoal (Gershony et al. 2014) | [02](02-tabby-patterns.md) |
 | Egyptian Mau "bronze" being black-based rather than chocolate | [02](02-tabby-patterns.md) |
-| Two albino alleles (`ca` / `c`) | [06](06-eye-colour-and-shape.md) |
+| Korat "kitty ALS" (Doug Schar's term) possibly meaning the documented GM1/GM2 gangliosidosis | [11](11-health-and-welfare.md#colour-breeding--closed-gene-pools) |
 | ALX1 "Burmese head defect": homozygous lethal, heterozygote short face | [09](09-ears-skull-and-brain.md) |
 | LYST as the Chediak-Higashi gene in other species | [11](11-health-and-welfare.md) |
 | Fold / Manx / Bobtail / Munchkin / Polydactyly / LaPerm as single-gene shape/coat traits | [08](08-conformation.md) |

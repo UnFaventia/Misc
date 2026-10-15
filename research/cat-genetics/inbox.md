@@ -22,3 +22,5 @@ Dump new research here: pasted articles, links, half-thoughts, "omg did you know
 | Date | Item | Went to |
 |---|---|---|
 | 2026-10-15 | First batch: messybeast colour & pattern tables (9 screenshots), 8 diagrams, eye-colour, DBE, Altai, bicolour-eye, Toyger/GDF7 and conformation texts | 01–11 |
+| 2026-10-15 | All 17 source images + credits/usage terms | [img/](img/README.md) |
+| 2026-10-15 | Schar & Hartwell 2023 *Mocha Genetics* (Bangkok-Mocha), checked against Yu et al. 2019 | [05](05-colourpoint-mink-sepia-mocha.md#bangkok-mocha-schar--hartwell-2023), [06](06-eye-colour-and-shape.md), [11](11-health-and-welfare.md#colour-breeding--closed-gene-pools), [00](00-coverage-map.md) |
