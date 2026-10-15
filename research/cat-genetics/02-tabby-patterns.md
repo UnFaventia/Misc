@@ -2,6 +2,7 @@
 
 > **Sources:** messybeast.com colour & pattern guide (Sarah Hartwell), user screenshots — Tabby Patterns; Breed-Specific Tabby/Spotted Terms.  
 > **Calculator status:** ✅/🟡 The domestic patterns are modelled (Mc, Sp, Ta, plus O/o for torbies): mackerel, classic, spotted, broken, ticked and torbie. ❌ Marble, clouded leopard, rosettes, braided/candle-flame and Sokoke are not; they are wild-derived or breed-selected.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [colour-guide-01-self-solid-colours.png](img/colour-guide-01-self-solid-colours.png) · [colour-guide-02-tabby-patterns-ticked-colours.png](img/colour-guide-02-tabby-patterns-ticked-colours.png) · [colour-guide-03-ticked-torties-silver-ticked-tabby-colours.png](img/colour-guide-03-ticked-torties-silver-ticked-tabby-colours.png) · [colour-guide-04-breed-terms-broken-colours.png](img/colour-guide-04-breed-terms-broken-colours.png)  
 > **Related:** [silver, golden, tipped, shaded & smoke](03-silver-golden-shading.md) · [colour names](01-colour-names.md) · [tortie, white & van](04-tortie-white-van.md) · [colourpoint, mink, sepia, mocha](05-colourpoint-mink-sepia-mocha.md) · [rare & future](10-rare-and-future.md) · [coverage map](00-coverage-map.md) · [README](README.md)
 
 ## At a glance

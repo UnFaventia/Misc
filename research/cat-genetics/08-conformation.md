@@ -1,7 +1,8 @@
 # Conformation: body, head, ears & coat vocabulary
 
-> **Sources:** messybeast.com *Plain English Guide to Conformation* and its glossary (Sarah Hartwell) · user diagram *Body & face types*, with its ear-set, modified-type and abnormality panels.
-> **Calculator status:** 🟡 portrait only. The portrait switches to a foreign (Oriental) body, low-set ears and upturned eyes **only for hairless and rex textures** (the `FOREIGN` texture list in `CatArt`). There's no body, head or ear-set input. Nothing here is modelled genetically. Conformation is overwhelmingly **polygenic plus selection**, and the few single-gene shape traits in the diagram (short legs, radial hypoplasia) aren't in the engine.
+> **Sources:** messybeast.com *Plain English Guide to Conformation* and its glossary (Sarah Hartwell) · user diagram *Body & face types*, with its ear-set, modified-type and abnormality panels.  
+> **Calculator status:** 🟡 portrait only. The portrait switches to a foreign (Oriental) body, low-set ears and upturned eyes **only for hairless and rex textures** (the `FOREIGN` texture list in `CatArt`). There's no body, head or ear-set input. Nothing here is modelled genetically. Conformation is overwhelmingly **polygenic plus selection**, and the few single-gene shape traits in the diagram (short legs, radial hypoplasia) aren't in the engine.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [body-and-face-types.jpg](img/body-and-face-types.jpg)  
 > **Related:** [ears, skull & brain](09-ears-skull-and-brain.md) · [eye shape](06-eye-colour-and-shape.md#eye-shapes) · [health](11-health-and-welfare.md) · [coverage map](00-coverage-map.md)
 
 ## At a glance

@@ -6,7 +6,8 @@
 > - Yu Y, Creighton EK, Buckley RM, Lyons LA, 99 Lives Consortium. *A Deletion in GDF7 is Associated with a Heritable Forebrain Commissural Malformation Concurrent with Ventriculomegaly and Interhemispheric Cysts in Cats.* Genes 2020;11:672
 > - User photos: the Italian founder male; the F2 kittens
 >
-> **Calculator status:** ❌ not modelled. The only ear locus is `Cu` (curl). There's no GDF7, no ALX1, and no brachycephaly.
+> **Calculator status:** ❌ not modelled. The only ear locus is `Cu` (curl). There's no GDF7, no ALX1, and no brachycephaly.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [toyger-small-rounded-ears.jpg](img/toyger-small-rounded-ears.jpg)  
 > **Related:** [conformation](08-conformation.md) · [health index](11-health-and-welfare.md) · [coverage map](00-coverage-map.md)
 
 ## At a glance

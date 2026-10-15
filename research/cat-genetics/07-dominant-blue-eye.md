@@ -1,7 +1,8 @@
 # Dominant Blue Eye (DBE) & the blue-eyed breeds
 
-> **Sources:** Abitbol M, Dufaure de Citres C, Rudd Garces G, Lühken G, Lyons LA, Gache V. *Different Founding Effects Underlie Dominant Blue Eyes (DBE) in the Domestic Cat.* Animals (Basel) 2024;14(13):1845. doi:10.3390/ani14131845, PMID 38997957, PMCID PMC11240321 · messybeast.com (Sarah Hartwell): blue-eyed breeds pages, Altai history, *Bicolours and Eye Colours* (2017) · user diagrams: *Russian Topaz (Altai) eye colours*, *Russian Topaz — white markings linked to blue eye trait*.
-> **Calculator status:** ❌ not modelled. There's no PAX3 locus, and eye colour is a portrait heuristic. Of everything in these notes, this is the best-characterised gene the calculator doesn't have yet.
+> **Sources:** Abitbol M, Dufaure de Citres C, Rudd Garces G, Lühken G, Lyons LA, Gache V. *Different Founding Effects Underlie Dominant Blue Eyes (DBE) in the Domestic Cat.* Animals (Basel) 2024;14(13):1845. doi:10.3390/ani14131845, PMID 38997957, PMCID PMC11240321 · messybeast.com (Sarah Hartwell): blue-eyed breeds pages, Altai history, *Bicolours and Eye Colours* (2017) · user diagrams: *Russian Topaz (Altai) eye colours*, *Russian Topaz — white markings linked to blue eye trait*.  
+> **Calculator status:** ❌ not modelled. There's no PAX3 locus, and eye colour is a portrait heuristic. Of everything in these notes, this is the best-characterised gene the calculator doesn't have yet.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [russian-topaz-white-markings.jpg](img/russian-topaz-white-markings.jpg) · [eye-colours.jpg](img/eye-colours.jpg)  
 > **Related:** [eye colour & shape](06-eye-colour-and-shape.md) · [white spotting](04-tortie-white-van.md) · [health index](11-health-and-welfare.md) · [coverage map](00-coverage-map.md)
 
 ## At a glance

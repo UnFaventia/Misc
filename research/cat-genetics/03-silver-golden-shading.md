@@ -2,6 +2,7 @@
 
 > **Sources:** messybeast.com colour & pattern guide (Sarah Hartwell), user screenshots — Silver and Golden Ticked Tabbies; Chinchilla (Shell), Tipped (Shorthair Tipped), Shaded and Smoke Colour Group (with its Black-on-Silver, Blue-on-Silver and Red/Cream synonym boxes); Golden Colour Group; Breed Specific Tipped.  
 > **Calculator status:** ✅/🟡 Silver (`I`), wide band (`Wb`) and smoke (a/a + I) are modelled, but the calculator has a single "Silver Shaded"/"Golden Shaded" step. ❌ Chinchilla/shell vs shaded vs tipped, Masked, Pewter and the Chausie "silver tipped" are not distinguished.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [colour-guide-03-ticked-torties-silver-ticked-tabby-colours.png](img/colour-guide-03-ticked-torties-silver-ticked-tabby-colours.png) · [colour-guide-04-breed-terms-broken-colours.png](img/colour-guide-04-breed-terms-broken-colours.png) · [colour-guide-05-broken-colours-chinchilla-group.png](img/colour-guide-05-broken-colours-chinchilla-group.png) · [colour-guide-06-silver-formulas-golden-colourpoints.png](img/colour-guide-06-silver-formulas-golden-colourpoints.png)  
 > **Related:** [tabby patterns & breed pattern terms](02-tabby-patterns.md) · [colour names](01-colour-names.md) · [tortie, white & van](04-tortie-white-van.md) · [colourpoint, mink, sepia, mocha](05-colourpoint-mink-sepia-mocha.md) · [eye colour & shape](06-eye-colour-and-shape.md) · [rare & future](10-rare-and-future.md) · [coverage map](00-coverage-map.md) · [README](README.md)
 
 ## At a glance

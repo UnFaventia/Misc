@@ -1,7 +1,8 @@
 # Rare, unrealised & "future" colours
 
-> **Sources:** messybeast.com *Future Colour Possibilities* table (Sarah Hartwell; user screenshot) · plain-English colour glossary · eye-colour pages.
-> **Calculator status:** mostly ❌, by definition. ✅ for the routes to a tortie tom the calculator already has: XXY and the XY/XY chimera.
+> **Sources:** messybeast.com *Future Colour Possibilities* table (Sarah Hartwell; user screenshot) · plain-English colour glossary · eye-colour pages.  
+> **Calculator status:** mostly ❌, by definition. ✅ for the routes to a tortie tom the calculator already has: XXY and the XY/XY chimera.  
+> **Images** (all messybeast.com; credits in [img/README](img/README.md)): [colour-guide-09-van-mitted-equivalent-names-future.png](img/colour-guide-09-van-mitted-equivalent-names-future.png)  
 > **Related:** [colour names](01-colour-names.md) · [tortie/white](04-tortie-white-van.md) · [eyes](06-eye-colour-and-shape.md) · [DBE](07-dominant-blue-eye.md) · [coverage map](00-coverage-map.md)
 
 ## At a glance
