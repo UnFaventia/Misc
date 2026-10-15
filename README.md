@@ -35,6 +35,8 @@ hairless coats each change the outline and texture.
 The genetics engine (`computePhenotype`) and the litter engine (`cross`) are pure functions with no DOM
 dependencies, and the in-page self-tests check textbook ratios (9:3:3:1, Tonkinese 1:2:1, tortie × black by sex).
 
+`research/cat-genetics/` holds the sorted research behind future expansions. It has colour and pattern tables tagged by genotype and calculator status, plus eye colour, Dominant Blue Eye (PAX3), conformation, the Toyger GDF7 ear/brain defect, rare colours and a health index. Its `00-coverage-map.md` sets every topic against what the calculator models today.
+
 The file is authored as a claude.ai Artifact page: it intentionally has no `<html>`/`<head>`/`<body>`
 wrapper (the artifact host supplies that skeleton) and is theme-aware (light/dark). It also opens
 fine as a raw file in a browser.
