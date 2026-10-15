@@ -95,7 +95,13 @@ The biggest gap by row count, and the cheapest to close. Every 🏷️ in files 
 - **Type & breed presets:** body (5 steps), face (7), ear set (4), eye shape (8). A preset can also choose a naming dialect and an eye standard ([08](08-conformation.md#modelling-notes)).
 
 ### E. Health & warnings
-All consolidated in [11](11-health-and-welfare.md), with a candidate list of new pairing warnings: DBE × DBE, CEL × ALT, RE × RE, GDF7 carrier × carrier, `Ws/Ws` high white.
+All consolidated in [11](11-health-and-welfare.md), with a candidate list of pairing warnings and safer pairings: DBE × DBE, CEL × ALT, RE × RE, Wd × Wd, Hp × Hp, GDF7 carrier × carrier, `Ws/Ws` high white.
+
+**The display rule (settled by you):**
+- Never restrict input. Never filter the litter. Lethal and affected kittens appear at their true odds.
+- Health goes in an obvious **box attached to the result**. It covers what the combination causes, whether pairings that produce it are recommended against (and the safer pairing), and lethality ("dies in utero").
+- Full text, and where the calculator falls short today, in [11 → Display rule](11-health-and-welfare.md#display-rule-how-the-calculator-handles-health--lethality).
+- **The health box UI is a prerequisite for adding any lethal or severe-welfare gene.**
 
 ### F. Edge cases & sandbox
 - **XX/XX chimera:** a natural extension of the existing XY/XY machinery, and the explanation for quadricolours ([10](10-rare-and-future.md#chimeras--mosaics-what-the-calculator-does-and-could-do)).
@@ -107,7 +113,7 @@ All consolidated in [11](11-health-and-welfare.md), with a candidate list of new
 | Tier | Work | Why here |
 |---|---|---|
 | **1 — cheap, visible** | **Siamese-Mocha correction** (C) · Naming dialect layer (A) · ticked/torbie naming fixes · white-grade mapping + Ws hearing note (C) | The mocha fix corrects a wrong answer the calculator gives today. The rest needs no new genetics, touches the most rows, and makes every later feature read correctly |
-| **2 — the headline gene** | Eye-colour model (D) → **DBE** (B) | DBE is the most interesting gap in the notes, and it can't be built without eyes |
+| **2 — the headline gene** | **Health box UI** (E) · Eye-colour model (D) → **DBE** (B) | DBE is the most interesting gap in the notes. It can't be built without eyes, and its homozygotes need the health box |
 | **3 — welfare genes** | **GDF7**, then ALX1 once verified (B, E) | Small engine changes, high information value, reuse the warning machinery |
 | **4 — portrait depth** | Age/temperature (D) · tipping-depth range (C) · XX/XX chimera (F) | Visual payoff, moderate effort |
 | **5 — type layer** | Body/face/ear presets (D) | Biggest portrait refactor; mostly non-genetic |
@@ -120,6 +126,11 @@ All consolidated in [11](11-health-and-welfare.md), with a candidate list of new
 3. ~~**Mocha cs/cm:** stick with Yu 2019, or model the co-dominant Siamocha?~~ **Answered** with Schar & Hartwell 2023: model it as co-dominant (Siamese-Mocha). Now a Tier 1 fix.
 4. **Hypotheticals sandbox:** yes or no?
 5. **Scope creep:** do skeletal and shape traits (fold, Manx, munchkin, radial hypoplasia) belong in a *coat* calculator?
+6. **XXY sires:** `cross()` currently refuses an XXY tom ("usually sterile"). Under the display rule, should it allow the cross and show a sterility box instead?
+
+**Settled:**
+- **Health & lethality display.** Any input; the full litter is always shown; health goes in a box next to the result, with pairing advice and lethality. See [E](#e-health--warnings).
+- **Mocha.** cs/cm is co-dominant (decision 3).
 
 ## Leads I added that aren't in your notes
 

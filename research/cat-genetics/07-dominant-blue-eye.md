@@ -140,6 +140,7 @@ How the ALT allele was found: whole-genome sequencing of one DBE cat, then a pan
   | `CEL/ALT` | White; high deafness risk |
   | `ALT` or `RE` heterozygote | "Hearing not BAER-characterised" note |
 
+- **Display:** all of these follow the [display rule](11-health-and-welfare.md#display-rule-how-the-calculator-handles-health--lethality). Every DBE genotype, lethal ones included, appears in the litter at its true odds, and a box on that kitten explains the problem and the safer pairing (DBE × non-DBE).
 - **Litter mode:** DBE × DBE gives ¼ homozygous. The existing pairing-level warning infrastructure already handles the Wd/Wd ¼ case the same way. Add the specific "Roxi-origin × Seymour-origin" warning for CEL × ALT pairings.
 - **Interactions:**
   - **Ws** enhances expression (the Fyodor anecdote). Record it as a note, not a number.
